@@ -48,6 +48,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -100,11 +101,15 @@ public class Aura_Sandbox extends LinearOpMode
     private static ElapsedTime timer_gp2_y = new ElapsedTime();
     private static ElapsedTime timer_gp2_a = new ElapsedTime();
 
+    public Servo test;
+
     boolean changingWheelSpeed = false;
     boolean targetFound = false;    // Set to true when an AprilTag target is detected
     boolean changingState = false;
     boolean bKeepGoing = true;
     public static int SANDBOX_MODE = 0;
+
+    public static double ServoPosition = 0;
 
     public static int Smd_profileTime = 5000;
 
@@ -120,9 +125,10 @@ public class Aura_Sandbox extends LinearOpMode
         SMD_WHEEL_MOTOR_PROFILER,
         SMD_INTAKE_OUTTAKE,
         HANG,
-        APRIL
+        APRIL,
+        SERVOTESTER
     }
-    public static SandboxMode sandboxMode = SandboxMode.APRIL;
+    public static SandboxMode sandboxMode = SandboxMode.SERVOTESTER;
 
 //    public static class CameraStreamProcessor implements VisionProcessor, CameraStreamSource {
 //        private final AtomicReference<Bitmap> lastFrame =
@@ -175,10 +181,10 @@ public class Aura_Sandbox extends LinearOpMode
         telemetry.addData("Left Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_LEFT));
         telemetry.addData("Right Tracking wheel: ", Aurelius.getCurrentPosition(UPPER_RIGHT));
         telemetry.addData("Strafe Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_RIGHT));
-        initAprilTag();
-        if(USE_WEBCAM) {
-            setManualExposure(6,250);
-        }
+//        initAprilTag();
+//        if(USE_WEBCAM) {
+//            setManualExposure(6,250);
+//        }
 
         waitForStart();
         //getUserInput();
@@ -194,7 +200,10 @@ public class Aura_Sandbox extends LinearOpMode
                     SandboxIntakeOuttake();
                     break;
                 case HANG:
-                    HangSandbox();
+//                    HangSandbox();
+                    break;
+                case SERVOTESTER:
+                    ServoTester();
                     break;
                 case APRIL:
                     AprilSandbox();
@@ -580,6 +589,18 @@ public class Aura_Sandbox extends LinearOpMode
             }
         }
         Aurelius.hanger.update();
+    }
+
+    public void ServoTester() {
+        test = hardwareMap.get(Servo.class, "Test");
+        if(gamepad1.y)
+            if(!changingState) {
+                timer_gp2_a.reset();
+                changingState = true;
+            } else if (timer_gp2_a.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                test.setPosition(ServoPosition);
+                changingState = false;
+            }
     }
 
     private void logTelemetryToHTML() {

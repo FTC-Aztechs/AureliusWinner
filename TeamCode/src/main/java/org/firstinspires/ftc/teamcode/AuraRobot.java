@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+//import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -159,12 +160,12 @@ public class AuraRobot
 
         Pose2d initPose2d = new Pose2d(0,0,0);
         //AuraMecanumDrive = new MecanumDrive(hwMap, initPose2d);
-        Khimera = hwMap.get(WebcamName.class, "Kemera");
+//        Khimera = hwMap.get(WebcamName.class, "Kemera");
 
-        noodleWash = new AuraIntakeController(hwMap);
-        boeing747 = new AuraLaunchController(hwMap);
-        hanger = new AuraHangController(hwMap);
-        depositFlipper = new Aura_DepositController(hwMap);
+//        noodleWash = new AuraIntakeController(hwMap);
+//        boeing747 = new AuraLaunchController(hwMap);
+//        hanger = new AuraHangController(hwMap);
+//        depositFlipper = new Aura_DepositController(hwMap);
     }
     String formatAngle( AngleUnit angleUnit, double angle) {
         return formatDegrees(angleUnit.DEGREES.fromUnit(angleUnit, angle));

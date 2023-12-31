@@ -97,7 +97,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
 
     Vector2d ParkPos = new Vector2d(49, -54.5);//7,-37
 
-    
+
 
     //Roadrunner field-centric coordinates quick guide brought to you by Lavanya
 

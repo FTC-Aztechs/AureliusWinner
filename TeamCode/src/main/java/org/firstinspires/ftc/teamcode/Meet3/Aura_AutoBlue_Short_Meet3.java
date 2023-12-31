@@ -453,7 +453,7 @@ public class Aura_AutoBlue_Short_Meet3 extends LinearOpMode {
         // Set the camera (webcam vs. built-in RC phone camera).
         builder.setCamera(hardwareMap.get(WebcamName.class, "Kemera"));
 
-        
+
         // Set and enable the processor.
         builder.addProcessor(tfod);
 
