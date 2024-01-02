@@ -97,9 +97,11 @@ public class Aura_Sandbox extends LinearOpMode
     AuraRobot Aurelius = new AuraRobot();
     private static ElapsedTime timer_gp1_dpad_left = new ElapsedTime();
     private static ElapsedTime timer_gp1_dpad_right = new ElapsedTime();
+
     private static ElapsedTime timer_gp2_x = new ElapsedTime();
     private static ElapsedTime timer_gp2_y = new ElapsedTime();
     private static ElapsedTime timer_gp2_a = new ElapsedTime();
+    private static ElapsedTime timer_gp2_b = new ElapsedTime();
 
     public Servo test;
 
@@ -108,6 +110,8 @@ public class Aura_Sandbox extends LinearOpMode
     boolean changingState = false;
     boolean bKeepGoing = true;
     public static int SANDBOX_MODE = 0;
+    AuraIntakeOuttakeController myController;
+
 
     public static double ServoPosition = 0;
 
@@ -165,6 +169,8 @@ public class Aura_Sandbox extends LinearOpMode
     @Override
     public void runOpMode() {
         Aurelius.init(hardwareMap);
+        AuraIntakeOuttakeController myController = new AuraIntakeOuttakeController (hardwareMap);
+
 
         // Telemetry and HTML Log file
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -312,40 +318,79 @@ public class Aura_Sandbox extends LinearOpMode
 
     void SandboxIntakeOuttake()
     {
-        if (gamepad2.dpad_left) {
-            if (!changingWheelSpeed) {
-                timer_gp1_dpad_left.reset();
-                changingWheelSpeed = true;
-            } else if (timer_gp1_dpad_left.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                if (dPadSpeedAdjust <= 1) {
-                    dPadSpeedAdjust = 1;
-                } else {
-                    dPadSpeedAdjust -= 1;
-                }
-                telemetry.addLine("Current speed: " + dPadSpeedAdjust);
-                telemetry.update();
-                changingWheelSpeed = false;
+//        if (gamepad2.dpad_left) {
+//            if (!changingWheelSpeed) {
+//                timer_gp1_dpad_left.reset();
+//                changingWheelSpeed = true;
+//            } else if (timer_gp1_dpad_left.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+//                if (dPadSpeedAdjust <= 1) {
+//                    dPadSpeedAdjust = 1;
+//                } else {
+//                    dPadSpeedAdjust -= 1;
+//                }
+//                telemetry.addLine("Current speed: " + dPadSpeedAdjust);
+//                telemetry.update();
+//                changingWheelSpeed = false;
+//            }
+//        }
+//
+//        //gamepad right -> increase wheel speed
+//        if (gamepad2.dpad_right) {
+//            if (!changingWheelSpeed) {
+//                timer_gp1_dpad_right.reset();
+//                changingWheelSpeed = true;
+//            } else if (timer_gp1_dpad_right.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+//                if (dPadSpeedAdjust >= 10) {
+//                    dPadSpeedAdjust = 10;
+//                } else {
+//                    dPadSpeedAdjust += 1;
+//                }
+//                telemetry.addLine("Current speed: " + dPadSpeedAdjust);
+//                telemetry.update();
+//                changingWheelSpeed = false;
+//            }
+//        }
+
+        // if gamepad2.a => STATE_1_RFI
+        // if gamepad2.x => STATE_3_ITA
+        // if gamepad2.y => STATE_5_RFO
+        // if gamepad2.b => STATE_6_PR
+
+        if(gamepad2.a) {
+            if(!changingState) {
+                timer_gp2_a.reset();
+                changingState = true;
+            } else if (timer_gp2_a.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
+                changingState = false;
             }
         }
-
-        //gamepad right -> increase wheel speed
-        if (gamepad2.dpad_right) {
-            if (!changingWheelSpeed) {
-                timer_gp1_dpad_right.reset();
-                changingWheelSpeed = true;
-            } else if (timer_gp1_dpad_right.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                if (dPadSpeedAdjust >= 10) {
-                    dPadSpeedAdjust = 10;
-                } else {
-                    dPadSpeedAdjust += 1;
-                }
-                telemetry.addLine("Current speed: " + dPadSpeedAdjust);
-                telemetry.update();
-                changingWheelSpeed = false;
+        if( gamepad2.x) {
+            if(!changingState) {
+                timer_gp2_x.reset();
+                changingState = true;
+            } else if (timer_gp2_x.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_ITA);
+                changingState = false
             }
         }
-
-        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, (dPadSpeedAdjust/10)*gamepad2.right_stick_y);
+        if (gamepad2.y) {
+            if(!changingState) {
+                timer_gp2_y.reset();
+                changingState = true;
+            } else if (timer_gp2_y.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO);
+                changingState = false
+        }
+        if (gamepad2.b) {
+            if(!changingState) {
+                timer_gp2_b.reset();
+                changingState = true;
+            } else if (timer_gp2_b.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_6_PR);
+                changingState = false
+        }
+        myController.update();
     }
 
     public void getUserInput()
