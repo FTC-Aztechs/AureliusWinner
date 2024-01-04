@@ -30,6 +30,11 @@
 package org.firstinspires.ftc.teamcode.Meet5;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_ITA;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_4_BF;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.INTAKE;
 import static org.firstinspires.ftc.teamcode.Aura_DepositController.DepositState.Down;
@@ -113,9 +118,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
 
     Vector2d ParkPos = new Vector2d(51.5, 11.5);//50, 82
-
-    AuraIntakeOuttakeController myIntakeController;
-
+    
     double AfterGateHeading = -180;//90
 
     // Set these manually from the Robot once it is at AfterGatePos.
@@ -156,7 +159,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
     AuraRobot Aurelius = new AuraRobot();
     MecanumDrive BlueLong;
-    public AuraHeadingEstimator myHeadingEstimator;
+    
 
 
     private static FtcDashboard auraBoard;
@@ -169,7 +172,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
             double oldHeading = BlueLong.pose.heading.log();
             telemetry.addData("Old heading", Math.toDegrees(oldHeading));
-            double yaw = myHeadingEstimator.getYaw();
+            double yaw = Aurelius.myHeadingEstimator.getYaw();
             telemetry.addData("IMU Heading correction: ", Math.toDegrees(yaw - oldHeading));
             telemetry.addData("Corrected heading:", Math.toDegrees(yaw));
             telemetry.update();
@@ -293,7 +296,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         Aurelius.init(hardwareMap);
 
         BlueLong = new MecanumDrive(Aurelius.hwMap, StartPos);
-        myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, StartPos);
+        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, StartPos);
         ElapsedTime trajectoryTimer = new ElapsedTime(MILLISECONDS);
 
         auraBoard = FtcDashboard.getInstance();
@@ -306,11 +309,11 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
         //TODO: Initialize any essential starting motor/servo positions here
 
-        myIntakeController = new AureliusIntakeOuttakeController(hardwareMap);
-        myIntakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_ITA);
-        runTime.reset();
+        Aurelius.myIntakeController = new AuraIntakeOuttakeController(hardwareMap);
+        Aurelius.myIntakeController.setTargetState(STATE_3_ITA);
+        runtime.reset();
         while(runtime.seconds() < 1) {
-            myIntakeController.update();
+            Aurelius.myIntakeController.update();
         }
 
         telemetry.addData("Status: ", "Building Trajectories......");
@@ -335,7 +338,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
             telemetryTfod();
         }
 
-        myHeadingEstimator.resetYaw();
+        Aurelius.myHeadingEstimator.resetYaw();
 
         runtime.reset();
         if (opModeIsActive()) {
@@ -507,34 +510,34 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         telemetry.addData("Deposit State", "down");
         telemetry.update();
 
-        myIntakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_4_BF);
+        Aurelius.myIntakeController.setTargetState(STATE_4_BF);
         runtime.reset();
         while(runtime.milliseconds() < 500)
-            myIntakeController.update();
-        myIntakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO);
+            Aurelius.myIntakeController.update();
+        Aurelius.myIntakeController.setTargetState(STATE_5_RFO);
         runtime.reset();
         while(runtime.milliseconds() < 200)
-            myIntakeController.update();
-        myIntakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_6_PR);
+            Aurelius.myIntakeController.update();
+        Aurelius.myIntakeController.setTargetState(STATE_6_PR);
         runtime.reset();
         while(runtime.milliseconds() < 300)
-            myIntakeController.update();
-        myIntakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO);
+            Aurelius.myIntakeController.update();
+        Aurelius.myIntakeController.setTargetState(STATE_5_RFO);
         runtime.reset();
         while(runtime.milliseconds() < 200)
-            myIntakeController.update();
-        myIntakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_4_BF);
+            Aurelius.myIntakeController.update();
+        Aurelius.myIntakeController.setTargetState(STATE_4_BF);
         runtime.reset();
         while(runtime.milliseconds() < 200)
-            myIntakeController.update();
-        myIntakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_ITA);
-        runTime.reset();
+            Aurelius.myIntakeController.update();
+        Aurelius.myIntakeController.setTargetState(STATE_3_ITA);
+        runtime.reset();
         while(runtime.seconds() < 1) {
-            myIntakeController.update();
-        myIntakeController.setTargetState)STATE_1_RFI);
+            Aurelius.myIntakeController.update();
+        Aurelius.myIntakeController.setTargetState(STATE_1_RFI);
             runtime.reset();
             while(runtime.milliseconds() < 200)
-                myIntakeController.update();
+                Aurelius.myIntakeController.update();
         }
 
 

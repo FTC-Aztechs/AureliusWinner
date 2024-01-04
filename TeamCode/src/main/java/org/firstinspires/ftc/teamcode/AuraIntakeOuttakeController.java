@@ -60,7 +60,7 @@ public class AuraIntakeOuttakeController {
     private Servo   LeftFinger;
     private Servo   RightFinger;
 
-    enum ioState {
+    public enum ioState {
         STATE_1_RFI,    // State 1: Ready for Intake
         STATE_2_PS,     // State 2: Pixels Secured
         STATE_3_ITA,    // State 3: Intake tucked away (slides raised to minimum)
@@ -97,8 +97,8 @@ public class AuraIntakeOuttakeController {
 
         Wrist = hardwareMap.get(Servo.class, "tilt");
         Elbow = hardwareMap.get(Servo.class, "flip");
-        LeftFinger = hardwareMap.get(Servo.class, "lefty")
-        RightFinger = hardwareMap.get(Servo.class, "righty")
+        LeftFinger = hardwareMap.get(Servo.class, "lefty");
+        RightFinger = hardwareMap.get(Servo.class, "righty");
         Slide = hardwareMap.get(DcMotor.class, "slide");
 
         currState = ioState.STATE_1_RFI;
@@ -129,14 +129,14 @@ public class AuraIntakeOuttakeController {
                 command = slideDownPID.output(targetSlidePos, Slide.getCurrentPosition());
                 SlidePower = Math.max(command / (SLIDE_RAISE_HIGH - SLIDE_INTAKE_POS), SlidePower_Down);
             } else {
-                command = Mvrk_Robot.slideUpPID.output(targetSlidePos, Slide.getCurrentPosition());
+                command = slideUpPID.output(targetSlidePos, Slide.getCurrentPosition());
                 SlidePower = Math.min(command / (SLIDE_RAISE_HIGH - SLIDE_INTAKE_POS), SlidePower_Up);
             }
             Slide.setPower(SlidePower);
             currSlidePos = Slide.getCurrentPosition();
         }
         if(telemetry != null) {
-            telemetry.addData("AuraIOController: Current Slide position: %f", currPos);
+            telemetry.addData("AuraIOController: Current Slide position: %f", currSlidePos);
             telemetry.update();
         }
     }
@@ -163,49 +163,49 @@ public class AuraIntakeOuttakeController {
             case STATE_1_RFI:
                 targetSlidePos = SLIDE_INTAKE_POS;
                 updateSlide();
-                Wrist.setPosition(wristIntake);
-                LeftFinger.SetPosition(fingersUnlock); //unlock
-                RightFinger.SetPosition(fingersUnlock); //unlock
-                Elbow.setPosition(elbowDown);
+                Wrist.setPosition(WRIST_INTAKE);
+                LeftFinger.setPosition(FINGERS_UNLOCK); //unlock
+                RightFinger.setPosition(FINGERS_UNLOCK); //unlock
+                Elbow.setPosition(ELBOW_DOWN);
                 currState = targetState;
                 break;
             case STATE_2_PS:
                 targetSlidePos = SLIDE_INTAKE_POS;
                 updateSlide();
-                Wrist.setPosition(wristIntake);
-                LeftFinger.SetPosition(fingersLock); //lock
-                RightFinger.SetPosition(fingersLock); //lock
-                Elbow.setPosition(elbowDown);
+                Wrist.setPosition(WRIST_INTAKE);
+                LeftFinger.setPosition(FINGERS_LOCK); //lock
+                RightFinger.setPosition(FINGERS_LOCK); //lock
+                Elbow.setPosition(ELBOW_DOWN);
                 currState = targetState;
                 break;
             case STATE_3_ITA:
                 targetSlidePos = SLIDE_RAISE_LOW;
                 updateSlide();
-                Wrist.setPosition(wristTuck);
-                Elbow.setPosition(elbowDown);
+                Wrist.setPosition(WRIST_TUCK);
+                Elbow.setPosition(ELBOW_DOWN);
                 currState = targetState;
                 break;
             case STATE_4_BF:
                 targetSlidePos = SLIDE_RAISE_LOW;
                 updateSlide();
-                Wrist.setPosition(wristTuck);
-                Elbow.setPosition(elbowUp);
+                Wrist.setPosition(WRIST_TUCK);
+                Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
                 break;
             case STATE_5_RFO:
                 targetSlidePos = SLIDE_RAISE_LOW;
                 updateSlide();
-                Wrist.setPosition(wristOutake);
-                Elbow.setPosition(elbowUp);
+                Wrist.setPosition(WRIST_OUTTAKE);
+                Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
                 break;
             case STATE_6_PR:
                 targetSlidePos = SLIDE_RAISE_LOW;
                 updateSlide();
-                Wrist.setPosition(wristOutake);
-                Elbow.setPosition(elbowUp);
-                LeftFinger.SetPosition(fingersUnlock); //unlock
-                RightFinger.SetPosition(fingersUnlock); //unlock
+                Wrist.setPosition(WRIST_OUTTAKE);
+                Elbow.setPosition(ELBOW_UP);
+                LeftFinger.setPosition(FINGERS_UNLOCK); //unlock
+                RightFinger.setPosition(FINGERS_UNLOCK); //unlock
                 currState = targetState;
                 break;
             default:
@@ -231,7 +231,7 @@ public class AuraIntakeOuttakeController {
     public boolean validStateTransition()
     {
 
-        if (targetSTate == currState ) {
+        if (targetState == currState ) {
             return true;
         }
 
@@ -239,45 +239,45 @@ public class AuraIntakeOuttakeController {
             if(targetState == ioState.STATE_2_PS || targetState == ioState.STATE_3_ITA) {
                 return true;
             }
-            return  false;
+            return false;
         }
 
         if( currState == ioState.STATE_2_PS) {
             if(targetState == ioState.STATE_3_ITA) {
-                return =true;
+                return true;
             }
-            return = false;
+            return false;
         }
 
         if( currState == ioState.STATE_3_ITA ) {
             if(targetState == ioState.STATE_4_BF || targetState == ioState.STATE_1_RFI ){
-                return =true;
+                return true;
             }
-            return = false;
+            return false;
         }
 
         if( currState == ioState.STATE_4_BF ) {
             if(targetState == ioState.STATE_5_RFO || targetState == ioState.STATE_3_ITA){
-                return =true;
+                return true;
             }
-            return = false;
+            return false;
         }
 
         if( currState == ioState.STATE_5_RFO ) {
             if(targetState == ioState.STATE_6_PR || targetState == ioState.STATE_4_BF ){
-                return =true;
+                return true;
             }
-            return = false;
+            return false;
         }
 
         if( currState == ioState.STATE_6_PR ) {
             if( targetState == ioState.STATE_5_RFO ){
-                return =true;
+                return true;
             }
-            return = false;
+            return false;
         }
 
-        return = false;
+        return false;
     }
 
 }
