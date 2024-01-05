@@ -46,6 +46,7 @@ import android.annotation.SuppressLint;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -66,6 +67,11 @@ public class Aura_Manual extends LinearOpMode {
     private boolean changingLauncherSpeed = false;
 
     private boolean changingState = false;
+
+    public RevColorSensorV3 Left = null;
+
+    public RevColorSensorV3 Right = null;
+
 
 
     private int slide_currentPos = 0;
@@ -136,6 +142,7 @@ public class Aura_Manual extends LinearOpMode {
         while (opModeIsActive()) {
 //            AuraIntake();
 //            AuraLauncher();
+            AuraColor();
             AuraManualDrive();
 //            AuraManualHang();
             //AuraDeposit();
@@ -148,12 +155,24 @@ public class Aura_Manual extends LinearOpMode {
         FtcDashboard Dash = auraDashboard;
         Aurelius.boeing747.launcher.setPosition(Launcher_Set_Pos);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        Left = hardwareMap.get(RevColorSensorV3.class, "Left");
+        Right = hardwareMap.get(RevColorSensorV3.class,"Right");
+
         telemetry.addLine("Status: Robot is ready to roll!");
         telemetry.update();
 
         return;
     }
 
+    public void AuraColor() {
+        Left.initialize();
+        Right.initialize();
+        Left.enableLed(true);
+        Right.enableLed(true);
+        Left.getLightDetected();
+
+
+    }
     public void AuraManualDrive() {
         // changing the speed
         if (gamepad1.dpad_left) {
@@ -284,6 +303,8 @@ public class Aura_Manual extends LinearOpMode {
         }
 
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(dPadIntakeAdjust/10)* gamepad2.right_stick_y);
+        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (dPadIntakeAdjust / 10) * gamepad2.right_stick_y);
+
     }
 
     @SuppressLint("SuspiciousIndentation")

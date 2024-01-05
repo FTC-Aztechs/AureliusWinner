@@ -39,6 +39,7 @@
 //import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_RIGHT;
 //import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
 //import static org.firstinspires.ftc.teamcode.AuraRobot.bumperSpeedAdjust;
+//import static org.firstinspires.ftc.teamcode.AuraRobot.dPadIntakeAdjust;
 //import static org.firstinspires.ftc.teamcode.AuraRobot.dPadSpeedAdjust;
 //import static org.firstinspires.ftc.teamcode.AuraRobot.speedAdjust;
 //import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -48,6 +49,7 @@
 //import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 //import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 //import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+//import com.qualcomm.robotcore.hardware.CRServo;
 //import com.qualcomm.robotcore.hardware.Servo;
 //import com.qualcomm.robotcore.util.ElapsedTime;
 //
@@ -104,6 +106,8 @@
 //    private static ElapsedTime timer_gp2_b = new ElapsedTime();
 //
 //    public Servo test;
+//
+//    public CRServo Roller;
 //
 //    boolean changingWheelSpeed = false;
 //    boolean targetFound = false;    // Set to true when an AprilTag target is detected
@@ -402,6 +406,46 @@
 //                    sandboxMode = SandboxMode.SMD_INTAKE_OUTTAKE;
 //                }
 //                idle();
+//            }
+//
+//            public void AuraIntake() {
+//                Roller = hardwareMap.get(CRServo.class, "Roller");
+//                if (gamepad2.dpad_left) {
+//                    if (!changingState) {
+//                        timer_gp2_dpad_left.reset();
+//                        changingState = true;
+//                    } else if (timer_gp2_dpad_left.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+//                        if (dPadIntakeAdjust <= 1) {
+//                            dPadIntakeAdjust = 1;
+//                        } else {
+//                            dPadIntakeAdjust -= 1;
+//                        }
+//                        telemetry.addLine("Current intake speed: " + dPadIntakeAdjust);
+//                        telemetry.update();
+//                        changingState = false;
+//                    }
+//                }
+//
+//                //gamepad right -> increase wheel speed
+//                if (gamepad2.dpad_right) {
+//                    if (!changingState) {
+//                        timer_gp2_dpad_right.reset();
+//                        changingState = true;
+//                    } else if (timer_gp2_dpad_right.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+//                        if (dPadIntakeAdjust >= 10) {
+//                            dPadIntakeAdjust = 10;
+//                        } else {
+//                            dPadIntakeAdjust += 1;
+//                        }
+//                        telemetry.addLine("Current speed: " + (dPadIntakeAdjust / 10));
+//                        telemetry.addLine("Current GP2Y: " + (gamepad2.right_stick_y));
+//                        telemetry.update();
+//                        changingState = false;
+//                    }
+//                }
+//
+//                Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(dPadIntakeAdjust/10)* gamepad2.right_stick_y);
+//                Roller.setPower((dPadIntakeAdjust/10) * gamepad2.right_stick_y);
 //            }
 //
 //            public void SandboxManualDrive () {

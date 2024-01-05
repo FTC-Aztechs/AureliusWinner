@@ -31,7 +31,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -52,6 +55,7 @@ public class AuraRobot
         UPPER_RIGHT,
         LOWER_RIGHT,
         INTAKE,
+        ROLLER,
         HANG,
         ALL_DRIVES,
         ALL_ATTACHMENTS,
@@ -65,6 +69,8 @@ public class AuraRobot
     public DcMotor Lower_Right = null;
 
     public DcMotor intakeMotor = null;
+    public CRServo Roller = null;
+
 
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
@@ -96,6 +102,10 @@ public class AuraRobot
     public static double motorTicks  = 537.7;
     public static double numRotations = 25;
 
+    public RevColorSensorV3 Left = null;
+
+    public RevColorSensorV3 Right = null;
+
     //claw variables
     public static double Launcher_Set_Pos = 0;
     public static double Launcher_Fire_Pos = 1;
@@ -116,7 +126,6 @@ public class AuraRobot
     public static double HangIdle = 0; //0
     public static double FunkyIdle = 0.9;
     public static double FunkyUp = 0.57;
-
     public static double APRILTAG_TIMEOUT = 5;
 
    //------------------------------------------------------------
@@ -141,13 +150,17 @@ public class AuraRobot
         Lower_Left = hwMap.get(DcMotor.class, "Lower_Left");
         Lower_Right = hwMap.get(DcMotor.class, "Lower_Right");
         intakeMotor = hwMap.get(DcMotor.class, "intakeMotor");
-
+        Roller = hwMap.get(CRServo.class, "Roller");
+        // Define and Initialize Color Sensors
+        Left = hwMap.get(RevColorSensorV3.class, "Left");
+        Right = hwMap.get(RevColorSensorV3.class,"Right");
         // Set all motors to zero power
         Upper_Left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Upper_Right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Lower_Left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Lower_Right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -204,6 +217,7 @@ public class AuraRobot
             case LOWER_RIGHT:
                 Lower_Right.setMode(eMode);
                 break;
+
 //            case CAT_MOUSE:
 //                Jerry.setMode(eMode);
 //                Tom.setMode(eMode);
@@ -246,6 +260,8 @@ public class AuraRobot
             case INTAKE:
                 intakeMotor.setPower(dPower);
                 break;
+            case ROLLER:
+                Roller.setPower(dPower);
             case ALL_DRIVES:
                 Lower_Right.setPower(dPower);
                 Lower_Left.setPower(dPower);
