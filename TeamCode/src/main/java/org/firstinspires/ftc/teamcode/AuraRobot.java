@@ -33,6 +33,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -104,7 +105,7 @@ public class AuraRobot
 
     public RevColorSensorV3 Left = null;
 
-    public RevColorSensorV3 Right = null;
+    public ColorRangeSensor Right = null;
 
     //claw variables
     public static double Launcher_Set_Pos = 0;
@@ -153,7 +154,7 @@ public class AuraRobot
         Roller = hwMap.get(CRServo.class, "Roller");
         // Define and Initialize Color Sensors
         Left = hwMap.get(RevColorSensorV3.class, "Left");
-        Right = hwMap.get(RevColorSensorV3.class,"Right");
+        Right = hwMap.get(ColorRangeSensor.class,"Right");
         // Set all motors to zero power
         Upper_Left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Upper_Right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -49,6 +49,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.concurrent.TimeUnit;
@@ -70,7 +71,7 @@ public class Aura_Manual extends LinearOpMode {
 
     public RevColorSensorV3 Left = null;
 
-    public RevColorSensorV3 Right = null;
+    public ColorRangeSensor Right = null;
 
 
 
@@ -153,10 +154,10 @@ public class Aura_Manual extends LinearOpMode {
 
     public void initAurelius() {
         FtcDashboard Dash = auraDashboard;
-        Aurelius.boeing747.launcher.setPosition(Launcher_Set_Pos);
+//        Aurelius.boeing747.launcher.setPosition(Launcher_Set_Pos);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Left = hardwareMap.get(RevColorSensorV3.class, "Left");
-        Right = hardwareMap.get(RevColorSensorV3.class,"Right");
+        Right = hardwareMap.get(ColorRangeSensor.class,"Right");
 
         telemetry.addLine("Status: Robot is ready to roll!");
         telemetry.update();
@@ -166,7 +167,6 @@ public class Aura_Manual extends LinearOpMode {
 
     public void AuraColor() {
         Left.initialize();
-        Right.initialize();
         Left.enableLed(true);
         Right.enableLed(true);
         Left.getLightDetected();
