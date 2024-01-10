@@ -183,7 +183,7 @@ public class Aura_Sandbox extends LinearOpMode
 
         Aurelius.setRunMode(LOWER_LEFT, RUN_WITHOUT_ENCODER);
         Aurelius.setRunMode(UPPER_RIGHT, RUN_WITHOUT_ENCODER);
-        Aurelius.setRunMode(LOWER_RIGHT, RUN_WITHOUT_ENCODER    );
+        Aurelius.setRunMode(LOWER_RIGHT, RUN_WITHOUT_ENCODER);
 
 
         telemetry.addData("Left Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_LEFT));

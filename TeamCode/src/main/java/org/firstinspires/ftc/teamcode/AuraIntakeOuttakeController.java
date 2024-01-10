@@ -73,6 +73,9 @@ public class AuraIntakeOuttakeController {
     ioState targetState;
     double targetSlidePos;
     double currSlidePos;
+    public static AuraPIDController liftController = new AuraPIDController(11, 0, 0.25, 3600);
+
+
     double SlidePower;
 
     public static double LEFT_FINGER_LOCK = 0.75;
@@ -80,7 +83,6 @@ public class AuraIntakeOuttakeController {
     public static double LEFT_FINGER_UNLOCK = 0.6;
     public static double RIGHT_FINGER_UNLOCK = 0.4;
     public static double WRIST_INTAKE = 0.5;
-    public static double WRIST_OUTTAKE = 0.5;
     public static double WRIST_TUCK = 0.8;
     public static double ELBOW_DOWN = 0.025;
     public static double ELBOW_UP = 0.55;
@@ -126,22 +128,22 @@ public class AuraIntakeOuttakeController {
 
     public void updateSlide() {
 
-//        if(currSlidePos != targetSlidePos ) {
-//            double command = 0;
-//            if (targetSlidePos < currSlidePos) {
-//                command = slideDownPID.output(targetSlidePos, Slide.getCurrentPosition());
-//                SlidePower = Math.max(command / (SLIDE_RAISE_HIGH - SLIDE_INTAKE_POS), SlidePower_Down);
-//            } else {
-//                command = slideUpPID.output(targetSlidePos, Slide.getCurrentPosition());
-//                SlidePower = Math.min(command / (SLIDE_RAISE_HIGH - SLIDE_INTAKE_POS), SlidePower_Up);
-//            }
-//            Slide.setPower(SlidePower);
-//            currSlidePos = Slide.getCurrentPosition();
-//        }
-//        if(telemetry != null) {
-//            telemetry.addData("AuraIOController: Current Slide position: %f", currSlidePos);
-//            telemetry.update();
-//        }
+        if(currSlidePos != targetSlidePos ) {
+            double command = liftController.output(targetSlidePos, Slide.getCurrentPosition());
+            if (targetSlidePos < currSlidePos) {
+                command = slideDownPID.output(targetSlidePos, Slide.getCurrentPosition());
+                SlidePower = Math.max(command / (SLIDE_RAISE_HIGH - SLIDE_INTAKE_POS), SlidePower_Down);
+            } else {
+                command = slideUpPID.output(targetSlidePos, Slide.getCurrentPosition());
+                SlidePower = Math.min(command / (SLIDE_RAISE_HIGH - SLIDE_INTAKE_POS), SlidePower_Up);
+            }
+            Slide.setPower(SlidePower);
+            currSlidePos = Slide.getCurrentPosition();
+        }
+        if(telemetry != null) {
+            telemetry.addData("AuraIOController: Current Slide position: %f", currSlidePos);
+            telemetry.update();
+        }
     }
     public void update() {
 
@@ -169,7 +171,7 @@ public class AuraIntakeOuttakeController {
                 Wrist.setPosition(WRIST_INTAKE);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
-                Elbow.setPosition(ELBOW_DOWN);
+                Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
                 break;
             case STATE_2_PS:
@@ -185,6 +187,8 @@ public class AuraIntakeOuttakeController {
                 targetSlidePos = SLIDE_RAISE_LOW;
                 updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
+                LeftFinger.setPosition(LEFT_FINGER_LOCK); //lock
+                RightFinger.setPosition(RIGHT_FINGER_LOCK); //lock
                 Elbow.setPosition(ELBOW_DOWN);
                 currState = targetState;
                 break;
@@ -198,14 +202,14 @@ public class AuraIntakeOuttakeController {
             case STATE_5_RFO:
                 targetSlidePos = SLIDE_RAISE_LOW;
                 updateSlide();
-                Wrist.setPosition(WRIST_OUTTAKE);
+                Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
                 break;
             case STATE_6_PR:
                 targetSlidePos = SLIDE_RAISE_LOW;
                 updateSlide();
-                Wrist.setPosition(WRIST_OUTTAKE);
+                Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
@@ -214,7 +218,7 @@ public class AuraIntakeOuttakeController {
             default:
                 break;
         }
-
+//
 //        if(currSlidePos != targetSlidePos) {
 //            double command = liftController.output(targetSlidePos, SlideMotor.getCurrentPosition());
 //            double slidePower = (targetSlidePos < currSlidePos) ?

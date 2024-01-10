@@ -104,7 +104,7 @@ public class AuraRobot
     public static double numRotations = 25;
 
     public RevColorSensorV3 Left = null;
-
+//turn off color unless being used?
     public ColorRangeSensor Right = null;
 
     //claw variables
