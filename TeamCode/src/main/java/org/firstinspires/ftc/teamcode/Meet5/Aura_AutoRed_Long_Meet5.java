@@ -651,22 +651,20 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
             telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
             telemetry.update();
 
-            double deltaX = (RangeCalibrated          * Math.sin(Math.toRadians(BearingCalibrated))) -
+            double currX = desiredTag.metadata.fieldPosition.getData()[0] -
                             (desiredTag.ftcPose.range * Math.sin(Math.toRadians(desiredTag.ftcPose.bearing)));
 
-            double deltaY = (RangeCalibrated          * Math.cos(Math.toRadians(BearingCalibrated))) -
+            double currY = desiredTag.metadata.fieldPosition.getData()[1] -
                             (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
 
 
             double deltaHeading = desiredTag.ftcPose.yaw - YawCalibrated;
 
-            double currX = RedLong.pose.position.x;
-            double currY = RedLong.pose.position.y;
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", RedLong.pose.position.x, RedLong.pose.position.y, Math.toDegrees(RedLong.pose.heading.log()));
-            telemetry.addData("Deltas", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", deltaX, deltaY, deltaHeading);
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(RedLong.pose.heading.log()));
+//            telemetry.addData("Deltas", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", deltaX, deltaY, deltaHeading);
             telemetry.update();
 
-            RedLong.pose = new Pose2d(AfterGateTagPos.x + deltaX, AfterGateTagPos.y - deltaY,Math.toRadians(-90) - Math.toRadians(deltaHeading));
+            RedLong.pose = new Pose2d(currX, currY,Math.toRadians(-90) - Math.toRadians(deltaHeading));
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", RedLong.pose.position.x, RedLong.pose.position.y, Math.toDegrees(RedLong.pose.heading.log()));
             telemetry.update();
             return true;
