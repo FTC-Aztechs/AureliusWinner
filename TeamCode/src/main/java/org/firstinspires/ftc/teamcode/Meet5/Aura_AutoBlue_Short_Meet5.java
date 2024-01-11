@@ -363,7 +363,8 @@ public class Aura_AutoBlue_Short_Meet5 extends LinearOpMode {
                 .build();
 
         trajPos3Purple = BlueShort.actionBuilder(StartPos)
-                .splineToLinearHeading(Purple3Pos, Math.toRadians(-90))
+                .setTangent(-80)
+                .splineToLinearHeading(Purple3Pos, Math.toRadians(-130))
                 .build();
     }
 

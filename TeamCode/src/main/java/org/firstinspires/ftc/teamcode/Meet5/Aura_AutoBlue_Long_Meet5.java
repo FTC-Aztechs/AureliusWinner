@@ -359,7 +359,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffPurplePixel();
+//                                            dropOffPurplePixel();
                                             return false;
                                         }
                                     },
@@ -367,7 +367,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffYellowPixel();
+//                                            dropOffYellowPixel();
                                             return false;
                                         }
                                     }
@@ -382,7 +382,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffPurplePixel();
+//                                            dropOffPurplePixel();
                                             return false;
                                         }
                                     },
@@ -390,7 +390,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffYellowPixel();
+//                                            dropOffYellowPixel();
                                             return false;
                                         }
                                     },
@@ -406,7 +406,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffPurplePixel();
+//                                            dropOffPurplePixel();
                                             return false;
                                         }
                                     },
@@ -414,7 +414,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffYellowPixel();
+//                                            dropOffYellowPixel();
                                             return false;
                                         }
                                     },

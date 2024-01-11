@@ -334,8 +334,8 @@ public class Aura_AutoRed_Short_Meet4 extends LinearOpMode {
     void buildPurpleTrajectories()
     {
         trajPos1Purple = RedShort.actionBuilder(StartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(Purple1Pos, Math.toRadians(30))
+                .setTangent(Math.toRadians(-80))
+                .splineToLinearHeading(Purple1Pos, Math.toRadians(-130))
                 .build();
 
         trajPos2Purple = RedShort.actionBuilder(StartPos)

@@ -42,6 +42,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TangentPath;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -124,6 +125,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
     private static final double LEFT_SPIKEMARK_BOUNDARY_X = 250;
     private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 260;
 
+    public static double TangentAngle = -90;
     public static double SplineAngle = 90;
     public static int PurpleDropOffPos = 0;
 
@@ -139,7 +141,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
         @Override
         public boolean run(TelemetryPacket tPkt) {
 
-            double oldHeading =RedShort.pose.heading.log();
+            double oldHeading = RedShort.pose.heading.log();
             telemetry.addData("Old heading", Math.toDegrees(oldHeading));
             double yaw = myHeadingEstimator.getYaw();
             telemetry.addData("IMU Heading correction: ", Math.toDegrees(yaw - oldHeading));
@@ -280,7 +282,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
 
         runtime.reset();
         if (opModeIsActive()) {
-            DetectPurpleDropoffPos();
+//            DetectPurpleDropoffPos();
             visionPortal.close();
 
             //TODO: Run Trajectories
@@ -292,7 +294,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffPurplePixel();
+//                                            dropOffPurplePixel();
                                             return false;
                                         }
                                     },
@@ -300,7 +302,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffYellowPixel();
+//                                            dropOffYellowPixel();
                                             return false;
                                         }
                                     }
@@ -315,7 +317,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffPurplePixel();
+//                                            dropOffPurplePixel();
                                             return false;
                                         }
                                     },
@@ -323,7 +325,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffYellowPixel();
+//                                            dropOffYellowPixel();
                                             return false;
                                         }
                                     },
@@ -339,7 +341,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffPurplePixel();
+//                                            dropOffPurplePixel();
                                             return false;
                                         }
                                     },
@@ -347,7 +349,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
                                     new Action() {
                                         @Override
                                         public boolean run(TelemetryPacket tPkt) {
-                                            dropOffYellowPixel();
+//                                            dropOffYellowPixel();
                                             return false;
                                         }
                                     },
@@ -371,8 +373,8 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
                 .build();
 
         trajPos3Purple = RedShort.actionBuilder(StartPos)
-                .setTangent(Math.toRadians(-70))
-                .splineToLinearHeading(Purple3Pos, Math.toRadians(0))
+                .setTangent(Math.toRadians(TangentAngle))
+                .splineToLinearHeading(Purple3Pos, Math.toRadians(SplineAngle))
                 .build();
     }
 
