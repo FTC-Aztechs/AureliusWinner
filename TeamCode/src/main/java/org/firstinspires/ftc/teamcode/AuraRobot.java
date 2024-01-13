@@ -56,6 +56,7 @@ public class AuraRobot
         UPPER_RIGHT,
         LOWER_RIGHT,
         INTAKE,
+        SLIDE,
         ROLLER,
         HANG,
         ALL_DRIVES,
@@ -69,6 +70,7 @@ public class AuraRobot
     public DcMotor Lower_Left = null;
     public DcMotor Lower_Right = null;
 
+    public DcMotor Slide = null;
     public DcMotor intakeMotor = null;
     public CRServo Roller = null;
 
@@ -151,6 +153,7 @@ public class AuraRobot
         Lower_Left = hwMap.get(DcMotor.class, "Lower_Left");
         Lower_Right = hwMap.get(DcMotor.class, "Lower_Right");
         intakeMotor = hwMap.get(DcMotor.class, "intakeMotor");
+        Slide = hwMap.get(DcMotor.class, "Slide");
         Roller = hwMap.get(CRServo.class, "Roller");
         // Define and Initialize Color Sensors
         Left = hwMap.get(RevColorSensorV3.class, "Left");
@@ -171,6 +174,7 @@ public class AuraRobot
         Lower_Right.setDirection(DcMotor.Direction.FORWARD); //+ used to be
 
         intakeMotor.setDirection(DcMotor.Direction.FORWARD); //- used to be
+        Slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         Pose2d initPose2d = new Pose2d(0,0,0);

@@ -139,9 +139,11 @@ public class AuraIntakeOuttakeController {
             }
             Slide.setPower(SlidePower);
             currSlidePos = Slide.getCurrentPosition();
+            targetSlidePos = Slide.getTargetPosition();
         }
         if(telemetry != null) {
             telemetry.addData("AuraIOController: Current Slide position: %f", currSlidePos);
+            telemetry.addData("TargetSlidePos:" , targetSlidePos);
             telemetry.update();
         }
     }

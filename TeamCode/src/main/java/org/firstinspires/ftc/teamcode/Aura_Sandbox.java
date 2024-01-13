@@ -32,9 +32,12 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Hang;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.ALL_DRIVES;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.HANG;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.LOWER_LEFT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.LOWER_RIGHT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.SLIDE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_LEFT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_RIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
@@ -43,6 +46,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.dPadIntakeAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.dPadSpeedAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.speedAdjust;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
+import android.transition.Slide;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -134,7 +139,7 @@ public class Aura_Sandbox extends LinearOpMode
         APRIL,
         SERVOTESTER
     }
-    public static SandboxMode sandboxMode = SandboxMode.SERVOTESTER;
+    public static SandboxMode sandboxMode = SandboxMode.SMD_INTAKE_OUTTAKE;
 
 //    public static class CameraStreamProcessor implements VisionProcessor, CameraStreamSource {
 //        private final AtomicReference<Bitmap> lastFrame =
@@ -244,6 +249,7 @@ public class Aura_Sandbox extends LinearOpMode
             telemetry.addData("Left Tracking wheel: ", -Aurelius.getCurrentPosition(LOWER_LEFT));
             telemetry.addData("Right Tracking wheel: ", Aurelius.getCurrentPosition(UPPER_RIGHT));
             telemetry.addData("Strafe Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_RIGHT));
+            telemetry.addData("Slide Pos: ", Aurelius.getCurrentPosition(SLIDE));
             telemetry.update();
         }
     }
@@ -632,7 +638,7 @@ public class Aura_Sandbox extends LinearOpMode
                 timer_gp2_a.reset();
                 changingState = true;
             } else if (timer_gp2_a.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                Aurelius.hanger.setTargetState(AuraHangController.HangState.Hang);
+                Aurelius.hanger.setTargetState(Hang);
                 telemetry.addData("State ", " Hang");
 
                 changingState = false;
