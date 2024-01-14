@@ -243,8 +243,8 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
         //   Option 3: Ditch the VisionProcessor and use EasyOpenCV directly
 
         Aurelius.init(hardwareMap);
-        RedShort = new MecanumDrive(Aurelius.hwMap, StartPos);
-        myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, StartPos);
+        RedShort = new MecanumDrive(Aurelius.hwMap, redStartPos);
+        myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, redStartPos);
         ElapsedTime trajectoryTimer = new ElapsedTime(MILLISECONDS);
 
         auraBoard = FtcDashboard.getInstance();
@@ -382,7 +382,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
     {
         trajPos3Yellow = RedShort.actionBuilder(redPurple3Pos)
                 .stopAndAdd(rectifyHeadingError)
-                .lineToLinearHeading(new Pose2d(10,-38.5, Math.toRadians(0)))
+                .strafeTo(new Vector2d(10,-38.5))
                 .setTangent(Math.toRadians(-90))
                 .splineToLinearHeading(redYellow3Pos, Math.toRadians(90))
                 .build();
@@ -406,15 +406,15 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
 
     void buildParkTrajectories()
     {
-        trajPos1ToPark = RedShort.actionBuilder(redYellow1Pos)
-                .strafeTo(redParkPos)
-                .build();
-
-        trajPos2ToPark = RedShort.actionBuilder(redYellow2Pos)
-                .strafeTo(redParkPos)
-                .build();
-
         trajPos3ToPark = RedShort.actionBuilder(redYellow3Pos)
+                .strafeTo(redParkPos)
+                .build();
+
+        trajPos2ToPark = RedShort.actionBuilder(new Pose2d(redYellow2Pos.x, redYellow2Pos.y, Math.toRadians(0)))
+                .strafeTo(redParkPos)
+                .build();
+
+        trajPos1ToPark = RedShort.actionBuilder(new Pose2d(redYellow1Pos.x, redYellow1Pos.y, Math.toRadians(0)))
                 .strafeTo(redParkPos)
                 .build();
     }

@@ -282,6 +282,10 @@ public class AuraRobot
                 break;
             case ROLLER:
                 Roller.setPower(dPower);
+                break;
+            case SLIDE:
+                Slide.setPower(dPower);
+                break;
             case ALL_DRIVES:
                 Lower_Right.setPower(dPower);
                 Lower_Left.setPower(dPower);

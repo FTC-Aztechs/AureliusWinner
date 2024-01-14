@@ -295,8 +295,8 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
         Aurelius.init(hardwareMap);
 
-        BlueLong = new MecanumDrive(Aurelius.hwMap, StartPos);
-        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, StartPos);
+        BlueLong = new MecanumDrive(Aurelius.hwMap, blueStartPos);
+        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, blueStartPos);
         ElapsedTime trajectoryTimer = new ElapsedTime(MILLISECONDS);
 
         auraBoard = FtcDashboard.getInstance();
@@ -469,9 +469,9 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                 .strafeTo(blueYellow2Pos)
                 .build();
 
-        trajPos3Yellow = BlueLong.actionBuilder(blueYellow3Pos)
+        trajPos3Yellow = BlueLong.actionBuilder(bluePurple3Pos)
                 .setTangent(Math.toRadians(90))
-                .lineToLinearHeading(new Pose2d(-34,34.5, Math.toRadians(180)))
+                .lineToX(-34)
                 .strafeTo(blueBeforeGatePos3)
                 .turn(Math.toRadians(180))
                 .stopAndAdd(rectifyHeadingError)
@@ -484,11 +484,11 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
     void buildParkTrajectories()
     {
-        trajPos1ToPark = BlueLong.actionBuilder(blueYellow1Pos)
+        trajPos1ToPark = BlueLong.actionBuilder(new Pose2d(blueYellow1Pos.x, blueYellow1Pos.y, Math.toRadians(0)))
                 .splineToLinearHeading(blueParkPos,Math.toRadians(0))
                 .build();
 
-        trajPos2ToPark = BlueLong.actionBuilder(blueYellow2Pos)
+        trajPos2ToPark = BlueLong.actionBuilder(new Pose2d(blueYellow2Pos.x, blueYellow2Pos.y, Math.toRadians(0)))
                 .splineToLinearHeading(blueParkPos,Math.toRadians(0))
                 .build();
 
@@ -716,7 +716,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
             telemetry.addData("Deltas", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", deltaX, deltaY, deltaHeading);
             telemetry.update();
 
-            BlueLong.pose = new Pose2d(AfterGateTagPos.x + deltaX, AfterGateTagPos.y + deltaY,Math.toRadians(90) + Math.toRadians(deltaHeading));
+            BlueLong.pose = new Pose2d(blueAfterGateTagPos.x + deltaX, blueAfterGateTagPos.y + deltaY,Math.toRadians(90) + Math.toRadians(deltaHeading));
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
             return true;

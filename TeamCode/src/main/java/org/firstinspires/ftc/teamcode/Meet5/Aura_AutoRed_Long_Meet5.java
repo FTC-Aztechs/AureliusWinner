@@ -284,8 +284,8 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
         //   Option 3: Ditch the VisionProcessor and use EasyOpenCV directly
 
         Aurelius.init(hardwareMap);
-        RedLong = new MecanumDrive(Aurelius.hwMap, StartPos);
-        myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, StartPos);
+        RedLong = new MecanumDrive(Aurelius.hwMap, redStartPos);
+        myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, redStartPos);
         ElapsedTime trajectoryTimer = new ElapsedTime(MILLISECONDS);
 
         auraBoard = FtcDashboard.getInstance();
@@ -417,6 +417,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
         trajPos2Purple = RedLong.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(redPurple2Pos, Math.toRadians(90))
+                .build();
 
         trajPos1Purple = RedLong.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(80))
@@ -428,7 +429,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
     {
         trajPos3Yellow = RedLong.actionBuilder(redPurple3Pos)
                 .setReversed(false)
-                .lineToLinearHeading(new Pose2d(-38,-34.5, Math.toRadians(0)))
+                .lineToX(-38)
                 .strafeTo(redBeforeGatePos3)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redAfterGateTagPos)
@@ -452,7 +453,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
 
         trajPos1Yellow = RedLong.actionBuilder(redPurple1Pos)
                 .setTangent(Math.toRadians(-90))
-                .lineToLinearHeading(new Pose2d(-34,-34.5, Math.toRadians(-180)))
+                .lineToX(-34)
                 .strafeTo(redBeforeGatePos1)
                 .turn(Math.toRadians(-180))
                 .stopAndAdd(rectifyHeadingError)
@@ -465,11 +466,11 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
 
     void buildParkTrajectories()
     {
-        trajPos3ToPark = RedLong.actionBuilder(redYellow3Pos)
+        trajPos3ToPark = RedLong.actionBuilder((new Pose2d(redYellow3Pos.x, redYellow3Pos.y, Math.toRadians(0))))
                 .splineToLinearHeading(redParkPos,Math.toRadians(0))
                 .build();
 
-        trajPos2ToPark = RedLong.actionBuilder(redYellow2Pos)
+        trajPos2ToPark = RedLong.actionBuilder((new Pose2d(redYellow2Pos.x, redYellow2Pos.y, Math.toRadians(0))))
                 .splineToLinearHeading(redParkPos,Math.toRadians(0))
                 .build();
 
