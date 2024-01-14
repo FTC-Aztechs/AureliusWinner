@@ -100,24 +100,24 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
     //to find heading: add -90 degrees to field centric start pos heading
 
 
-    Pose2d StartPos = new Pose2d(-36,61.5,Math.toRadians(-90));//0,0,0
+    Pose2d blueStartPos = new Pose2d(-36,61.5,Math.toRadians(-90));//0,0,0
 
-    Pose2d Purple1Pos = new Pose2d(-34, 33.5, Math.toRadians(0));//28,2,90
-    Pose2d Purple2Pos = new Pose2d(-59, 25.5, Math.toRadians(0));//36,-14,90
-    Pose2d Purple3Pos = new Pose2d(-55, 33.5, Math.toRadians(0));//28,-19,90
+    Pose2d bluePurple3Pos = new Pose2d(-38, 34.5 , Math.toRadians(-180)); //27,19,-90
+    Pose2d bluePurple2Pos = new Pose2d(-31, 33, Math.toRadians(-90));  //37,12,-90
+    Pose2d bluePurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
 
-    Vector2d BeforeGatePos1 = new Vector2d(-34,11.5);//50,2
-    Vector2d BeforeGatePos2 = new Vector2d(-50, 11.5);//50,-14
-    Vector2d BeforeGatePos3 = new Vector2d(-55, 11.5);//50,-19
-    Vector2d AfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
-    Vector2d AfterGatePos = new Vector2d(32, 11.5);//50,68
+    Vector2d blueBeforeGatePos1 = new Vector2d(-38,11.5);//50,2
+    Vector2d blueBeforeGatePos2 = new Vector2d(-50, 11.5);//50,-14
+    Vector2d blueBeforeGatePos3 = new Vector2d(-34, 11.5);//50,-19
+    Vector2d blueAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
+    Vector2d blueAfterGatePos = new Vector2d(32, 11.5);//50,68
 
-    Pose2d Yellow1Pos = new Pose2d(51.5, 39.5, Math.toRadians(-180));//22,87.5,-90
-    Pose2d Yellow2Pos = new Pose2d(51.5, 33.5, Math.toRadians(-180));//22,87.5,-90
-    Pose2d Yellow3Pos = new Pose2d(51.5, 28.5, Math.toRadians(-180));//22,87.5, -90
+    Vector2d blueYellow1Pos = new Vector2d(45, 42);  //27,37,-90
+    Vector2d blueYellow2Pos = new Vector2d(45, 35.5);   //26,37,-90
+    Pose2d blueYellow3Pos = new Pose2d(45,28.5,Math.toRadians(0));    //33,37,-90
 
 
-    Vector2d ParkPos = new Vector2d(51.5, 11.5);//50, 82
+    Pose2d blueParkPos = new Pose2d(51.5, 11.5,Math.toRadians(0));//50, 82
     
     double AfterGateHeading = -180;//90
 
@@ -427,73 +427,73 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
     void buildPurpleTrajectories()
     {
-        trajPos1Purple = BlueLong.actionBuilder(StartPos)
+        trajPos1Purple = BlueLong.actionBuilder(blueStartPos)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(Purple1Pos, Math.toRadians(30))
+                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-90))
                 .build();
 
-        trajPos2Purple = BlueLong.actionBuilder(StartPos)
-                .setTangent(Math.toRadians(-70))
-                .splineToLinearHeading(Purple2Pos, Math.toRadians(0))
+        trajPos2Purple = BlueLong.actionBuilder(blueStartPos)
+                .setTangent(Math.toRadians(0))
+                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-90))
                 .build();
 
-        trajPos3Purple = BlueLong.actionBuilder(StartPos)
-                .setTangent(Math.toRadians(-70))
-                .splineToLinearHeading(Purple3Pos, Math.toRadians(0))
+        trajPos3Purple = BlueLong.actionBuilder(blueStartPos)
+                .setTangent(Math.toRadians(-80))
+                .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-130))
                 .build();
     }
 
     void buildYellowTrajectories()
     {
-        trajPos1Yellow = BlueLong.actionBuilder(Purple1Pos)
+        trajPos1Yellow = BlueLong.actionBuilder(bluePurple1Pos)
                 .setReversed(false)
                 .lineToX(-38)
-                .strafeTo(BeforeGatePos1)
+                .strafeTo(blueBeforeGatePos1)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(AfterGateTagPos)
+                .strafeTo(blueAfterGateTagPos)
                 .stopAndAdd(updateAfterGatePos)
-                .splineToLinearHeading(new Pose2d(ParkPos.x, ParkPos.y, Math.toRadians(-180)), Math.toRadians(90))
+                .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(new Vector2d(Yellow1Pos.component1().x,Yellow1Pos.component1().y))
+                .strafeTo(blueYellow1Pos)
                 .build();
 
-        trajPos2Yellow = BlueLong.actionBuilder(Purple2Pos)
-                .setReversed(false)
-                .lineToX(-54)
-                .strafeTo(BeforeGatePos2)
+        trajPos2Yellow = BlueLong.actionBuilder(bluePurple2Pos)
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-50,45, Math.toRadians(0)),Math.toRadians(180))
+                .strafeTo(blueBeforeGatePos2)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(AfterGateTagPos)
+                .strafeTo(blueAfterGateTagPos)
                 .stopAndAdd(updateAfterGatePos)
-                .splineToLinearHeading(new Pose2d(ParkPos.x, ParkPos.y, Math.toRadians(-180)), Math.toRadians(90))
+                .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(new Vector2d(Yellow2Pos.component1().x,Yellow2Pos.component1().y))
+                .strafeTo(blueYellow2Pos)
                 .build();
 
-        trajPos3Yellow = BlueLong.actionBuilder(Purple3Pos)
-                .setReversed(false)
-                .lineToX(-57)
-                .strafeTo(BeforeGatePos3)
+        trajPos3Yellow = BlueLong.actionBuilder(blueYellow3Pos)
+                .setTangent(Math.toRadians(90))
+                .lineToLinearHeading(new Pose2d(-34,34.5, Math.toRadians(180)))
+                .strafeTo(blueBeforeGatePos3)
+                .turn(Math.toRadians(180))
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(AfterGateTagPos)
+                .strafeTo(blueAfterGateTagPos)
                 .stopAndAdd(updateAfterGatePos)
-                .splineToLinearHeading(new Pose2d(ParkPos.x, ParkPos.y, Math.toRadians(-180)), Math.toRadians(90))
+                .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(new Vector2d(Yellow3Pos.component1().x,Yellow3Pos.component1().y))
                 .build();
     }
 
     void buildParkTrajectories()
     {
-        trajPos1ToPark = BlueLong.actionBuilder(Yellow1Pos)
-                .strafeTo(ParkPos)
+        trajPos1ToPark = BlueLong.actionBuilder(blueYellow1Pos)
+                .splineToLinearHeading(blueParkPos,Math.toRadians(0))
                 .build();
 
-        trajPos2ToPark = BlueLong.actionBuilder(Yellow2Pos)
-                .strafeTo(ParkPos)
+        trajPos2ToPark = BlueLong.actionBuilder(blueYellow2Pos)
+                .splineToLinearHeading(blueParkPos,Math.toRadians(0))
                 .build();
 
-        trajPos3ToPark = BlueLong.actionBuilder(Yellow3Pos)
-                .strafeTo(ParkPos)
+        trajPos3ToPark = BlueLong.actionBuilder(blueYellow3Pos)
+                .splineToLinearHeading(blueParkPos,Math.toRadians(0))
                 .build();
     }
     void dropOffPurplePixel()

@@ -13,31 +13,45 @@ public class MyMeepMeep {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        //red short
-        Pose2d redStartPos = new Pose2d(12,-61.5,Math.toRadians(90));//0,0,0
+        //red long
+        Pose2d redStartPos = new Pose2d(-36,-61.5,Math.toRadians(90));//0,0,0
 
-        Pose2d redPurple3Pos = new Pose2d(31, -34.5, Math.toRadians(180));//28,2,90
-        Pose2d redPurple2Pos = new Pose2d(24, -24.5, Math.toRadians(180));//36,-12,90
-        Pose2d redPurple1Pos = new Pose2d(12, -34.5, Math.toRadians(180));//28,-19,90
+        Pose2d redPurple1Pos = new Pose2d(-38, -34.5 , Math.toRadians(180)); //27,19,-90
+        Pose2d redPurple2Pos = new Pose2d(-31,- 33, Math.toRadians(90));  //37,12,-90
+        Pose2d redPurple3Pos = new Pose2d(-34, -34.5, Math.toRadians(0));  //27,0,-90
 
-        Pose2d redYellow3Pos = new Pose2d(49, -34.5, Math.toRadians(180));//20,-37,90
-        Pose2d redYellow2Pos = new Pose2d(49, -35.5, Math.toRadians(180));//28,-37,90
-        Pose2d redYellow1Pos = new Pose2d(49,-28.5, Math.toRadians(180));//33,-37,90
+        Vector2d redBeforeGatePos3 = new Vector2d(-38,-11.5);//50,2
+        Vector2d redBeforeGatePos2 = new Vector2d(-50,-11.5);//50,-14
+        Vector2d redBeforeGatePos1 = new Vector2d(-34,-11.5);//50,-19
+        Vector2d redAfterGateTagPos = new Vector2d(15.25, -11.5);//50,51.25
+        Vector2d redAfterGatePos = new Vector2d(32, -11.5);//50,68
 
-        Vector2d redParkPos = new Vector2d(49, -54.5);//7,-37
+        Vector2d redYellow3Pos = new Vector2d(45, -42);  //27,37,-90
+        Vector2d redYellow2Pos = new Vector2d(45, -35.5);   //26,37,-90
+        Pose2d redYellow1Pos = new Pose2d(45,-28.5,Math.toRadians(0));    //33,37,-90
 
-        //blue short
-        Pose2d blueStartPos = new Pose2d(12,61.5,Math.toRadians(-90));//0,0,0
 
-        Pose2d bluePurple1Pos = new Pose2d(31, 34.5 , Math.toRadians(-180)); //27,19,-90
-        Pose2d bluePurple2Pos = new Pose2d(24, 24.5 , Math.toRadians(-180));  //37,12,-90
-        Pose2d bluePurple3Pos = new Pose2d(12, 34.5, Math.toRadians(-180));  //27,0,-90
+        Pose2d redParkPos = new Pose2d(51.5, -11.5,Math.toRadians(0));//50, 82
 
-        Pose2d blueYellow1Pos = new Pose2d(49, 34.5, Math.toRadians(-180));  //27,37,-90
-        Pose2d blueYellow2Pos = new Pose2d(49, 35.5,Math.toRadians(-180));   //26,37,-90
-        Pose2d blueYellow3Pos = new Pose2d(49,28.5 ,Math.toRadians(-180));    //33,37,-90
+        //blue long
+        Pose2d blueStartPos = new Pose2d(-36,61.5,Math.toRadians(-90));//0,0,0
 
-        Vector2d blueParkPos = new Vector2d(49, 54.5);  //7, 37
+        Pose2d bluePurple3Pos = new Pose2d(-38, 34.5 , Math.toRadians(-180)); //27,19,-90
+        Pose2d bluePurple2Pos = new Pose2d(-31, 33, Math.toRadians(-90));  //37,12,-90
+        Pose2d bluePurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
+
+        Vector2d blueBeforeGatePos1 = new Vector2d(-38,11.5);//50,2
+        Vector2d blueBeforeGatePos2 = new Vector2d(-50, 11.5);//50,-14
+        Vector2d blueBeforeGatePos3 = new Vector2d(-34, 11.5);//50,-19
+        Vector2d blueAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
+        Vector2d blueAfterGatePos = new Vector2d(32, 11.5);//50,68
+
+        Vector2d blueYellow1Pos = new Vector2d(45, 42);  //27,37,-90
+        Vector2d blueYellow2Pos = new Vector2d(45, 35.5);   //26,37,-90
+        Pose2d blueYellow3Pos = new Pose2d(45,28.5,Math.toRadians(0));    //33,37,-90
+
+
+        Pose2d blueParkPos = new Pose2d(51.5, 11.5,Math.toRadians(0));//50, 82
 
         RoadRunnerBotEntity myFirstBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -47,9 +61,19 @@ public class MyMeepMeep {
                         drive.trajectorySequenceBuilder(redStartPos)
                                 .setTangent(Math.toRadians(80))
                                 .splineToLinearHeading(redPurple1Pos, Math.toRadians(130))
-                                .setReversed(true)
-                                .splineToLinearHeading(redYellow1Pos, Math.toRadians(-90))
-                                .strafeTo(redParkPos)
+
+
+                                .setTangent(Math.toRadians(-90))
+                                .lineToLinearHeading(new Pose2d(-34,-34.5, Math.toRadians(-180)))
+                                .strafeTo(redBeforeGatePos1)
+                                .turn(Math.toRadians(-180))
+//                                        .stopAndAdd(rectifyHeadingError)
+                                .strafeTo(redAfterGateTagPos)
+//                                        .stopAndAdd(updateAfterGatePos)
+                                .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
+//                                        .stopAndAdd(rectifyHeadingError)
+
+                                .splineToLinearHeading(redParkPos,Math.toRadians(0))
                                 .build()
 //                        //Blue Long Pos 3
 //                        drive.trajectorySequenceBuilder(new Pose2d(0 + StartPos.getX(), 0 + StartPos.getY(), Math.toRadians(0) + StartPos.getHeading()))
@@ -69,16 +93,26 @@ public class MyMeepMeep {
                 );
 
         RoadRunnerBotEntity mySecondBot = new DefaultBotBuilder(meepMeep)
-                // We set this bot to be red
+                // We set this bot to be blue
                 .setColorScheme(new ColorSchemeBlueDark())
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(blueStartPos)
                                         .setTangent(Math.toRadians(-80))
                                         .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-130))
-                                        .setReversed(true)
-                                        .splineToLinearHeading(blueYellow3Pos, Math.toRadians(90)).setReversed(true)
-                                        .strafeTo(blueParkPos)
+
+
+                                        .setTangent(Math.toRadians(90))
+                                        .lineToLinearHeading(new Pose2d(-34,34.5, Math.toRadians(180)))
+                                        .strafeTo(blueBeforeGatePos3)
+                                        .turn(Math.toRadians(180))
+//                                        .stopAndAdd(rectifyHeadingError)
+                                        .strafeTo(blueAfterGateTagPos)
+//                                        .stopAndAdd(updateAfterGatePos)
+                                        .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
+//                                        .stopAndAdd(rectifyHeadingError)
+
+                                        .splineToLinearHeading(blueParkPos,Math.toRadians(0))
                                         .build()
 //                        //Blue Long Pos 3
 //                        drive.trajectorySequenceBuilder(new Pose2d(0 + rStartPos.getX(), 0 + rStartPos.getY(), Math.toRadians(0) + rStartPos.getHeading()))
