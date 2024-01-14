@@ -121,7 +121,7 @@ public class AuraRobot
     public static double Deposit_Down_Pos =  0.04;
     public static double Deposit_Up_Pos = 0.5;
     //Slide variables
-    public static int LowerLimit     = 0;
+    public static int LowerLimit = 0;
     public static double LEFT_FINGER_LOCK = 0.75;
     public static double RIGHT_FINGER_LOCK = 0.25;
     public static double LEFT_FINGER_UNLOCK = 0.45;

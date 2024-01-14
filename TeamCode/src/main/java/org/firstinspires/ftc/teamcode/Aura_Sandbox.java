@@ -435,8 +435,8 @@ public class Aura_Sandbox extends LinearOpMode
             }
         }
 
-        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(dPadIntakeAdjust/10)* gamepad2.right_stick_y);
-        Roller.setPower(-1 * gamepad2.right_stick_y);
+        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(1.25)* gamepad2.right_stick_y);
+        Roller.setPower(-1.25 * gamepad2.right_stick_y);
     }
 
     public void SandboxManualDrive () {

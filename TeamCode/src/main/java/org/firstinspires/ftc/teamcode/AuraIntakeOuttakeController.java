@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 import static org.firstinspires.ftc.teamcode.AuraRobot.ELBOW_DOWN;
 import static org.firstinspires.ftc.teamcode.AuraRobot.ELBOW_UP;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
@@ -16,6 +17,7 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.UpperLimit;
 import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_TUCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.liftController;
+import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -79,7 +81,8 @@ public class AuraIntakeOuttakeController {
         STATE_3_ITA,    // State 3: Intake tucked away (slides raised to minimum)
         STATE_4_BF,     // State 4: Box Flipped
         STATE_5_RFO,    // State 5: Ready for Outtake
-        STATE_6_PR      // State 6: Pixels Released
+        STATE_6_PR,      // State 6: Pixels Released
+        STATE_7_MC
     }
 
     ioState currState;
@@ -168,7 +171,7 @@ public class AuraIntakeOuttakeController {
         switch(targetState) {
             case STATE_1_RFI: // Ready for Intake
                 targetSlidePos = SLIDE_INTAKE_POS;
-//                updateSlide();
+                updateSlide();
                 Wrist.setPosition(WRIST_INTAKE);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
@@ -177,7 +180,7 @@ public class AuraIntakeOuttakeController {
                 break;
             case STATE_2_PS: // Pixel Secured
                 targetSlidePos = SLIDE_INTAKE_POS;
-//                updateSlide();
+                updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
@@ -186,7 +189,7 @@ public class AuraIntakeOuttakeController {
                 break;
             case STATE_3_ITA: // Intake Tucked Away
                 targetSlidePos = SLIDE_RAISE_LOW;
-//                updateSlide();
+                updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 LeftFinger.setPosition(LEFT_FINGER_LOCK); //lock
                 RightFinger.setPosition(RIGHT_FINGER_LOCK); //lock
@@ -195,26 +198,36 @@ public class AuraIntakeOuttakeController {
                 break;
             case STATE_4_BF: // Box Flipped
                 targetSlidePos = SLIDE_RAISE_LOW;
-//                updateSlide();
+                updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
                 break;
             case STATE_5_RFO: // Ready for Outtake
                 targetSlidePos = SLIDE_RAISE_LOW;
-//                updateSlide();
+                updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
                 break;
             case STATE_6_PR: // Pixel Release
                 targetSlidePos = SLIDE_RAISE_LOW;
-//                updateSlide();
+                updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
                 currState = targetState;
+                break;
+            case STATE_7_MC:
+                targetSlidePos = targetSlidePos + (int) (-gamepad2.left_stick_y * slideTicks_stepSize);
+                if( targetSlidePos >= SLIDE_RAISE_HIGH) {
+                    targetSlidePos = SLIDE_RAISE_HIGH;
+                } else if(targetSlidePos < LowerLimit) {
+                    targetSlidePos = LowerLimit;
+                    telemetry.addData("TargetSlidePos: ", targetSlidePos);
+                    telemetry.update();
+                }
                 break;
             default:
                 break;
@@ -236,6 +249,9 @@ public class AuraIntakeOuttakeController {
     }
 
     // Ensure that this state transitoin is valid
+
+
+
     public boolean validStateTransition()
     {
 
