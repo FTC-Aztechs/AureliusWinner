@@ -89,10 +89,10 @@ public class AuraRobot
     public static double speedAdjust = 7;
     public static double bumperSpeedAdjust = 10;
     public static double dPadSpeedAdjust = 7;
-
     public static double dPadIntakeAdjust = 6;
     public static double SlidePower_Up= 1;
     public static double SlidePower_Down = -0.01;
+    public static double SlidePower;
     public static int BUTTON_TRIGGER_TIMER_MS = 500;
 
     //dimensions for vuforia recognition
@@ -110,6 +110,8 @@ public class AuraRobot
     public ColorRangeSensor Right = null;
 
     //claw variables
+    public static AuraPIDController liftController = new AuraPIDController(11, 0, 0.25, 3600);
+
     public static double Launcher_Set_Pos = 0;
     public static double Launcher_Fire_Pos = 1;
 
@@ -120,6 +122,19 @@ public class AuraRobot
     public static double Deposit_Up_Pos = 0.5;
     //Slide variables
     public static int LowerLimit     = 0;
+    public static double LEFT_FINGER_LOCK = 0.75;
+    public static double RIGHT_FINGER_LOCK = 0.25;
+    public static double LEFT_FINGER_UNLOCK = 0.45;
+    public static double RIGHT_FINGER_UNLOCK = 0.5;
+    public static double WRIST_INTAKE = 0.54;
+    public static double WRIST_TUCK = 0.8;
+    public static double ELBOW_DOWN = 0.023;
+    public static double ELBOW_UP = 0.55;
+    public static int SLIDE_INTAKE_POS = 100;
+    public static int SLIDE_RAISE_LOW = 250;
+    public static int SLIDE_RAISE_MED = 700;
+    public static int SLIDE_RAISE_HIGH = 1000;
+    public static double slideTicks_stepSize = 25;
     public static int FloorPosition  = 600;
     public static int HighJunction   = 15400; // 15400
     public static int HighJunction_Auto = 15250;
@@ -246,7 +261,7 @@ public class AuraRobot
         }
     }
 
-    public void setPower(AuraMotors eWhichMotor, double dPower )
+    public void setPower(AuraMotors eWhichMotor, double dPower)
     {
 
         switch (eWhichMotor){
@@ -291,6 +306,8 @@ public class AuraRobot
                 return Upper_Right.getCurrentPosition();
             case LOWER_RIGHT:
                 return Lower_Right.getCurrentPosition();
+            case SLIDE:
+                return Slide.getCurrentPosition();
             default:
                 return 0;
         }

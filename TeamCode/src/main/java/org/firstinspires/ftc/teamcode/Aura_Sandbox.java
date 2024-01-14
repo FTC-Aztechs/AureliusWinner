@@ -30,7 +30,9 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODERS;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Hang;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.ALL_DRIVES;
@@ -58,6 +60,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -109,6 +112,9 @@ public class Aura_Sandbox extends LinearOpMode
     private static ElapsedTime timer_gp2_y = new ElapsedTime();
     private static ElapsedTime timer_gp2_a = new ElapsedTime();
     private static ElapsedTime timer_gp2_b = new ElapsedTime();
+    private static ElapsedTime timer_gp2_dpad_up = new ElapsedTime();
+    private static ElapsedTime timer_gp2_dpad_down = new ElapsedTime();
+
 
     public CRServo Roller;
 
@@ -177,6 +183,7 @@ public class Aura_Sandbox extends LinearOpMode
     public void runOpMode() {
         Aurelius.init(hardwareMap);
         myController = new AuraIntakeOuttakeController (hardwareMap);
+        myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
 
 
         // Telemetry and HTML Log file
@@ -185,15 +192,17 @@ public class Aura_Sandbox extends LinearOpMode
         Aurelius.setRunMode(LOWER_LEFT, STOP_AND_RESET_ENCODER); //3
         Aurelius.setRunMode(UPPER_RIGHT, STOP_AND_RESET_ENCODER);  //0
         Aurelius.setRunMode(LOWER_RIGHT, STOP_AND_RESET_ENCODER); //1
-
+        Aurelius.setRunMode(SLIDE, STOP_AND_RESET_ENCODER);
         Aurelius.setRunMode(LOWER_LEFT, RUN_WITHOUT_ENCODER);
         Aurelius.setRunMode(UPPER_RIGHT, RUN_WITHOUT_ENCODER);
         Aurelius.setRunMode(LOWER_RIGHT, RUN_WITHOUT_ENCODER);
+        Aurelius.setRunMode(SLIDE, RUN_WITHOUT_ENCODER);
 
 
         telemetry.addData("Left Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_LEFT));
         telemetry.addData("Right Tracking wheel: ", Aurelius.getCurrentPosition(UPPER_RIGHT));
         telemetry.addData("Strafe Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_RIGHT));
+        telemetry.addData("Slide Position: ", Aurelius.getCurrentPosition(UPPER_LEFT));
 //        initAprilTag();
 //        if(USE_WEBCAM) {
 //            setManualExposure(6,250);
@@ -210,7 +219,7 @@ public class Aura_Sandbox extends LinearOpMode
         while (!isStopRequested()) {
             switch(sandboxMode) {
                 case SMD_INTAKE_OUTTAKE:
-                    myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_2_PS);
+                    AuraIntake();
                     SandboxIntakeOuttake();
                     break;
                 case HANG:
@@ -344,7 +353,7 @@ public class Aura_Sandbox extends LinearOpMode
                 timer_gp2_x.reset();
                 changingState = true;
             } else if (timer_gp2_x.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_ITA);
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_2_PS);
                 changingState = false;
             }
         }
@@ -353,7 +362,7 @@ public class Aura_Sandbox extends LinearOpMode
                 timer_gp2_y.reset();
                 changingState = true;
             } else if (timer_gp2_y.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO);
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_ITA);
                 changingState = false;
             }
         }
@@ -362,6 +371,15 @@ public class Aura_Sandbox extends LinearOpMode
                 timer_gp2_b.reset();
                 changingState = true;
             } else if (timer_gp2_b.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_4_BF);
+                changingState = false;
+            }
+        }
+        if (gamepad2.dpad_up) {
+            if (!changingState) {
+                timer_gp2_dpad_up.reset();
+                changingState = true;
+            } else if (timer_gp2_dpad_up.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_6_PR);
                 changingState = false;
             }
@@ -418,7 +436,7 @@ public class Aura_Sandbox extends LinearOpMode
         }
 
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(dPadIntakeAdjust/10)* gamepad2.right_stick_y);
-        Roller.setPower((dPadIntakeAdjust/10) * gamepad2.right_stick_y);
+        Roller.setPower(-1 * gamepad2.right_stick_y);
     }
 
     public void SandboxManualDrive () {

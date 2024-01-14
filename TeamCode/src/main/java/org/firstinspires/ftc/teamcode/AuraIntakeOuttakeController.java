@@ -1,8 +1,21 @@
 package org.firstinspires.ftc.teamcode;
+import static org.firstinspires.ftc.teamcode.AuraRobot.ELBOW_DOWN;
+import static org.firstinspires.ftc.teamcode.AuraRobot.ELBOW_UP;
+import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LowerLimit;
+import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_LOW;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower_Down;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower_Up;
 import static org.firstinspires.ftc.teamcode.AuraRobot.UpperLimit;
+import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_INTAKE;
+import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_TUCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.liftController;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,13 +33,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 //      * Elbow @ Intake
 // State 2: Pixels Secured
 //      - Slides @ lowest pos
-//      - Wrist @ Intake angle
-//      * Pixel grabbers secured
+//      - Wrist @ Tuck in angle
+//      - Pixel grabbers released
 //      - Elbow @ Intake
 // State 3: Intake tucked away (slides raised to minimum)
 //      * Slides @ minimum raised pos
 //      * Wrist @ Tuck In angle
-//      - Pixel grabbers in previous state (note: can be secured or unsecured depending on what state it is returning from)
+//      - Pixel grabbers secured
 //      - Elbow @ Intake
 // State 4: Box Flipped
 //      - Slides @ minimum raised pos
@@ -73,23 +86,6 @@ public class AuraIntakeOuttakeController {
     ioState targetState;
     double targetSlidePos;
     double currSlidePos;
-    public static AuraPIDController liftController = new AuraPIDController(11, 0, 0.25, 3600);
-
-
-    double SlidePower;
-
-    public static double LEFT_FINGER_LOCK = 0.75;
-    public static double RIGHT_FINGER_LOCK = 0.25;
-    public static double LEFT_FINGER_UNLOCK = 0.6;
-    public static double RIGHT_FINGER_UNLOCK = 0.4;
-    public static double WRIST_INTAKE = 0.5;
-    public static double WRIST_TUCK = 0.8;
-    public static double ELBOW_DOWN = 0.025;
-    public static double ELBOW_UP = 0.55;
-    public static double SLIDE_INTAKE_POS = 100;
-    public static double SLIDE_RAISE_LOW = 250;
-    public static double SLIDE_RAISE_MED = 700;
-    public static double SLIDE_RAISE_HIGH = 1000;
     public static AuraServoPIDController servoController;
     private Telemetry telemetry;
 
@@ -129,7 +125,8 @@ public class AuraIntakeOuttakeController {
     public void updateSlide() {
 
         if(currSlidePos != targetSlidePos ) {
-            double command = liftController.output(targetSlidePos, Slide.getCurrentPosition());
+            double command;
+//            = liftController.output(targetSlidePos, Slide.getCurrentPosition());
             if (targetSlidePos < currSlidePos) {
                 command = slideDownPID.output(targetSlidePos, Slide.getCurrentPosition());
                 SlidePower = Math.max(command / (SLIDE_RAISE_HIGH - SLIDE_INTAKE_POS), SlidePower_Down);
@@ -138,11 +135,12 @@ public class AuraIntakeOuttakeController {
                 SlidePower = Math.min(command / (SLIDE_RAISE_HIGH - SLIDE_INTAKE_POS), SlidePower_Up);
             }
             Slide.setPower(SlidePower);
-            currSlidePos = Slide.getCurrentPosition();
-            targetSlidePos = Slide.getTargetPosition();
+            currSlidePos = -Slide.getCurrentPosition();
+//            targetSlidePos = Slide.getTargetPosition();
         }
         if(telemetry != null) {
             telemetry.addData("AuraIOController: Current Slide position: %f", currSlidePos);
+            telemetry.addData("Current State: ", currState);
             telemetry.addData("TargetSlidePos:" , targetSlidePos);
             telemetry.update();
         }
@@ -160,57 +158,58 @@ public class AuraIntakeOuttakeController {
         //ReadyO -> Flipped: tuck wrist
         //Released -> ReadyO: no op
 
-        if( currState == targetState )
+        if( currState == targetState && targetState != ioState.STATE_1_RFI )
             return;
+
 
         if(!validStateTransition())
             return;
 
         switch(targetState) {
-            case STATE_1_RFI:
+            case STATE_1_RFI: // Ready for Intake
                 targetSlidePos = SLIDE_INTAKE_POS;
-                updateSlide();
+//                updateSlide();
                 Wrist.setPosition(WRIST_INTAKE);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
-                Elbow.setPosition(ELBOW_UP);
+                Elbow.setPosition(ELBOW_DOWN);
                 currState = targetState;
                 break;
-            case STATE_2_PS:
+            case STATE_2_PS: // Pixel Secured
                 targetSlidePos = SLIDE_INTAKE_POS;
-                updateSlide();
-                Wrist.setPosition(WRIST_INTAKE);
+//                updateSlide();
+                Wrist.setPosition(WRIST_TUCK);
+                LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
+                RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
+                Elbow.setPosition(ELBOW_DOWN);
+                currState = targetState;
+                break;
+            case STATE_3_ITA: // Intake Tucked Away
+                targetSlidePos = SLIDE_RAISE_LOW;
+//                updateSlide();
+                Wrist.setPosition(WRIST_TUCK);
                 LeftFinger.setPosition(LEFT_FINGER_LOCK); //lock
                 RightFinger.setPosition(RIGHT_FINGER_LOCK); //lock
                 Elbow.setPosition(ELBOW_DOWN);
                 currState = targetState;
                 break;
-            case STATE_3_ITA:
+            case STATE_4_BF: // Box Flipped
                 targetSlidePos = SLIDE_RAISE_LOW;
-                updateSlide();
-                Wrist.setPosition(WRIST_TUCK);
-                LeftFinger.setPosition(LEFT_FINGER_LOCK); //lock
-                RightFinger.setPosition(RIGHT_FINGER_LOCK); //lock
-                Elbow.setPosition(ELBOW_DOWN);
-                currState = targetState;
-                break;
-            case STATE_4_BF:
-                targetSlidePos = SLIDE_RAISE_LOW;
-                updateSlide();
+//                updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
                 break;
-            case STATE_5_RFO:
+            case STATE_5_RFO: // Ready for Outtake
                 targetSlidePos = SLIDE_RAISE_LOW;
-                updateSlide();
+//                updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
                 break;
-            case STATE_6_PR:
+            case STATE_6_PR: // Pixel Release
                 targetSlidePos = SLIDE_RAISE_LOW;
-                updateSlide();
+//                updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
