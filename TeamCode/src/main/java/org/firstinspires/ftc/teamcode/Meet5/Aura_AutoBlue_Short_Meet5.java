@@ -426,26 +426,26 @@ public class Aura_AutoBlue_Short_Meet5 extends LinearOpMode {
 
         sleep(500);
 
-        Aurelius.depositFlipper.setTargetState(Up);
-        Aurelius.depositFlipper.update();
-        telemetry.addData("Deposit State", "up");
-        telemetry.update();
-
-        sleep(1500);
-
-        Aurelius.depositFlipper.setTargetState(Open);
-        Aurelius.depositFlipper.update();
-        telemetry.addData("Deposit State", "open");
-        telemetry.update();
-
-        sleep(500);
-
-        Aurelius.depositFlipper.setTargetState(Down);
-        Aurelius.depositFlipper.update();
-        telemetry.addData("Deposit State", "down");
-        telemetry.update();
-
-        sleep(500);
+//        Aurelius.depositFlipper.setTargetState(Up);
+//        Aurelius.depositFlipper.update();
+//        telemetry.addData("Deposit State", "up");
+//        telemetry.update();
+//
+//        sleep(1500);
+//
+//        Aurelius.depositFlipper.setTargetState(Open);
+//        Aurelius.depositFlipper.update();
+//        telemetry.addData("Deposit State", "open");
+//        telemetry.update();
+//
+//        sleep(500);
+//
+//        Aurelius.depositFlipper.setTargetState(Down);
+//        Aurelius.depositFlipper.update();
+//        telemetry.addData("Deposit State", "down");
+//        telemetry.update();
+//
+//        sleep(500);
     }
 
 

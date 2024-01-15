@@ -482,31 +482,31 @@ public class Aura_AutoRed_Long_Meet4 extends LinearOpMode {
 
     void dropOffYellowPixel()
     {
-        telemetry.addData("Deposit State", "down");
-        telemetry.update();
-
-        sleep(500);
-
-        Aurelius.depositFlipper.setTargetState(Up);
-        Aurelius.depositFlipper.update();
-        telemetry.addData("Deposit State", "up");
-        telemetry.update();
-
-        sleep(1500);
-
-        Aurelius.depositFlipper.setTargetState(Open);
-        Aurelius.depositFlipper.update();
-        telemetry.addData("Deposit State", "open");
-        telemetry.update();
-
-        sleep(500);
-
-        Aurelius.depositFlipper.setTargetState(Down);
-        Aurelius.depositFlipper.update();
-        telemetry.addData("Deposit State", "down");
-        telemetry.update();
-
-        sleep(500);
+ telemetry.addData("Deposit State", "down");
+//        telemetry.update();
+//
+//        sleep(500);
+//
+//        Aurelius.depositFlipper.setTargetState(Up);
+//        Aurelius.depositFlipper.update();
+//        telemetry.addData("Deposit State", "up");
+//        telemetry.update();
+//
+//        sleep(1500);
+//
+//        Aurelius.depositFlipper.setTargetState(Open);
+//        Aurelius.depositFlipper.update();
+//        telemetry.addData("Deposit State", "open");
+//        telemetry.update();
+//
+//        sleep(500);
+//
+//        Aurelius.depositFlipper.setTargetState(Down);
+//        Aurelius.depositFlipper.update();
+//        telemetry.addData("Deposit State", "down");
+//        telemetry.update();
+//
+//        sleep(500);
     }
 
 

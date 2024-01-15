@@ -82,7 +82,6 @@ public class AuraIntakeOuttakeController {
         STATE_4_BF,     // State 4: Box Flipped
         STATE_5_RFO,    // State 5: Ready for Outtake
         STATE_6_PR,      // State 6: Pixels Released
-        STATE_7_MC
     }
 
     ioState currState;
@@ -138,7 +137,7 @@ public class AuraIntakeOuttakeController {
                 SlidePower = Math.min(command / (SLIDE_RAISE_HIGH - SLIDE_INTAKE_POS), SlidePower_Up);
             }
             Slide.setPower(SlidePower);
-            currSlidePos = -Slide.getCurrentPosition();
+            currSlidePos = Slide.getCurrentPosition();
 //            targetSlidePos = Slide.getTargetPosition();
         }
         if(telemetry != null) {
@@ -204,30 +203,26 @@ public class AuraIntakeOuttakeController {
                 currState = targetState;
                 break;
             case STATE_5_RFO: // Ready for Outtake
-                targetSlidePos = SLIDE_RAISE_LOW;
+                targetSlidePos = targetSlidePos + (int) (-gamepad2.left_stick_y * slideTicks_stepSize);
+                if( targetSlidePos >= SLIDE_RAISE_HIGH) {
+                    targetSlidePos = SLIDE_RAISE_HIGH;
+                } else if(targetSlidePos < SLIDE_RAISE_LOW) {
+                    targetSlidePos = SLIDE_RAISE_LOW;
+                    telemetry.addData("TargetSlidePos: ", targetSlidePos);
+                    telemetry.update();
+                }
                 updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
                 break;
             case STATE_6_PR: // Pixel Release
-                targetSlidePos = SLIDE_RAISE_LOW;
                 updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
                 currState = targetState;
-                break;
-            case STATE_7_MC:
-                targetSlidePos = targetSlidePos + (int) (-gamepad2.left_stick_y * slideTicks_stepSize);
-                if( targetSlidePos >= SLIDE_RAISE_HIGH) {
-                    targetSlidePos = SLIDE_RAISE_HIGH;
-                } else if(targetSlidePos < LowerLimit) {
-                    targetSlidePos = LowerLimit;
-                    telemetry.addData("TargetSlidePos: ", targetSlidePos);
-                    telemetry.update();
-                }
                 break;
             default:
                 break;

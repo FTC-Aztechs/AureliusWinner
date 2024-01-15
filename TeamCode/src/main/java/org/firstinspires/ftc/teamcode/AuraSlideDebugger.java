@@ -38,12 +38,18 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODE
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
+import static org.firstinspires.ftc.teamcode.AuraRobot.ELBOW_DOWN;
+import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LowerLimit;
+import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_LOW;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_MED;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower_Down;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower_Up;
+import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_TUCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -52,6 +58,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.concurrent.TimeUnit;
@@ -145,9 +152,10 @@ public class AuraSlideDebugger extends LinearOpMode {
 
         // Initialize the drive system variables
         Aura.init(hardwareMap);
-
         initAura();
+
 //        Aura.setPosition(AuraRobot.AuraServos.TWIN_TOWERS, Aura.Claw_Open_Pos);
+
         waitForStart();
 
         if( Mode == 1 || Mode == 2) {

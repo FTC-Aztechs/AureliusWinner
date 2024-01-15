@@ -307,27 +307,27 @@ public class Aura_Manual extends LinearOpMode {
 
     }
 
-    @SuppressLint("SuspiciousIndentation")
-    public void AuraDeposit()
-    {
-        ElapsedTime timer = new ElapsedTime();
-        if(gamepad2.a)
-            timer_gp2_buttonA.reset();
-            if(timer_gp2_buttonA.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                Aurelius.depositFlipper.setTargetState(Aura_DepositController.DepositState.Up);
-                Aurelius.depositFlipper.update();
-            }
-        if(timer_gp2_buttonY.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-            Aurelius.depositFlipper.Lid.setPosition(Lid_Open_Pos);
-            Aurelius.depositFlipper.update();
-
-        }
-        if(timer_gp2_buttonB.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-            Aurelius.depositFlipper.setTargetState(Aura_DepositController.DepositState.Down);
-            Aurelius.depositFlipper.update();
-
-        }
-    }
+//    @SuppressLint("SuspiciousIndentation")
+//    public void AuraDeposit()
+//    {
+//        ElapsedTime timer = new ElapsedTime();
+//        if(gamepad2.a)
+//            timer_gp2_buttonA.reset();
+//            if(timer_gp2_buttonA.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+//                Aurelius.depositFlipper.setTargetState(Aura_DepositController.DepositState.Up);
+//                Aurelius.depositFlipper.update();
+//            }
+//        if(timer_gp2_buttonY.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+//            Aurelius.depositFlipper.Lid.setPosition(Lid_Open_Pos);
+//            Aurelius.depositFlipper.update();
+//
+//        }
+//        if(timer_gp2_buttonB.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+//            Aurelius.depositFlipper.setTargetState(Aura_DepositController.DepositState.Down);
+//            Aurelius.depositFlipper.update();
+//
+//        }
+//    }
 
     public void AuraLauncher(){
         if (gamepad1.left_trigger == 1f) {

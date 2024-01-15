@@ -381,7 +381,7 @@ public class Aura_Sandbox extends LinearOpMode
                 timer_gp2_dpad_up.reset();
                 changingState = true;
             } else if (timer_gp2_dpad_up.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_6_PR);
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO);
                 changingState = false;
             }
         }

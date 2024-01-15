@@ -78,7 +78,7 @@ public class AuraRobot
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
     public AuraHangController hanger;
-    public Aura_DepositController depositFlipper;
+//    public Aura_DepositController depositFlipper;
     public AuraIntakeOuttakeController myIntakeController;
     public AuraHeadingEstimator myHeadingEstimator;
 
@@ -196,10 +196,11 @@ public class AuraRobot
         //AuraMecanumDrive = new MecanumDrive(hwMap, initPose2d);
 //        Khimera = hwMap.get(WebcamName.class, "Kemera");
 
-//        noodleWash = new AuraIntakeController(hwMap);
-//        boeing747 = new AuraLaunchController(hwMap);
-//        hanger = new AuraHangController(hwMap);
+        noodleWash = new AuraIntakeController(hwMap);
+        boeing747 = new AuraLaunchController(hwMap);
+        hanger = new AuraHangController(hwMap);
 //        depositFlipper = new Aura_DepositController(hwMap);
+        myIntakeController = new AuraIntakeOuttakeController(hwMap);
     }
     String formatAngle( AngleUnit angleUnit, double angle) {
         return formatDegrees(angleUnit.DEGREES.fromUnit(angleUnit, angle));
