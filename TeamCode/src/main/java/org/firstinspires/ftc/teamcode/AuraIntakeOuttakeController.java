@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_LOW;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_MED;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower_Down;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower_Up;
@@ -21,6 +22,7 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -92,8 +94,8 @@ public class AuraIntakeOuttakeController {
     private Telemetry telemetry;
 
     //TODO: change numbers
-    public static AuraPIDController slideUpPID = new AuraPIDController(11, 0, 0, 5500); // KD Values .25 -> .32 KG Previous Values 3600 -> 5500 2/19/2023
-    public static AuraPIDController slideDownPID = new AuraPIDController(0.8, 0, 0, 1500);
+    public static AuraPIDController slideUpPID = new AuraPIDController(5, 0, 0, 0); // KD Values .25 -> .32 KG Previous Values 3600 -> 5500 2/19/2023
+    public static AuraPIDController slideDownPID = new AuraPIDController(5, 0, 0, 0);
 
     public AuraIntakeOuttakeController(HardwareMap hardwareMap) {
 
@@ -106,7 +108,7 @@ public class AuraIntakeOuttakeController {
         currState = ioState.STATE_1_RFI;
         targetState = ioState.STATE_1_RFI;
 
-        currSlidePos = SLIDE_INTAKE_POS;
+        currSlidePos = Slide.getCurrentPosition();
         targetSlidePos = SLIDE_INTAKE_POS;
     }
 
@@ -144,6 +146,7 @@ public class AuraIntakeOuttakeController {
             telemetry.addData("AuraIOController: Current Slide position: %f", currSlidePos);
             telemetry.addData("Current State: ", currState);
             telemetry.addData("TargetSlidePos:" , targetSlidePos);
+            telemetry.addData("slidePower", SlidePower);
             telemetry.update();
         }
     }
@@ -160,8 +163,8 @@ public class AuraIntakeOuttakeController {
         //ReadyO -> Flipped: tuck wrist
         //Released -> ReadyO: no op
 
-        if( currState == targetState && targetState != ioState.STATE_1_RFI )
-            return;
+//        if(currState == targetState && targetState != ioState.STATE_1_RFI )
+//            return;
 
 
         if(!validStateTransition())
@@ -203,17 +206,11 @@ public class AuraIntakeOuttakeController {
                 currState = targetState;
                 break;
             case STATE_5_RFO: // Ready for Outtake
-                targetSlidePos = targetSlidePos + (int) (-gamepad2.left_stick_y * slideTicks_stepSize);
-                if( targetSlidePos >= SLIDE_RAISE_HIGH) {
-                    targetSlidePos = SLIDE_RAISE_HIGH;
-                } else if(targetSlidePos < SLIDE_RAISE_LOW) {
-                    targetSlidePos = SLIDE_RAISE_LOW;
-                    telemetry.addData("TargetSlidePos: ", targetSlidePos);
-                    telemetry.update();
-                }
                 updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
+                LeftFinger.setPosition(LEFT_FINGER_LOCK); //unlock
+                RightFinger.setPosition(RIGHT_FINGER_LOCK); //unlock
                 currState = targetState;
                 break;
             case STATE_6_PR: // Pixel Release

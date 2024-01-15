@@ -44,9 +44,12 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.SLIDE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_LEFT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_RIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_LOW;
 import static org.firstinspires.ftc.teamcode.AuraRobot.bumperSpeedAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.dPadIntakeAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.dPadSpeedAdjust;
+import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 import static org.firstinspires.ftc.teamcode.AuraRobot.speedAdjust;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -346,6 +349,8 @@ public class Aura_Sandbox extends LinearOpMode
                 changingState = true;
             } else if (timer_gp2_a.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
+                telemetry.addData("State", "1");
+                telemetry.update();
                 changingState = false;
             }
         }
@@ -355,6 +360,8 @@ public class Aura_Sandbox extends LinearOpMode
                 changingState = true;
             } else if (timer_gp2_x.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_2_PS);
+                telemetry.addData("State", "2");
+                telemetry.update();
                 changingState = false;
             }
         }
@@ -364,6 +371,8 @@ public class Aura_Sandbox extends LinearOpMode
                 changingState = true;
             } else if (timer_gp2_y.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_ITA);
+                telemetry.addData("State", "3");
+                telemetry.update();
                 changingState = false;
             }
         }
@@ -373,6 +382,8 @@ public class Aura_Sandbox extends LinearOpMode
                 changingState = true;
             } else if (timer_gp2_b.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_4_BF);
+                telemetry.addData("State", "4");
+                telemetry.update();
                 changingState = false;
             }
         }
@@ -381,7 +392,29 @@ public class Aura_Sandbox extends LinearOpMode
                 timer_gp2_dpad_up.reset();
                 changingState = true;
             } else if (timer_gp2_dpad_up.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                double target = targetSlidePos + (int) (gamepad2.left_stick_y * slideTicks_stepSize);
+                if (target >= SLIDE_RAISE_HIGH) {
+                    target = SLIDE_RAISE_HIGH;
+                } else if (target < SLIDE_RAISE_LOW) {
+                    target = SLIDE_RAISE_LOW;
+                    telemetry.addData("TargetSlidePos: ", targetSlidePos);
+                    telemetry.update();
+                }
+                myController.setTargetPosition(target);
                 myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO);
+                telemetry.addData("State", "5");
+                telemetry.update();
+                changingState = false;
+            }
+        }
+        if (gamepad2.dpad_down) {
+            if (!changingState) {
+                timer_gp2_dpad_down.reset();
+                changingState = true;
+            } else if (timer_gp2_dpad_down.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_6_PR);
+                telemetry.addData("State", "6");
+                telemetry.update();
                 changingState = false;
             }
         }

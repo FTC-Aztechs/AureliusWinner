@@ -91,7 +91,7 @@ public class AuraRobot
     public static double dPadSpeedAdjust = 7;
     public static double dPadIntakeAdjust = 6;
     public static double SlidePower_Up= 1;
-    public static double SlidePower_Down = -0.01;
+    public static double SlidePower_Down = -0.5;
     public static double SlidePower;
     public static int BUTTON_TRIGGER_TIMER_MS = 500;
 
