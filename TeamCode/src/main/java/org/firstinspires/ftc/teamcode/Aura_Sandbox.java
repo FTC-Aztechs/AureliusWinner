@@ -35,6 +35,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODE
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODERS;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Hang;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.targetSlidePos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.ALL_DRIVES;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.HANG;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.LOWER_LEFT;
@@ -202,7 +203,6 @@ public class Aura_Sandbox extends LinearOpMode
         telemetry.addData("Left Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_LEFT));
         telemetry.addData("Right Tracking wheel: ", Aurelius.getCurrentPosition(UPPER_RIGHT));
         telemetry.addData("Strafe Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_RIGHT));
-        telemetry.addData("Slide Position: ", Aurelius.getCurrentPosition(UPPER_LEFT));
 //        initAprilTag();
 //        if(USE_WEBCAM) {
 //            setManualExposure(6,250);
@@ -259,6 +259,7 @@ public class Aura_Sandbox extends LinearOpMode
             telemetry.addData("Right Tracking wheel: ", Aurelius.getCurrentPosition(UPPER_RIGHT));
             telemetry.addData("Strafe Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_RIGHT));
             telemetry.addData("Slide Pos: ", Aurelius.getCurrentPosition(SLIDE));
+            telemetry.addData("Target Slide Pos: ", targetSlidePos);
             telemetry.update();
         }
     }

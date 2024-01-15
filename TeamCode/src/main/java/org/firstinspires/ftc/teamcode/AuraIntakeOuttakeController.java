@@ -87,7 +87,7 @@ public class AuraIntakeOuttakeController {
 
     ioState currState;
     ioState targetState;
-    double targetSlidePos;
+    public static double targetSlidePos;
     double currSlidePos;
     public static AuraServoPIDController servoController;
     private Telemetry telemetry;
