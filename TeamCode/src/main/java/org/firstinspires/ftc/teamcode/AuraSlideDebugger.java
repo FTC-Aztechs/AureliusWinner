@@ -167,6 +167,17 @@ public class AuraSlideDebugger extends LinearOpMode {
 
         telemetry.addData("Slide Debugger Running in mode: ", Mode);
         telemetry.update();
+        Servo Wrist = hardwareMap.get(Servo.class, "tilt");
+        Servo Elbow = hardwareMap.get(Servo.class, "flip");
+
+        Aura.setRunMode(AuraRobot.AuraMotors.SLIDE, STOP_AND_RESET_ENCODER);
+        telemetry.addData("rykUpSlide_pid: Current Slide Position: ", Aura.getCurrentPosition(AuraRobot.AuraMotors.SLIDE));
+        telemetry.update();
+
+
+        Wrist.setPosition(WRIST_TUCK);
+        Elbow.setPosition(ELBOW_DOWN);
+
 
         while (opModeIsActive()) {
             if (Mode == 0) {
@@ -533,6 +544,7 @@ public class AuraSlideDebugger extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_RAISE_LOW);
         Aura.setRunMode(AuraRobot.AuraMotors.SLIDE, RUN_TO_POSITION);
         Aura.setPower(AuraRobot.AuraMotors.SLIDE, SlidePower_Up);

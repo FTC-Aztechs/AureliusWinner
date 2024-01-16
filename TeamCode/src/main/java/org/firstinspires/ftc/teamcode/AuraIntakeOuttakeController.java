@@ -94,8 +94,8 @@ public class AuraIntakeOuttakeController {
     private Telemetry telemetry;
 
     //TODO: change numbers
-    public static AuraPIDController slideUpPID = new AuraPIDController(5, 0, 0, 0); // KD Values .25 -> .32 KG Previous Values 3600 -> 5500 2/19/2023
-    public static AuraPIDController slideDownPID = new AuraPIDController(5, 0, 0, 0);
+    public static AuraPIDController slideUpPID = new AuraPIDController(12, 0, 0, 0); // KD Values .25 -> .32 KG Previous Values 3600 -> 5500 2/19/2023
+    public static AuraPIDController slideDownPID = new AuraPIDController(12, 0, 0, 0);
 
     public AuraIntakeOuttakeController(HardwareMap hardwareMap) {
 

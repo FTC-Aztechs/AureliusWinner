@@ -91,7 +91,7 @@ public class AuraRobot
     public static double dPadSpeedAdjust = 7;
     public static double dPadIntakeAdjust = 6;
     public static double SlidePower_Up= 1;
-    public static double SlidePower_Down = -0.5;
+    public static double SlidePower_Down = -1;
     public static double SlidePower;
     public static int BUTTON_TRIGGER_TIMER_MS = 500;
 
@@ -129,16 +129,16 @@ public class AuraRobot
     public static double WRIST_INTAKE = 0.54;
     public static double WRIST_TUCK = 0.8;
     public static double ELBOW_DOWN = 0.023;
-    public static double ELBOW_UP = 0.55;
+    public static double ELBOW_UP = 0.58;
     public static int SLIDE_INTAKE_POS = 100;
-    public static int SLIDE_RAISE_LOW = 250;
-    public static int SLIDE_RAISE_MED = 700;
-    public static int SLIDE_RAISE_HIGH = 1000;
+    public static int SLIDE_RAISE_LOW = 500;
+    public static int SLIDE_RAISE_MED = 750;
+    public static int SLIDE_RAISE_HIGH = 3000;
     public static double slideTicks_stepSize = 25;
     public static int FloorPosition  = 600;
     public static int HighJunction   = 15400; // 15400
     public static int HighJunction_Auto = 15250;
-    public static int UpperLimit     = 18000;
+    public static int UpperLimit     = 3000;
 
     public static double HangExtend = 0.4;
     public static double HangIdle = 0; //0

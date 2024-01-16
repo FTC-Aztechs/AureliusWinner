@@ -32,16 +32,25 @@ package org.firstinspires.ftc.teamcode;
 //import com.acmerobotics.dashboard.FtcDashboard;
 //import com.acmerobotics.dashboard.config.Config;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.targetSlidePos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.LOWER_LEFT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.LOWER_RIGHT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.SLIDE;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_RIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Launcher_Set_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Lid_Open_Pos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_LOW;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_MED;
 import static org.firstinspires.ftc.teamcode.AuraRobot.bumperSpeedAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.dPadIntakeAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.dPadSpeedAdjust;
+import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 import static org.firstinspires.ftc.teamcode.AuraRobot.speedAdjust;
-
-import android.annotation.SuppressLint;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -97,12 +106,15 @@ public class Aura_Manual extends LinearOpMode {
     private static ElapsedTime timer_gp1_dpad_left = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp1_dpad_right = new ElapsedTime(MILLISECONDS);
 
+
     private static ElapsedTime timer_gp2_x = new ElapsedTime(MILLISECONDS);
 
     private static ElapsedTime timer_gp2_y = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp2_a = new ElapsedTime(MILLISECONDS);
+    private static ElapsedTime timer_gp2_b = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp2_dpad_up = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp2_dpad_down = new ElapsedTime(MILLISECONDS);
+    private static ElapsedTime timer_gp2_rb = new ElapsedTime(MILLISECONDS);
     //    private static ElapsedTime timer_gp2_buttonA = new ElapsedTime(MILLISECONDS);
 //    private static ElapsedTime timer_gp2_buttonX = new ElapsedTime(MILLISECONDS);
 //    private static ElapsedTime timer_gp2_buttonY = new ElapsedTime(MILLISECONDS);
@@ -129,6 +141,7 @@ public class Aura_Manual extends LinearOpMode {
     private boolean changing_drive_mode = false;
     private boolean fieldCentric = false;
 
+    AuraIntakeOuttakeController myController;
 
     FtcDashboard auraDashboard;
 
@@ -137,16 +150,22 @@ public class Aura_Manual extends LinearOpMode {
     public void runOpMode() {
         // Initialize the drive system vriables
         Aurelius.init(hardwareMap);
+        myController = new AuraIntakeOuttakeController (hardwareMap);
+        myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
+
+        Aurelius.setRunMode(SLIDE, STOP_AND_RESET_ENCODER);
+        Aurelius.setRunMode(SLIDE, RUN_WITHOUT_ENCODER);
+
         initAurelius();
         waitForStart();
 
         while (opModeIsActive()) {
-//            AuraIntake();
-//            AuraLauncher();
+            AuraIntake();
+            AuraLauncher();
             AuraColor();
             AuraManualDrive();
 //            AuraManualHang();
-            //AuraDeposit();
+            AuraIntakeOuttake();
             telemetry.addLine("Drive Mode: Forward Facing");
             telemetry.update();
         }
@@ -154,7 +173,7 @@ public class Aura_Manual extends LinearOpMode {
 
     public void initAurelius() {
         FtcDashboard Dash = auraDashboard;
-//        Aurelius.boeing747.launcher.setPosition(Launcher_Set_Pos);
+        Aurelius.boeing747.launcher.setPosition(Launcher_Set_Pos);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Left = hardwareMap.get(RevColorSensorV3.class, "Left");
         Right = hardwareMap.get(ColorRangeSensor.class,"Right");
@@ -234,34 +253,33 @@ public class Aura_Manual extends LinearOpMode {
     }
 
     public void AuraManualHang() {
-        if(gamepad2.x) {
+        if(gamepad2.dpad_left) {
             if (!changingState) {
-                timer_gp2_x.reset();
+                timer_gp2_dpad_left.reset();
                 changingState = true;
-            } else if (timer_gp2_x.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            } else if (timer_gp2_dpad_left.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 Aurelius.hanger.setTargetState(AuraHangController.HangState.Idle);
                 telemetry.addData("State ", " Idle");
                 changingState = false;
             }
         }
-        if (gamepad2.y) {
+        if (gamepad2.dpad_up) {
             if (!changingState) {
-                timer_gp2_y.reset();
+                timer_gp2_dpad_up.reset();
                 changingState = true;
-            } else if (timer_gp2_y.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            } else if (timer_gp2_dpad_up.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 Aurelius.hanger.setTargetState(AuraHangController.HangState.Up);
                 telemetry.addData("State ", " Up");
                 changingState = false;
             }
         }
-        if (gamepad2.a) {
+        if (gamepad2.dpad_down) {
             if (!changingState) {
-                timer_gp2_a.reset();
+                timer_gp2_dpad_down.reset();
                 changingState = true;
-            } else if (timer_gp2_a.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            } else if (timer_gp2_dpad_down.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 Aurelius.hanger.setTargetState(AuraHangController.HangState.Hang);
                 telemetry.addData("State ", " Hang");
-
                 changingState = false;
             }
         }
@@ -269,65 +287,122 @@ public class Aura_Manual extends LinearOpMode {
     }
 
     public void AuraIntake() {
-        if (gamepad2.dpad_left) {
-            if (!changingIntakeSpeed) {
-                timer_gp2_dpad_left.reset();
-                changingIntakeSpeed = true;
-            } else if (timer_gp2_dpad_left.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                if (dPadIntakeAdjust <= 1) {
-                    dPadIntakeAdjust = 1;
-                } else {
-                    dPadIntakeAdjust -= 1;
-                }
-                telemetry.addLine("Current intake speed: " + dPadIntakeAdjust);
-                telemetry.update();
-                changingIntakeSpeed = false;
-            }
-        }
+//        if (gamepad2.dpad_left) {
+//            if (!changingIntakeSpeed) {
+//                timer_gp2_dpad_left.reset();
+//                changingIntakeSpeed = true;
+//            } else if (timer_gp2_dpad_left.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+//                if (dPadIntakeAdjust <= 1) {
+//                    dPadIntakeAdjust = 1;
+//                } else {
+//                    dPadIntakeAdjust -= 1;
+//                }
+//                telemetry.addLine("Current intake speed: " + dPadIntakeAdjust);
+//                telemetry.update();
+//                changingIntakeSpeed = false;
+//            }
+//        }
+//
+//        //gamepad right -> increase wheel speed
+//        if (gamepad2.dpad_right) {
+//            if (!changingIntakeSpeed) {
+//                timer_gp2_dpad_right.reset();
+//                changingIntakeSpeed = true;
+//            } else if (timer_gp2_dpad_right.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+//                if (dPadIntakeAdjust >= 10) {
+//                    dPadIntakeAdjust = 10;
+//                } else {
+//                    dPadIntakeAdjust += 1;
+//                }
+//                telemetry.addLine("Current speed: " + dPadIntakeAdjust);
+//                telemetry.update();
+//                changingIntakeSpeed = false;
+//            }
+//        }
 
-        //gamepad right -> increase wheel speed
-        if (gamepad2.dpad_right) {
-            if (!changingIntakeSpeed) {
-                timer_gp2_dpad_right.reset();
-                changingIntakeSpeed = true;
-            } else if (timer_gp2_dpad_right.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                if (dPadIntakeAdjust >= 10) {
-                    dPadIntakeAdjust = 10;
-                } else {
-                    dPadIntakeAdjust += 1;
-                }
-                telemetry.addLine("Current speed: " + dPadIntakeAdjust);
-                telemetry.update();
-                changingIntakeSpeed = false;
-            }
-        }
-
-        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(dPadIntakeAdjust/10)* gamepad2.right_stick_y);
-        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (dPadIntakeAdjust / 10) * gamepad2.right_stick_y);
+        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(gamepad2.right_stick_y));
+        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (gamepad2.right_stick_y));
 
     }
 
 //    @SuppressLint("SuspiciousIndentation")
-//    public void AuraDeposit()
-//    {
-//        ElapsedTime timer = new ElapsedTime();
-//        if(gamepad2.a)
-//            timer_gp2_buttonA.reset();
-//            if(timer_gp2_buttonA.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-//                Aurelius.depositFlipper.setTargetState(Aura_DepositController.DepositState.Up);
-//                Aurelius.depositFlipper.update();
-//            }
-//        if(timer_gp2_buttonY.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-//            Aurelius.depositFlipper.Lid.setPosition(Lid_Open_Pos);
-//            Aurelius.depositFlipper.update();
-//
-//        }
-//        if(timer_gp2_buttonB.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-//            Aurelius.depositFlipper.setTargetState(Aura_DepositController.DepositState.Down);
-//            Aurelius.depositFlipper.update();
-//
-//        }
-//    }
+public void AuraIntakeOuttake() {
+    // if gamepad2.b => STATE_1_RFI
+    // if gamepad2.a => STATE_3_ITA
+    // if gamepad2.x => STATE_5_RFO
+    // if gamepad2.y => STATE_6_PR
+
+    if (gamepad2.b) {
+        if (!changingState) {
+            timer_gp2_b.reset();
+            changingState = true;
+        } else if (timer_gp2_b.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
+            telemetry.addData("State", "1");
+            telemetry.update();
+            changingState = false;
+        }
+    }
+    if (gamepad2.a) {
+        if (!changingState) {
+            timer_gp2_a.reset();
+            changingState = true;
+        } else if (timer_gp2_a.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_ITA);
+            telemetry.addData("State", "3");
+            telemetry.update();
+            changingState = false;
+        }
+    }
+    if (gamepad2.x) {
+        if (!changingState) {
+            timer_gp2_x.reset();
+            changingState = true;
+        } else if (timer_gp2_x.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_ITA);
+            telemetry.addData("State", "3");
+            telemetry.update();
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_4_BF);
+            telemetry.addData("State", "4");
+            telemetry.update();
+            changingState = false;
+        }
+    }
+    if (gamepad2.y) {
+        if (!changingState) {
+            timer_gp2_y.reset();
+            changingState = true;
+        } else if (timer_gp2_y.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO);
+            telemetry.addData("State", "5");
+            telemetry.update();
+            changingState = false;
+            myController.setTargetPosition(SLIDE_RAISE_MED);
+            //update slide?
+        }
+    }
+    if (gamepad2.right_bumper) {
+        if (!changingState) {
+            timer_gp2_rb.reset();
+            changingState = true;
+        } else if (timer_gp2_rb.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            double target = targetSlidePos + (int) (gamepad2.left_stick_y * slideTicks_stepSize);
+            if (target >= SLIDE_RAISE_HIGH) {
+                target = SLIDE_RAISE_HIGH;
+            } else if (target < SLIDE_RAISE_LOW) {
+                target = SLIDE_RAISE_LOW;
+                telemetry.addData("TargetSlidePos: ", targetSlidePos);
+                telemetry.update();
+            }
+            myController.setTargetPosition(target);
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_6_PR);
+            telemetry.addData("State", "6");
+            telemetry.update();
+            changingState = false;
+        }
+    }
+    myController.update();
+}
 
     public void AuraLauncher(){
         if (gamepad1.left_trigger == 1f) {
