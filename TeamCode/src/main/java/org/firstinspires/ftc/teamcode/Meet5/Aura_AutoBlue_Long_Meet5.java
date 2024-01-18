@@ -31,15 +31,12 @@ package org.firstinspires.ftc.teamcode.Meet5;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
-import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_ITA;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_PS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_4_BF;
-import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.INTAKE;
-import static org.firstinspires.ftc.teamcode.Aura_DepositController.DepositState.Down;
-import static org.firstinspires.ftc.teamcode.Aura_DepositController.DepositState.Open;
-import static org.firstinspires.ftc.teamcode.Aura_DepositController.DepositState.Up;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -310,7 +307,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         //TODO: Initialize any essential starting motor/servo positions here
 
         Aurelius.myIntakeController = new AuraIntakeOuttakeController(hardwareMap);
-        Aurelius.myIntakeController.setTargetState(STATE_3_ITA);
+        Aurelius.myIntakeController.setTargetState(STATE_3_PS);
         runtime.reset();
         while(runtime.seconds() < 1) {
             Aurelius.myIntakeController.update();
@@ -514,7 +511,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         runtime.reset();
         while(runtime.milliseconds() < 500)
             Aurelius.myIntakeController.update();
-        Aurelius.myIntakeController.setTargetState(STATE_5_RFO);
+        Aurelius.myIntakeController.setTargetState(STATE_5_RFO_LOW);
         runtime.reset();
         while(runtime.milliseconds() < 200)
             Aurelius.myIntakeController.update();
@@ -522,7 +519,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         runtime.reset();
         while(runtime.milliseconds() < 300)
             Aurelius.myIntakeController.update();
-        Aurelius.myIntakeController.setTargetState(STATE_5_RFO);
+        Aurelius.myIntakeController.setTargetState(STATE_5_RFO_LOW);
         runtime.reset();
         while(runtime.milliseconds() < 200)
             Aurelius.myIntakeController.update();
@@ -530,7 +527,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         runtime.reset();
         while(runtime.milliseconds() < 200)
             Aurelius.myIntakeController.update();
-        Aurelius.myIntakeController.setTargetState(STATE_3_ITA);
+        Aurelius.myIntakeController.setTargetState(STATE_3_PS);
         runtime.reset();
         while(runtime.seconds() < 1) {
             Aurelius.myIntakeController.update();
@@ -700,23 +697,20 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
             telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
             telemetry.update();
 
-            double deltaX = (RangeCalibrated          * Math.sin(Math.toRadians(BearingCalibrated))) -
+            double currX = desiredTag.metadata.fieldPosition.getData()[0] -
                     (desiredTag.ftcPose.range * Math.sin(Math.toRadians(desiredTag.ftcPose.bearing)));
 
-            double deltaY = (RangeCalibrated          * Math.cos(Math.toRadians(BearingCalibrated))) -
-                            (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
+            double currY = desiredTag.metadata.fieldPosition.getData()[1] -
+                    (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
 
 
+            double deltaHeading = -desiredTag.ftcPose.yaw;
 
-            double deltaHeading = YawCalibrated - desiredTag.ftcPose.yaw;
-
-            double currX = BlueLong.pose.position.x;
-            double currY = BlueLong.pose.position.y;
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
-            telemetry.addData("Deltas", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", deltaX, deltaY, deltaHeading);
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(BlueLong.pose.heading.log()));
+//            telemetry.addData("Deltas", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", deltaX, deltaY, deltaHeading);
             telemetry.update();
 
-            BlueLong.pose = new Pose2d(blueAfterGateTagPos.x + deltaX, blueAfterGateTagPos.y + deltaY,Math.toRadians(90) + Math.toRadians(deltaHeading));
+            BlueLong.pose = new Pose2d(currX, currY,Math.toRadians(-90) - Math.toRadians(deltaHeading));
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
             return true;

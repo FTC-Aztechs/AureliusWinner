@@ -661,7 +661,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
                             (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
 
 
-            double deltaHeading = desiredTag.ftcPose.yaw - YawCalibrated;
+            double deltaHeading = -desiredTag.ftcPose.yaw;
 
             telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(RedLong.pose.heading.log()));
 //            telemetry.addData("Deltas", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", deltaX, deltaY, deltaHeading);

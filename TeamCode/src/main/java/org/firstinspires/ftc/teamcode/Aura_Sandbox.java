@@ -30,14 +30,11 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODERS;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Hang;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.targetSlidePos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.ALL_DRIVES;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.HANG;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.LOWER_LEFT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.LOWER_RIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.SLIDE;
@@ -45,7 +42,7 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_LEFT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_RIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
-import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_LOW;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_FLIP_HEIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.bumperSpeedAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.dPadIntakeAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.dPadSpeedAdjust;
@@ -53,18 +50,14 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 import static org.firstinspires.ftc.teamcode.AuraRobot.speedAdjust;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-import android.transition.Slide;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -359,7 +352,7 @@ public class Aura_Sandbox extends LinearOpMode
                 timer_gp2_x.reset();
                 changingState = true;
             } else if (timer_gp2_x.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_2_PS);
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_2_ITA);
                 telemetry.addData("State", "2");
                 telemetry.update();
                 changingState = false;
@@ -370,7 +363,7 @@ public class Aura_Sandbox extends LinearOpMode
                 timer_gp2_y.reset();
                 changingState = true;
             } else if (timer_gp2_y.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_ITA);
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_PS);
                 telemetry.addData("State", "3");
                 telemetry.update();
                 changingState = false;
@@ -395,13 +388,13 @@ public class Aura_Sandbox extends LinearOpMode
                 double target = targetSlidePos + (int) (gamepad2.left_stick_y * slideTicks_stepSize);
                 if (target >= SLIDE_RAISE_HIGH) {
                     target = SLIDE_RAISE_HIGH;
-                } else if (target < SLIDE_RAISE_LOW) {
-                    target = SLIDE_RAISE_LOW;
+                } else if (target < SLIDE_FLIP_HEIGHT) {
+                    target = SLIDE_FLIP_HEIGHT;
                     telemetry.addData("TargetSlidePos: ", targetSlidePos);
                     telemetry.update();
                 }
                 myController.setTargetPosition(target);
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO);
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW);
                 telemetry.addData("State", "5");
                 telemetry.update();
                 changingState = false;

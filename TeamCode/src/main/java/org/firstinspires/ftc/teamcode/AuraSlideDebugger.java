@@ -39,14 +39,10 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENC
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.ELBOW_DOWN;
-import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LowerLimit;
-import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_LOCK;
-import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
-import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_LOW;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_FLIP_HEIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_MED;
-import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower_Down;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SlidePower_Up;
 import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_TUCK;
@@ -337,7 +333,7 @@ public class AuraSlideDebugger extends LinearOpMode {
                 telemetry.addLine("GP2_A triggered. Set Tom&Jerry to Low position");
                 telemetry.update();
 
-                newPos = SLIDE_RAISE_LOW;
+                newPos = SLIDE_FLIP_HEIGHT;
                 assumingLowPosition = false;
             }
         }
@@ -459,7 +455,7 @@ public class AuraSlideDebugger extends LinearOpMode {
                 telemetry.addLine("GP2_A triggered. Set Tom&Jerry to Low position");
                 telemetry.update();
 
-                newPos = SLIDE_RAISE_LOW;
+                newPos = SLIDE_FLIP_HEIGHT;
                 assumingLowPosition = false;
             }
         }
@@ -508,7 +504,7 @@ public class AuraSlideDebugger extends LinearOpMode {
 
 //        Aura.setPosition(AuraRobot.AuraServos.TWIN_TOWERS, Claw_Close_Pos);
 
-        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_RAISE_LOW);
+        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_FLIP_HEIGHT);
         Aura.setRunMode(AuraRobot.AuraMotors.SLIDE, RUN_TO_POSITION);
         Aura.setPower(AuraRobot.AuraMotors.SLIDE, SlidePower_Up);
         
@@ -520,7 +516,7 @@ public class AuraSlideDebugger extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_RAISE_LOW);
+        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_FLIP_HEIGHT);
         Aura.setRunMode(AuraRobot.AuraMotors.SLIDE, RUN_TO_POSITION);
         Aura.setPower(AuraRobot.AuraMotors.SLIDE, SlidePower_Up);
 
@@ -532,7 +528,7 @@ public class AuraSlideDebugger extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_RAISE_LOW);
+        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_FLIP_HEIGHT);
         Aura.setRunMode(AuraRobot.AuraMotors.SLIDE, RUN_TO_POSITION);
         Aura.setPower(AuraRobot.AuraMotors.SLIDE, SlidePower_Up);
         
@@ -545,7 +541,7 @@ public class AuraSlideDebugger extends LinearOpMode {
             e.printStackTrace();
         }
 
-        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_RAISE_LOW);
+        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_FLIP_HEIGHT);
         Aura.setRunMode(AuraRobot.AuraMotors.SLIDE, RUN_TO_POSITION);
         Aura.setPower(AuraRobot.AuraMotors.SLIDE, SlidePower_Up);
         
@@ -557,7 +553,7 @@ public class AuraSlideDebugger extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_RAISE_LOW);
+        Aura.setTargetPosition(AuraRobot.AuraMotors.SLIDE, SLIDE_FLIP_HEIGHT);
         Aura.setRunMode(AuraRobot.AuraMotors.SLIDE, RUN_TO_POSITION);
         Aura.setPower(AuraRobot.AuraMotors.SLIDE, SlidePower_Up);
         
@@ -644,7 +640,7 @@ public class AuraSlideDebugger extends LinearOpMode {
                 telemetry.addLine("GP2_A triggered. Set Tom&Jerry to Low position");
                 telemetry.update();
 
-                newPos = SLIDE_RAISE_LOW;
+                newPos = SLIDE_FLIP_HEIGHT;
                 assumingLowPosition = false;
             }
         }

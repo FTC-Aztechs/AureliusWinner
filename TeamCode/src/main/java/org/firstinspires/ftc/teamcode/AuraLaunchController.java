@@ -23,9 +23,11 @@ public class AuraLaunchController {
 
     public AuraLaunchController(HardwareMap hardwareMap) {
         launcher = hardwareMap.get(Servo.class, "Launcher");
-//        color = hardwareMap.get(NormalizedColorSensor.class, "Retina");
-        launcher.setPosition(Launcher_Set_Pos);
         currState = launchState.Set;
+    }
+
+    public void init(){
+        launcher.setPosition(Launcher_Set_Pos);
     }
 
     public void setTelemetry(Telemetry tele)
