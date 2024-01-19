@@ -47,6 +47,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.dPadSpeedAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 import static org.firstinspires.ftc.teamcode.AuraRobot.speedAdjust;
 
+import android.graphics.Color;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -73,7 +75,9 @@ public class Aura_Manual extends LinearOpMode {
 
     private boolean changingState = false;
 
+    public RevColorSensorV3 Left;
 
+    public ColorRangeSensor Right;
 
 
     private int slide_currentPos = 0;
@@ -147,7 +151,10 @@ public class Aura_Manual extends LinearOpMode {
         myController = new AuraIntakeOuttakeController (hardwareMap);
         Aurelius.setRunMode(SLIDE, STOP_AND_RESET_ENCODER);
         Aurelius.setRunMode(SLIDE, RUN_WITHOUT_ENCODER);
-
+        Left = hardwareMap.get(RevColorSensorV3.class, "Left");
+        Right = hardwareMap.get(ColorRangeSensor.class, "Right");
+        Left.enableLed(true);
+        Right.enableLed(true);
         initAurelius();
         waitForStart();
 
@@ -157,6 +164,7 @@ public class Aura_Manual extends LinearOpMode {
             AuraManualDrive();
 //            AuraManualHang();
             AuraIntakeOuttake();
+            AuraColor();
             telemetry.addLine("Drive Mode: Forward Facing");
             telemetry.update();
         }
@@ -173,6 +181,16 @@ public class Aura_Manual extends LinearOpMode {
         telemetry.update();
 
         return;
+    }
+
+    public void AuraColor() {
+        telemetry.addData("Right Red : ", Right.red());
+        telemetry.addData("Right Green : ", Right.green());
+        telemetry.addData("Right Blue : ", Right.blue());
+        telemetry.addData("Left Red: ", Left.red());
+        telemetry.addData("Left Blue: ", Left.blue());
+        telemetry.addData("Left Green: ", Left.green());
+
     }
 
 
