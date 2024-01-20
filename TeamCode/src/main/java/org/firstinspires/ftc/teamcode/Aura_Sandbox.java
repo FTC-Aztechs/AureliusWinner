@@ -109,8 +109,8 @@ public class Aura_Sandbox extends LinearOpMode
     AuraRobot Aurelius = new AuraRobot();
     private static ElapsedTime timer_gp1_dpad_left = new ElapsedTime();
     private static ElapsedTime timer_gp1_dpad_right = new ElapsedTime();
-    private static ElapsedTime timer_gp2_left_trigger = new ElapsedTime();
-    private static ElapsedTime timer_gp2_right_trigger = new ElapsedTime();
+    private static ElapsedTime timer_gp2_lt = new ElapsedTime();
+    private static ElapsedTime timer_gp2_rt = new ElapsedTime();
     private static ElapsedTime timer_gp2_x = new ElapsedTime();
     private static ElapsedTime timer_gp2_y = new ElapsedTime();
     private static ElapsedTime timer_gp2_a = new ElapsedTime();
@@ -356,20 +356,23 @@ public class Aura_Sandbox extends LinearOpMode
             }
         }
 
-        if(gamepad2.right_trigger >= 1f && myController.safeToUnload == true) {
+        if(gamepad2.right_trigger == 1f && myController.safeToUnload == true) {
             if (!changingState) {
                 timer_gp2_a.reset();
                 changingState = true;
-                RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
+            } else if (timer_gp2_rt.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS){
+                LeftFinger.setPosition(RIGHT_FINGER_UNLOCK);
+                changingState= false;
             }
         }
 
-        if(gamepad2.left_trigger >= 1f && myController.safeToUnload == true) {
+        if(gamepad2.left_trigger == 1f && myController.safeToUnload == true) {
             if (!changingState) {
-                timer_gp2_a.reset();
+                timer_gp2_lt.reset();
                 changingState = true;
-            } else if (timer_gp2_a){
+            } else if (timer_gp2_lt.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS){
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
+                changingState= false;
             }
         }
 

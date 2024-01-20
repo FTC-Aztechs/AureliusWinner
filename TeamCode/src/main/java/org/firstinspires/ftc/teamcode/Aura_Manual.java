@@ -61,6 +61,8 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -138,6 +140,7 @@ public class Aura_Manual extends LinearOpMode {
     private boolean assumingMiddleCone = false;
 
 
+
     //drive booleans
     private boolean changing_drive_mode = false;
     private boolean fieldCentric = false;
@@ -167,7 +170,7 @@ public class Aura_Manual extends LinearOpMode {
             AuraManualDrive();
 //            AuraManualHang();
             AuraIntakeOuttake();
-//            AuraColor();
+            AuraColor();
             telemetry.addLine("Drive Mode: Forward Facing");
             telemetry.update();
         }
@@ -187,19 +190,45 @@ public class Aura_Manual extends LinearOpMode {
     }
 
     public void AuraColor() {
-        telemetry.addData("Right Red : ", Right.red());
-        telemetry.addData("Right Green : ", Right.green());
-        telemetry.addData("Right Blue : ", Right.blue());
-        telemetry.addData("Left Red: ", Left.red());
-        telemetry.addData("Left Blue: ", Left.blue());
-        telemetry.addData("Left Green: ", Left.green());
-        if(Right.red() > 300 && Right.blue() > 300 && Right.green() > 300  ) {
 
-        } else if (Right.green() > 300 && Right.blue() > 300 && Right.red() > 300 ) {
+        telemetry.addData("Right Red", Right.red());
+        telemetry.addData("Right Green", Right.green());
+        telemetry.addData("Right Blue", Right.blue());
+        telemetry.addData("Left Red", Left.red());
+        telemetry.addData("Left Blue", Left.blue());
+        telemetry.addData("Left Green", Left.green());
 
+        String[] colors = {"White", "Green", "Purple", "Yellow"};
+        int[][] rightRanges = {
+                {1255, 1455, 1480, 1580, 1346, 1446}, // White (Color Ranges are 100 apart original for first was 1355 so range became 1255 && 1455)
+                {264, 364, 468, 568, 237, 337},      // Green
+                {565, 665, 550, 650, 710, 810},      // Purple
+                {782, 882, 584, 684, 312, 412}       // Yellow
+        };
+        int[][] leftRanges = {
+                {1365, 1465, 2382, 2482, 2244, 2344},// White
+                {348, 448, 1065, 1165, 460, 560},    // Green
+                {832, 932, 1726, 1826, 1205, 1305},  // Purple
+                {1165, 1265, 1571, 1671, 458, 558}   // Yellow
+        };
+
+        // Check the color for Right sensor
+        for (int i = 0; i < colors.length; i++) {
+            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
+                telemetry.addData("Pixel Detected by Right Sensor", colors[i]);
+
+            }
         }
-    }
 
+        // Check the color for Left sensor
+        for (int i = 0; i < colors.length; i++) {
+            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
+                telemetry.addData("Pixel Detected by Left Sensor", colors[i]);
+            }
+        }
+
+        telemetry.update();
+    }
 
     public void AuraManualDrive() {
         // changing the speed
