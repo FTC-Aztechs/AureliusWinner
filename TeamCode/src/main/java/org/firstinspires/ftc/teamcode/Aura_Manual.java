@@ -33,6 +33,7 @@ package org.firstinspires.ftc.teamcode;
 //import com.acmerobotics.dashboard.config.Config;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODERS;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.targetSlidePos;
@@ -48,6 +49,7 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 import static org.firstinspires.ftc.teamcode.AuraRobot.speedAdjust;
 
 import android.graphics.Color;
+import android.transition.Slide;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -56,6 +58,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.concurrent.TimeUnit;
@@ -164,7 +167,7 @@ public class Aura_Manual extends LinearOpMode {
             AuraManualDrive();
 //            AuraManualHang();
             AuraIntakeOuttake();
-            AuraColor();
+//            AuraColor();
             telemetry.addLine("Drive Mode: Forward Facing");
             telemetry.update();
         }
@@ -190,7 +193,11 @@ public class Aura_Manual extends LinearOpMode {
         telemetry.addData("Left Red: ", Left.red());
         telemetry.addData("Left Blue: ", Left.blue());
         telemetry.addData("Left Green: ", Left.green());
+        if(Right.red() > 300 && Right.blue() > 300 && Right.green() > 300  ) {
 
+        } else if (Right.green() > 300 && Right.blue() > 300 && Right.red() > 300 ) {
+
+        }
     }
 
 
@@ -323,7 +330,7 @@ public class Aura_Manual extends LinearOpMode {
 //        }
 
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(gamepad2.right_stick_y));
-        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (gamepad2.right_stick_y));
+        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (-gamepad2.right_stick_y));
 
     }
 
@@ -347,21 +354,30 @@ public void AuraIntakeOuttake() {
     }
     if (gamepad2.b) {
 //        if (myController.currState == AuraIntakeOuttakeController.ioState.STATE_1_RFI) {
-            if (!changingState) {
-                timer_gp2_b.reset();
-                changingState = true;
-            } else if (timer_gp2_b.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_2_ITA);
-                telemetry.addData("State", "2");
-                telemetry.update();
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_PS);
-                telemetry.addData("State", "3");
-                telemetry.update();
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_4_BF);
-                telemetry.addData("State", "4");
-                telemetry.update();
-                changingState = false;
-            }
+        if (!changingState) {
+            timer_gp2_b.reset();
+            changingState = true;
+        } else if (timer_gp2_b.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_2_ITA);
+            telemetry.addData("State", "2");
+            telemetry.update();
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_3_PS);
+            telemetry.addData("State", "3");
+            telemetry.update();
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_4_BF);
+            telemetry.addData("State", "4");
+            telemetry.update();
+            changingState = false;
+        }
+    if(gamepad2.a) {
+        if(!changingState) {
+            timer_gp2_a.reset();
+            changingState = true;
+        } else if (timer_gp2_a.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
+            changingState = false;
+        }
+    }
 //        } else if (myController.currState == AuraIntakeOuttakeController.ioState.STATE_6_PR) {
 //            if (!changingState) {
 //                timer_gp2_b.reset();

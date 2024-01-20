@@ -99,8 +99,10 @@ public class AuraIntakeOuttakeController {
     public static AuraServoPIDController servoController;
     private Telemetry telemetry;
 
+    public boolean safeToUnload = false;
+
     //TODO: change numbers
-    public static AuraPIDController slideUpPID = new AuraPIDController(12, 0, 0, 0); // KD Values .25 -> .32 KG Previous Values 3600 -> 5500 2/19/2023
+    public static AuraPIDController slideUpPID = new AuraPIDController(12, 0, 0, 6); // KD Values .25 -> .32 KG Previous Values 3600 -> 5500 2/19/2023
     public static AuraPIDController slideDownPID = new AuraPIDController(12, 0, 0, 0);
 
     public AuraIntakeOuttakeController(HardwareMap hardwareMap) {
@@ -114,10 +116,8 @@ public class AuraIntakeOuttakeController {
         Left = hardwareMap.get(RevColorSensorV3.class, "Left");
         Right = hardwareMap.get(ColorRangeSensor.class,"Right");
 
-
         currState = ioState.STATE_1_RFI;
         targetState = ioState.STATE_1_RFI;
-
         currSlidePos = Slide.getCurrentPosition();
         targetSlidePos = SLIDE_INTAKE_POS;
     }
@@ -197,6 +197,7 @@ public class AuraIntakeOuttakeController {
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
                 Elbow.setPosition(ELBOW_DOWN);
                 currState = targetState;
+                safeToUnload = false;
                 break;
             case STATE_2_ITA: // Intake tucked
                 targetSlidePos = SLIDE_INTAKE_POS;
@@ -206,6 +207,7 @@ public class AuraIntakeOuttakeController {
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
                 Elbow.setPosition(ELBOW_DOWN);
                 currState = targetState;
+                safeToUnload = false;
                 break;
             case STATE_3_PS: // Pixels secured
                 targetSlidePos = SLIDE_FLIP_HEIGHT;
@@ -215,6 +217,7 @@ public class AuraIntakeOuttakeController {
                 RightFinger.setPosition(RIGHT_FINGER_LOCK); //lock
                 Elbow.setPosition(ELBOW_DOWN);
                 currState = targetState;
+                safeToUnload = false;
                 break;
             case STATE_4_BF: // Box Flipped
                 targetSlidePos = SLIDE_FLIP_HEIGHT;
@@ -222,6 +225,7 @@ public class AuraIntakeOuttakeController {
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 currState = targetState;
+                safeToUnload = false;
                 break;
             case STATE_5_RFO_LOW: // Ready for Outtake
                 targetSlidePos = SLIDE_RAISE_LOW;
@@ -231,6 +235,7 @@ public class AuraIntakeOuttakeController {
                 LeftFinger.setPosition(LEFT_FINGER_LOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_LOCK); //unlock
                 currState = targetState;
+                safeToUnload = false;
                 break;
             case STATE_5_RFO_MID: // Ready for Outtake
                 targetSlidePos = SLIDE_RAISE_MED;
@@ -240,6 +245,7 @@ public class AuraIntakeOuttakeController {
                 LeftFinger.setPosition(LEFT_FINGER_LOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_LOCK); //unlock
                 currState = targetState;
+                safeToUnload = false;
                 break;
             case STATE_5_RFO_HIGH: // Ready for Outtake
                 targetSlidePos = SLIDE_RAISE_HIGH;
@@ -249,6 +255,7 @@ public class AuraIntakeOuttakeController {
                 LeftFinger.setPosition(LEFT_FINGER_LOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_LOCK); //unlock
                 currState = targetState;
+                safeToUnload = false;
                 break;
             case STATE_5_RFO_MANUAL: // Ready for Outtake
                 updateSlide();
@@ -257,14 +264,15 @@ public class AuraIntakeOuttakeController {
                 LeftFinger.setPosition(LEFT_FINGER_LOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_LOCK); //unlock
                 currState = targetState;
+                safeToUnload = false;
                 break;
             case STATE_6_PR: // Pixel Release
-                updateSlide();
                 Wrist.setPosition(WRIST_TUCK);
                 Elbow.setPosition(ELBOW_UP);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
                 currState = targetState;
+                safeToUnload = true;
                 break;
             default:
                 break;

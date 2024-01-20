@@ -110,7 +110,7 @@ public class AuraRobot
     public ColorRangeSensor Right = null;
 
     //claw variables
-    public static AuraPIDController liftController = new AuraPIDController(11, 0, 0.25, 3600);
+    public static AuraPIDController liftController = new AuraPIDController(12, 0, 0, 0);
 
     public static double Launcher_Set_Pos = 0;
     public static double Launcher_Fire_Pos = 1;
@@ -127,11 +127,11 @@ public class AuraRobot
     public static double LEFT_FINGER_UNLOCK = 0.45;
     public static double RIGHT_FINGER_UNLOCK = 0.5;
     public static double WRIST_INTAKE = 0.54;
-    public static double WRIST_TUCK = 0.8;
+    public static double WRIST_TUCK = 0.75;
     public static double ELBOW_DOWN = 0.023;
-    public static double ELBOW_UP = 0.58;
-    public static int SLIDE_INTAKE_POS = 100;
-    public static int SLIDE_FLIP_HEIGHT = 500;
+    public static double ELBOW_UP = 0.65;
+    public static int SLIDE_INTAKE_POS = 25;
+    public static int SLIDE_FLIP_HEIGHT = 680;
     public static int SLIDE_RAISE_LOW = 400;
     public static int SLIDE_RAISE_MED = 750;
     public static int SLIDE_RAISE_HIGH = 3000;
