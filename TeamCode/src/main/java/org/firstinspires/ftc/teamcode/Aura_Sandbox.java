@@ -41,6 +41,10 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.SLIDE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_LEFT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_RIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
+import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_FLIP_HEIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.bumperSpeedAdjust;
@@ -56,6 +60,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -104,7 +109,8 @@ public class Aura_Sandbox extends LinearOpMode
     AuraRobot Aurelius = new AuraRobot();
     private static ElapsedTime timer_gp1_dpad_left = new ElapsedTime();
     private static ElapsedTime timer_gp1_dpad_right = new ElapsedTime();
-
+    private static ElapsedTime timer_gp2_lt = new ElapsedTime();
+    private static ElapsedTime timer_gp2_rt = new ElapsedTime();
     private static ElapsedTime timer_gp2_x = new ElapsedTime();
     private static ElapsedTime timer_gp2_y = new ElapsedTime();
     private static ElapsedTime timer_gp2_a = new ElapsedTime();
@@ -112,7 +118,8 @@ public class Aura_Sandbox extends LinearOpMode
     private static ElapsedTime timer_gp2_dpad_up = new ElapsedTime();
     private static ElapsedTime timer_gp2_dpad_down = new ElapsedTime();
 
-
+    private Servo LeftFinger;
+    private Servo   RightFinger;
     public CRServo Roller;
 
     boolean changingWheelSpeed = false;
@@ -181,7 +188,8 @@ public class Aura_Sandbox extends LinearOpMode
         Aurelius.init(hardwareMap);
         myController = new AuraIntakeOuttakeController (hardwareMap, true);
         myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
-
+        LeftFinger = hardwareMap.get(Servo.class, "lefty");
+        RightFinger = hardwareMap.get(Servo.class, "righty");
 
         // Telemetry and HTML Log file
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -347,6 +355,27 @@ public class Aura_Sandbox extends LinearOpMode
                 changingState = false;
             }
         }
+
+        if(gamepad2.right_trigger == 1f && myController.safeToUnload == true) {
+            if (!changingState) {
+                timer_gp2_a.reset();
+                changingState = true;
+            } else if (timer_gp2_rt.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS){
+                LeftFinger.setPosition(RIGHT_FINGER_UNLOCK);
+                changingState= false;
+            }
+        }
+
+        if(gamepad2.left_trigger == 1f && myController.safeToUnload == true) {
+            if (!changingState) {
+                timer_gp2_lt.reset();
+                changingState = true;
+            } else if (timer_gp2_lt.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS){
+                LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
+                changingState= false;
+            }
+        }
+
         if (gamepad2.x) {
             if (!changingState) {
                 timer_gp2_x.reset();

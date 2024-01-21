@@ -114,8 +114,10 @@ public class AuraIntakeOuttakeController {
     public static double FLIP_WAIT_TIME_LIMIT = 1;
     private Telemetry telemetry;
 
+    public boolean safeToUnload = false;
+
     //TODO: change numbers
-    public static AuraPIDController slideUpPID = new AuraPIDController(12, 0, 0, 0); // KD Values .25 -> .32 KG Previous Values 3600 -> 5500 2/19/2023
+    public static AuraPIDController slideUpPID = new AuraPIDController(12, 0, 0, 6); // KD Values .25 -> .32 KG Previous Values 3600 -> 5500 2/19/2023
     public static AuraPIDController slideDownPID = new AuraPIDController(12, 0, 0, 0);
 
     public AuraIntakeOuttakeController(HardwareMap hardwareMap, boolean Manual) {
