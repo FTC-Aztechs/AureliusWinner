@@ -51,6 +51,7 @@ import android.transition.Slide;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -315,38 +316,6 @@ public class Aura_Manual extends LinearOpMode {
     }
 
     public void AuraIntakeRoller() {
-//        if (gamepad2.dpad_left) {
-//            if (!changingIntakeSpeed) {
-//                timer_gp2_dpad_left.reset();
-//                changingIntakeSpeed = true;
-//            } else if (timer_gp2_dpad_left.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-//                if (dPadIntakeAdjust <= 1) {
-//                    dPadIntakeAdjust = 1;
-//                } else {
-//                    dPadIntakeAdjust -= 1;
-//                }
-//                telemetry.addLine("Current intake speed: " + dPadIntakeAdjust);
-//                telemetry.update();
-//                changingIntakeSpeed = false;
-//            }
-//        }
-//
-//        //gamepad right -> increase wheel speed
-//        if (gamepad2.dpad_right) {
-//            if (!changingIntakeSpeed) {
-//                timer_gp2_dpad_right.reset();
-//                changingIntakeSpeed = true;
-//            } else if (timer_gp2_dpad_right.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-//                if (dPadIntakeAdjust >= 10) {
-//                    dPadIntakeAdjust = 10;
-//                } else {
-//                    dPadIntakeAdjust += 1;
-//                }
-//                telemetry.addLine("Current speed: " + dPadIntakeAdjust);
-//                telemetry.update();
-//                changingIntakeSpeed = false;
-//            }
-//        }
 
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(gamepad2.right_stick_y));
         Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (-gamepad2.right_stick_y));
@@ -355,10 +324,7 @@ public class Aura_Manual extends LinearOpMode {
 
 //    @SuppressLint("SuspiciousIndentation")
 public void AuraIntakeOuttake() {
-    // if gamepad2.b => STATE_1_RFI
-    // if gamepad2.a => STATE_3_ITA
-    // if gamepad2.x => STATE_5_RFO
-    // if gamepad2.y => STATE_6_PR
+
 
     if (gamepad2.a) {
         if (!changingState) {

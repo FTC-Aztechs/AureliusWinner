@@ -201,7 +201,6 @@ public class AuraRobot
         boeing747 = new AuraLaunchController(hwMap);
         hanger = new AuraHangController(hwMap);
 //        depositFlipper = new Aura_DepositController(hwMap);
-        myIntakeController = new AuraIntakeOuttakeController(hwMap);
     }
     String formatAngle( AngleUnit angleUnit, double angle) {
         return formatDegrees(angleUnit.DEGREES.fromUnit(angleUnit, angle));
