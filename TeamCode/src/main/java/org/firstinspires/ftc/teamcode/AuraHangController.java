@@ -37,9 +37,12 @@ public class AuraHangController {
         hanger = hardwareMap.get(Servo.class, "Extend");
         funky = hardwareMap.get(Servo.class, "Funky");
         hangMotor = hardwareMap.get(DcMotor.class, "hangMotor");
-        hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         currState = AuraHangController.HangState.Idle;
         targetState = HangState.Idle;
+    }
+
+    public void init(){
+        hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void setTelemetry(Telemetry tele)

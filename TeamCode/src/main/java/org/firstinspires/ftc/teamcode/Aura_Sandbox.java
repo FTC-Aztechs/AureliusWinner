@@ -179,7 +179,7 @@ public class Aura_Sandbox extends LinearOpMode
     @Override
     public void runOpMode() {
         Aurelius.init(hardwareMap);
-        myController = new AuraIntakeOuttakeController (hardwareMap);
+        myController = new AuraIntakeOuttakeController (hardwareMap, true);
         myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
 
 
@@ -405,7 +405,7 @@ public class Aura_Sandbox extends LinearOpMode
                 timer_gp2_dpad_down.reset();
                 changingState = true;
             } else if (timer_gp2_dpad_down.time(MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_6_PR);
+                myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH);
                 telemetry.addData("State", "6");
                 telemetry.update();
                 changingState = false;

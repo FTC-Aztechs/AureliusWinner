@@ -79,7 +79,6 @@ public class AuraRobot
     public AuraLaunchController boeing747;
     public AuraHangController hanger;
 //    public Aura_DepositController depositFlipper;
-    public AuraIntakeOuttakeController myIntakeController;
     public AuraHeadingEstimator myHeadingEstimator;
 
     public WebcamName Khimera = null;
@@ -130,10 +129,10 @@ public class AuraRobot
     public static double WRIST_TUCK = 0.8;
     public static double ELBOW_DOWN = 0.023;
     public static double ELBOW_UP = 0.58;
-    public static int SLIDE_INTAKE_POS = 100;
-    public static int SLIDE_FLIP_HEIGHT = 500;
+    public static int SLIDE_INTAKE_POS = 0;
+    public static int SLIDE_FLIP_HEIGHT = 750;
     public static int SLIDE_RAISE_LOW = 400;
-    public static int SLIDE_RAISE_MED = 750;
+    public static int SLIDE_RAISE_MED = 500;
     public static int SLIDE_RAISE_HIGH = 3000;
     public static double slideTicks_stepSize = 25;
     public static int FloorPosition  = 600;
@@ -201,7 +200,6 @@ public class AuraRobot
         boeing747 = new AuraLaunchController(hwMap);
         hanger = new AuraHangController(hwMap);
 //        depositFlipper = new Aura_DepositController(hwMap);
-        myIntakeController = new AuraIntakeOuttakeController(hwMap);
     }
     String formatAngle( AngleUnit angleUnit, double angle) {
         return formatDegrees(angleUnit.DEGREES.fromUnit(angleUnit, angle));
