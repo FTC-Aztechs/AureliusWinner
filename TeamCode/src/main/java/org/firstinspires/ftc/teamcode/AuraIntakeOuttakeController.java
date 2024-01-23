@@ -71,7 +71,7 @@ public class AuraIntakeOuttakeController {
     public static double slideTickError = 10;
     public static double servoPosError = 0.02;
     public static double SLIDE_WAIT_TIME_LIMIT = 1;
-    public static double FLIP_WAIT_TIME_LIMIT = 1;
+    public static double FLIP_WAIT_TIME_LIMIT = 0.5;
     private Telemetry telemetry;
 
     public boolean safeToUnload = false;
@@ -102,7 +102,7 @@ public class AuraIntakeOuttakeController {
         slideTimer.reset();
 
 
-        currSlidePos = SLIDE_INTAKE_POS;
+        currSlidePos = 0;
         targetSlidePos = SLIDE_INTAKE_POS;
 
         isManual = Manual;
@@ -216,7 +216,7 @@ public class AuraIntakeOuttakeController {
 
     public void updateSlide() {
 
-        if(currSlidePos != targetSlidePos ) {
+        //if(currSlidePos != targetSlidePos ) {
             double command;
 //            = liftController.output(targetSlidePos, Slide.getCurrentPosition());
             if (targetSlidePos < currSlidePos) {
@@ -229,7 +229,7 @@ public class AuraIntakeOuttakeController {
             Slide.setPower(SlidePower);
             currSlidePos = Slide.getCurrentPosition();
 //            targetSlidePos = Slide.getTargetPosition();
-        }
+        //}
         if(telemetry != null) {
             telemetry.addData("AuraIOController: Current Slide position: %f", currSlidePos);
             telemetry.addData("Current State: ", currState);
@@ -252,7 +252,7 @@ public class AuraIntakeOuttakeController {
                 // TODO: GO TO state 3 if TWO PIXELS ARE LOADED.
                 // TODO: OTHERWISE, REACT TO MANUAL OVERRIDE
                 //color sensor input = pixel in
-                setTargetState(ioState.STATE_3_PS);
+                //setTargetState(ioState.STATE_3_PS);
             }
 
             return;

@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static org.firstinspires.ftc.teamcode.AuraRobot.FunkyIdle;
-import static org.firstinspires.ftc.teamcode.AuraRobot.FunkyUp;
-import static org.firstinspires.ftc.teamcode.AuraRobot.HangExtend;
-import static org.firstinspires.ftc.teamcode.AuraRobot.HangIdle;
-import static org.firstinspires.ftc.teamcode.AuraRobot.motorTicks;
-import static org.firstinspires.ftc.teamcode.AuraRobot.numRotations;
+import static org.firstinspires.ftc.teamcode.AuraRobot.HANG_FLIPPER_DOWN;
+import static org.firstinspires.ftc.teamcode.AuraRobot.HANG_FLIPPER_UP;
+import static org.firstinspires.ftc.teamcode.AuraRobot.HANG_EXTENDER_EXTEND;
+import static org.firstinspires.ftc.teamcode.AuraRobot.HANG_EXTENDER_RETRACT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.HANG_MOTOR_TICKS;
+import static org.firstinspires.ftc.teamcode.AuraRobot.HANG_NUM_MOTOR_ROTATIONS;
 
 
 import com.acmerobotics.dashboard.config.Config;
@@ -18,9 +18,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 public class AuraHangController {
-    public Servo hanger;
+    public Servo hangExtender;
 
-    public Servo funky;
+    public Servo hangFlipper;
 
     private DcMotor hangMotor;
     enum HangState
@@ -34,8 +34,9 @@ public class AuraHangController {
     Telemetry telemetry;
 
     public AuraHangController(HardwareMap hardwareMap) {
-        hanger = hardwareMap.get(Servo.class, "Extend");
-        funky = hardwareMap.get(Servo.class, "Funky");
+        // TODO: Configure these right and flip it correctly.
+        hangFlipper = hardwareMap.get(Servo.class, "Extend");
+        hangExtender = hardwareMap.get(Servo.class, "Funky");
         hangMotor = hardwareMap.get(DcMotor.class, "hangMotor");
         currState = AuraHangController.HangState.Idle;
         targetState = HangState.Idle;
@@ -43,6 +44,7 @@ public class AuraHangController {
 
     public void init(){
         hangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void setTelemetry(Telemetry tele)
@@ -70,19 +72,19 @@ public class AuraHangController {
         switch (targetState) {
             case Hang:
 //                telemetry.addData("MOTOR TICKS",(int)Math.floor(numRotations * motorTicks));
-                hangMotor.setTargetPosition((int)Math.floor(numRotations * motorTicks));
+                hangMotor.setTargetPosition((int)Math.floor(HANG_NUM_MOTOR_ROTATIONS * HANG_MOTOR_TICKS));
                 hangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 hangMotor.setPower(1);
                 currState = AuraHangController.HangState.Hang;
                 break;
             case Up:
-                hanger.setPosition(HangExtend);
-                funky.setPosition(FunkyUp);
+                hangExtender.setPosition(HANG_EXTENDER_EXTEND);
+                hangFlipper.setPosition(HANG_FLIPPER_UP);
                 currState = HangState.Up;
                 break;
             case Idle:
-                hanger.setPosition(HangIdle);
-                funky.setPosition(FunkyIdle);
+                hangExtender.setPosition(HANG_EXTENDER_RETRACT);
+                hangFlipper.setPosition(HANG_FLIPPER_DOWN);
                 currState = AuraHangController.HangState.Idle;
                 break;
             }

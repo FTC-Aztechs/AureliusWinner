@@ -33,8 +33,10 @@ package org.firstinspires.ftc.teamcode;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Hang;
+import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Idle;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.targetSlidePos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.ALL_DRIVES;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.HANG;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.LOWER_LEFT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.LOWER_RIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.SLIDE;
@@ -63,6 +65,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -190,6 +193,10 @@ public class Aura_Sandbox extends LinearOpMode
         myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
         LeftFinger = hardwareMap.get(Servo.class, "lefty");
         RightFinger = hardwareMap.get(Servo.class, "righty");
+
+        Aurelius.hanger.init();
+        Aurelius.hanger.setTargetState(Idle);
+        Aurelius.hanger.update();
 
         // Telemetry and HTML Log file
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -718,6 +725,8 @@ public class Aura_Sandbox extends LinearOpMode
                 changingState = false;
             }
         }
+        telemetry.addData("Hang Position: ", Aurelius.getCurrentPosition(HANG));
+        telemetry.update();
         Aurelius.hanger.update();
     }
 

@@ -35,8 +35,13 @@ package org.firstinspires.ftc.teamcode;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
+import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Hang;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.targetSlidePos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.HANG;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
+import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_FLIP_HEIGHT;
@@ -55,6 +60,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.HashMap;
@@ -134,6 +140,9 @@ public class Aura_Manual extends LinearOpMode {
     private boolean assumingTopMidCone = false;
     private boolean assumingMiddleCone = false;
 
+    // Define Fingers
+    private Servo LeftFinger = null;
+    private Servo RightFinger = null;
 
 
     //drive booleans
@@ -149,6 +158,9 @@ public class Aura_Manual extends LinearOpMode {
     public void runOpMode() {
         // Initialize the drive system vriables
         Aurelius.init(hardwareMap);
+        LeftFinger = hardwareMap.get(Servo.class, "lefty");
+        RightFinger = hardwareMap.get(Servo.class, "righty");
+
         myIntakeOuttakeController = new AuraIntakeOuttakeController (hardwareMap, true);
         initAurelius();
 
@@ -161,8 +173,36 @@ public class Aura_Manual extends LinearOpMode {
             AuraIntakeOuttake();
             AuraManualDrive();
             AuraLauncher();
-            //AuraHang();
+            AuraFingers();
+            AuraHang();
+//            AuraColor();
+            //AuraHang();//            AuraColor();
 
+        }
+    }
+
+
+
+
+    public void AuraFingers()
+    {
+        if(gamepad2.left_trigger == 1f) {
+            if(!changingState) {
+                timer_gp2_lt.reset();
+                changingState = true;
+            } else if (timer_gp2_lt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
+                changingState = false;
+            }
+        }
+        if(gamepad2.right_trigger == 1f) {
+            if(!changingState) {
+                timer_gp2_rt.reset();
+                changingState = true;
+            } else if (timer_gp2_lt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                RightFinger.setPosition(RIGHT_FINGER_UNLOCK);
+                changingState = false;
+            }
         }
     }
 
@@ -170,26 +210,19 @@ public class Aura_Manual extends LinearOpMode {
         FtcDashboard Dash = auraDashboard;
 
         Aurelius.boeing747.init();
+
+        Aurelius.hanger.init();
+        Aurelius.hanger.update();
+
         myIntakeOuttakeController.init();
         myIntakeOuttakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
 
-//        Aurelius.hanger.init();
-//        Aurelius.hanger.update();
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
         telemetry.addLine("Status: Robot is ready to roll!");
         telemetry.update();
     }
 
     public void AuraColor() {
-
-        telemetry.addData("Right Red", Right.red());
-        telemetry.addData("Right Green", Right.green());
-        telemetry.addData("Right Blue", Right.blue());
-        telemetry.addData("Left Red", Left.red());
-        telemetry.addData("Left Blue", Left.blue());
-        telemetry.addData("Left Green", Left.green());
 
         String[] colors = {"White", "Green", "Purple", "Yellow"};
         int[][] rightRanges = {
@@ -317,8 +350,8 @@ public class Aura_Manual extends LinearOpMode {
 
     public void AuraIntakeRoller() {
 
-        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(gamepad2.right_stick_y));
-        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (-gamepad2.right_stick_y));
+        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(-gamepad2.right_stick_y));
+        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (gamepad2.right_stick_y));
 
     }
 
