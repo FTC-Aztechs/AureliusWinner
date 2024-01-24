@@ -617,8 +617,6 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
 
         // Set the camera (webcam vs. built-in RC phone camera).
         builder.setCamera(hardwareMap.get(WebcamName.class, "Kemera"));
-
-
         // Set and enable the processor.
         builder.addProcessor(tfod);
 
