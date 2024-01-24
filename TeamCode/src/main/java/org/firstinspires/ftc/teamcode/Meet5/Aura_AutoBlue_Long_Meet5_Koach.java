@@ -35,6 +35,9 @@ import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.INTAKE;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -88,11 +91,6 @@ import java.util.concurrent.TimeUnit;
 @Autonomous(name="Blue_Long_Coach", group="Linear OpMode")
 
 public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
-
-    // TODO: Move these to AuroRobot so they can be used across all Autos
-    public static double AUTO_WAIT_FOR_OUTTAKE = 1.0;
-    public static double AUTO_WAIT_FOR_YELLOW_DROP = 1.0;
-
 
     //**** Roadrunner Pose2ds ****
 
@@ -240,7 +238,7 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
     boolean bRunningTrajectory = false;
 
     AuraRobot Aurelius = new AuraRobot();
-    AuraIntakeOuttakeController MyIntakeOuttakeController = new AuraIntakeOuttakeController(hardwareMap, false);
+    AuraIntakeOuttakeController MyIntakeOuttakeController;
     MecanumDrive BlueLong;
     
 
@@ -350,19 +348,11 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        auraBoard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Initialize...
         Aurelius.init(hardwareMap);
-        BlueLong = new MecanumDrive(Aurelius.hwMap, blueStartPos);
-        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, blueStartPos);
-        ElapsedTime trajectoryTimer = new ElapsedTime(MILLISECONDS);
-        MyIntakeOuttakeController = new AuraIntakeOuttakeController(hardwareMap, false);
-        MyIntakeOuttakeController.setTargetState(STATE_3_PS);
-
-        auraBoard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        telemetry.setAutoClear(false);
-
         telemetry.addLine(String.format("%d. Aura Initialized!", iTeleCt++));
         telemetry.update();
 
@@ -370,6 +360,14 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
         telemetry.addLine(String.format("%d. Battery voltage: %.1f volts", iTeleCt++, volts));
         telemetry.update();
 
+        BlueLong = new MecanumDrive(Aurelius.hwMap, blueStartPos);
+        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, blueStartPos);
+        telemetry.addLine(String.format("%d. myHeadingEstimator Initialized!", iTeleCt++));
+        telemetry.update();
+
+        ElapsedTime trajectoryTimer = new ElapsedTime(MILLISECONDS);
+        MyIntakeOuttakeController = new AuraIntakeOuttakeController(hardwareMap, false);
+        MyIntakeOuttakeController.setTargetState(STATE_3_PS);
 
         // Build trajectories here ...
         telemetry.addData("Status: ", "Building Trajectories......");
@@ -396,7 +394,6 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
 
-        telemetry.setAutoClear(true);
 
         while (!isStarted()) {
             telemetryTfod();
@@ -417,10 +414,22 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                 MyIntakeOuttakeController.update();
             }
 
+            // Parallel action trajectories => call first action, then second, then first, then second until both actions finish
+            //     In our logic, we use the dropOff trajectory as one parallel action
+            //     and updateIOController as teh second which lets the slide PIDs and all others work.
+            //     Within the drop off trajectories, we simply tweak the state machine states at different points
+            //     in the trajectory and allow the updateIoController take care of letting the SM achieve the states as
+            //     needed. All of this happens in parallel.
+            //     bRunningTrajectory, beginTrajectoryMarker & endTrajectoryMarker
+            //        - We use the bRunningTrajectory flag as a way to keep the updateIOController calls keep running until
+            //          the trajectory run is completed. The begin & end Markers ensure that the flag is turned on before
+            //          the trajectory is started and turned off when it is completed.
+
             // Set this outside the Parllel actions - need to make sure that updateIOController has
             // a chance to enter it while(bRunningTrajectory) loop when parallel actions are started.
-
             bRunningTrajectory = true;
+
+
             switch (PurpleDropOffPos) {
                 case 1:
                     Actions.runBlocking( new SequentialAction(
@@ -538,19 +547,21 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
 
         dropOffYellowAtPos3 = BlueLong.actionBuilder(bluePurple3Pos)
                 .setTangent(Math.toRadians(90))
-                .lineToX(-34)
+                .strafeTo(new Vector2d(-32,34.5))
                 .strafeTo(blueBeforeGatePos3)
                 .turn(Math.toRadians(180))
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueAfterGateTagPos)
                 .afterDisp(0, getReadyForOutTake)
-                .stopAndAdd(updateAfterGatePos)
+                //.stopAndAdd(updateAfterGatePos)
                 .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
 				.stopAndAdd(depositYellow)
-                .afterTime(AUTO_WAIT_FOR_YELLOW_DROP, getReadyForIntake)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .splineToLinearHeading(blueParkPos, Math.toRadians(0))
+                .afterDisp(0, getReadyForIntake)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .stopAndAdd(endTrajectoryMarker)
                 .build();
     }
@@ -695,6 +706,11 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                   }
             }
         }
+        // TODO: Once April Tag detection works, remove this false override
+        //       Also, the correction logic here needs to be updated to just get the position
+        //       from the AprilTag and udpate the localizer. No need to calibrate or consult the
+        //       calibrated value.
+        targetFound = false;
         if(targetFound) {
             telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.fieldPosition);
             telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);

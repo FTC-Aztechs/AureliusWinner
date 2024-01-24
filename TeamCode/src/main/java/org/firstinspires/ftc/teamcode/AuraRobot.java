@@ -147,6 +147,12 @@ public class AuraRobot
     public static double HANG_NUM_MOTOR_ROTATIONS = 3.5;
 
 
+    public static double AUTO_WAIT_FOR_OUTTAKE = 1.0;
+    public static double AUTO_WAIT_FOR_YELLOW_DROP = 1.0;
+    public static double AUTO_WAIT_RETURN_TO_INTAKE = 3.0;
+
+
+
     public static double APRILTAG_TIMEOUT = 5;
 
    //------------------------------------------------------------

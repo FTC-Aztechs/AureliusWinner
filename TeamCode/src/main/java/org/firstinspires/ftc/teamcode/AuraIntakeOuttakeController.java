@@ -44,9 +44,10 @@ public class AuraIntakeOuttakeController {
     public ColorRangeSensor Right = null;
     public ElapsedTime flipTimer;
     public ElapsedTime slideTimer;
+    public ElapsedTime wristTimer; // TODO: Remove this after we have color sensors implemented
 
 
-    //TODO: main states are State 1, State 3, State 5 Mid (in auto), State 5 manual, and State 6 (in auto) other states are transions or unused. *Target pos can only be set to these)
+    // main states are State 1, State 3,  State 5 manual, and State 6 (in auto) other states are transions or unused. *Target pos can only be set to these)
     public enum ioState {
         STATE_0_UNINITIALIZED, // At Init, set Target to 1_RFI and leave Current at Uninitialized
         STATE_1_RFI,    // State 1: Ready for Intake
@@ -69,9 +70,9 @@ public class AuraIntakeOuttakeController {
     public static boolean goingUp = false;
     public static AuraServoPIDController servoController;
     public static double slideTickError = 10;
-    public static double servoPosError = 0.02;
-    public static double SLIDE_WAIT_TIME_LIMIT = 1;
+    public static double SLIDE_WAIT_TIME_LIMIT = 0.5;
     public static double FLIP_WAIT_TIME_LIMIT = 0.5;
+    public static double WRIST_WAIT_TIME_LIMIT = 1;
     private Telemetry telemetry;
 
     public boolean safeToUnload = false;
@@ -100,6 +101,9 @@ public class AuraIntakeOuttakeController {
 
         slideTimer = new ElapsedTime();
         slideTimer.reset();
+
+        wristTimer = new ElapsedTime();
+        wristTimer.reset();
 
 
         currSlidePos = 0;
@@ -135,6 +139,7 @@ public class AuraIntakeOuttakeController {
 
         flipTimer.reset();
         slideTimer.reset();
+        wristTimer.reset();
         targetState = eState;
 
         if (targetState == ioState.STATE_1_RFI) {
@@ -172,10 +177,10 @@ public class AuraIntakeOuttakeController {
                 break;
             case STATE_4_BF:
                 if (goingUp) {
-                    if (isManual) {
+                    if (isManual) { // TODO: UNless we need to adjust slide pos to something else in Auto...
                         nextState = ioState.STATE_5_RFO_MANUAL;
                     } else {
-                        nextState = ioState.STATE_5_RFO_MID;
+                        nextState = ioState.STATE_5_RFO_MANUAL;
                     }
                 } else {
                     nextState = ioState.STATE_3_PS;
@@ -185,17 +190,6 @@ public class AuraIntakeOuttakeController {
                 if (goingUp) {
                     if (isManual) {
                         nextState = ioState.STATE_5_RFO_MANUAL;
-                    } else {
-                        nextState = ioState.STATE_6_PR_BOTH;
-                    }
-                } else {
-                    nextState = ioState.STATE_4_BF;
-                }
-                break;
-            case STATE_5_RFO_MID:
-                if (goingUp) {
-                    if (isManual) {
-                        nextState = ioState.STATE_5_RFO_MID;
                     } else {
                         nextState = ioState.STATE_6_PR_BOTH;
                     }
@@ -247,13 +241,13 @@ public class AuraIntakeOuttakeController {
             updateSlide();
             //updateServo();
 
-            if (currState == ioState.STATE_1_RFI && flipTimer.milliseconds() > 2000) {
-                // TODO: Replce this with Color sensor logic
-                // TODO: GO TO state 3 if TWO PIXELS ARE LOADED.
-                // TODO: OTHERWISE, REACT TO MANUAL OVERRIDE
-                //color sensor input = pixel in
-                //setTargetState(ioState.STATE_3_PS);
-            }
+//            if (currState == ioState.STATE_1_RFI && flipTimer.milliseconds() > 2000) {
+//                // TODO: Replce this with Color sensor logic
+//                // TODO: GO TO state 3 if TWO PIXELS ARE LOADED.
+//                // TODO: OTHERWISE, REACT TO MANUAL OVERRIDE
+//                //color sensor input = pixel in
+//                //setTargetState(ioState.STATE_3_PS);
+//            }
 
             return;
         }
@@ -276,8 +270,11 @@ public class AuraIntakeOuttakeController {
             case STATE_2_ITA: // Intake tucked
 
                 Wrist.setPosition(WRIST_TUCK);
-                currState = nextState;
 
+                // Give the wrist some time to reach tuck position
+                if(wristTimer.seconds() > WRIST_WAIT_TIME_LIMIT) {
+                    currState = nextState;
+                }
                 break;
 
             case STATE_3_PS: // Pixels secured = main state
@@ -310,7 +307,6 @@ public class AuraIntakeOuttakeController {
                 if(slideTimer.seconds() > SLIDE_WAIT_TIME_LIMIT)
                 {
                     currState = nextState;
-
                     // Reset flip timer such that states 3 & states 5
                     // have a fresh timer to count
                     flipTimer.reset();
@@ -333,21 +329,6 @@ public class AuraIntakeOuttakeController {
                     // Reset Slide Timer such that state 4 has a fresh timer to count
                     slideTimer.reset();
                 }
-                break;
-
-            case STATE_5_RFO_LOW: // Ready for Outtake
-                targetSlidePos = SLIDE_RAISE_LOW;
-                currState = nextState;
-                break;
-
-            case STATE_5_RFO_MID: // Ready for Outtake
-                targetSlidePos = SLIDE_RAISE_MED;
-                currState = nextState;
-                break;
-
-            case STATE_5_RFO_HIGH: // Ready for Outtake
-                targetSlidePos = SLIDE_RAISE_HIGH;
-                currState = nextState;
                 break;
 
             case STATE_6_PR_BOTH: // Pixel Release = main state in auto
@@ -374,6 +355,14 @@ public class AuraIntakeOuttakeController {
             return true;
         }
 
+        if(currState == ioState.STATE_0_UNINITIALIZED)
+        {
+            if(targetState == ioState.STATE_1_RFI || targetState == ioState.STATE_3_PS ) {
+                return true;
+            }
+            return false;
+        }
+
         if( currState == ioState.STATE_1_RFI ) {
             if(targetState == ioState.STATE_3_PS
              ) {
@@ -383,21 +372,14 @@ public class AuraIntakeOuttakeController {
         }
 
         if( currState == ioState.STATE_3_PS) {
-            if(targetState == ioState.STATE_1_RFI || targetState == ioState.STATE_5_RFO_MANUAL || targetState == ioState.STATE_5_RFO_MANUAL){
-                return true;
-            }
-            return false;
-        }
-
-        if( currState == ioState.STATE_5_RFO_MID) {
-            if(targetState == ioState.STATE_6_PR_BOTH){
+            if(targetState == ioState.STATE_1_RFI || targetState == ioState.STATE_5_RFO_MANUAL ){
                 return true;
             }
             return false;
         }
 
         if( currState == ioState.STATE_5_RFO_MANUAL) {
-            if(targetState == ioState.STATE_1_RFI){
+            if(targetState == ioState.STATE_1_RFI || targetState == ioState.STATE_6_PR_BOTH){
                 return true;
             }
             return false;
