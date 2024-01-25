@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -74,6 +75,7 @@ public class AuraRobot
     public DcMotor intakeMotor = null;
     public CRServo Roller = null;
     public DcMotor Hang = null;
+    public Servo   PurpleDumper = null;
 
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
@@ -138,6 +140,8 @@ public class AuraRobot
     public static int HighJunction   = 15400; // 15400
     public static int HighJunction_Auto = 15250;
     public static int UpperLimit     = 3000;
+    public static double PURPLE_LOCK    = 1.0;
+    public static double PURPLE_UNLOCK  = 0.5;
 
     public static double HANG_EXTENDER_EXTEND = 0.36;
     public static double HANG_EXTENDER_RETRACT = 0.58; //0
@@ -180,6 +184,7 @@ public class AuraRobot
         Slide = hwMap.get(DcMotor.class, "Slide");
         Roller = hwMap.get(CRServo.class, "Roller");
         Hang = hwMap.get(DcMotor.class, "hangMotor");
+        PurpleDumper = hwMap.get(Servo.class, "purple");
 
         // Define and Initialize Color Sensors
         Left = hwMap.get(RevColorSensorV3.class, "Left");
@@ -210,6 +215,7 @@ public class AuraRobot
         noodleWash = new AuraIntakeController(hwMap);
         boeing747 = new AuraLaunchController(hwMap);
         hanger = new AuraHangController(hwMap);
+
 //        depositFlipper = new Aura_DepositController(hwMap);
     }
     String formatAngle( AngleUnit angleUnit, double angle) {

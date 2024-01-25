@@ -41,6 +41,7 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.HANG;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
@@ -209,8 +210,8 @@ public class Aura_Manual extends LinearOpMode {
     public void initAurelius() {
         FtcDashboard Dash = auraDashboard;
 
+        Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
         Aurelius.boeing747.init();
-
         Aurelius.hanger.init();
         Aurelius.hanger.update();
 
