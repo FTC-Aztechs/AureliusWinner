@@ -78,6 +78,8 @@ public class AuraIntakeOuttakeController {
     private Telemetry telemetry;
 
     public static boolean bPixelsDetected = false;
+    public static boolean rightDetected = false;
+    public static boolean leftDetected = false;
     public boolean safeToUnload = false;
 
     //TODO: change numbers
@@ -239,7 +241,9 @@ public class AuraIntakeOuttakeController {
         for (int i = 0; i < colors.length; i++) {
             if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
                 telemetry.addData("Pixel Detected by Right Sensor", colors[i]);
-                RightFinger.setPosition(RIGHT_FINGER_LOCK);
+                rightDetected = true;
+            } else {
+                rightDetected = false;
             }
         }
 
@@ -247,11 +251,16 @@ public class AuraIntakeOuttakeController {
         for (int i = 0; i < colors.length; i++) {
             if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
                 telemetry.addData("Pixel Detected by Left Sensor", colors[i]);
-                colorTimer = new ElapsedTime();
-                LeftFinger.setPosition(LEFT_FINGER_LOCK);
+                leftDetected = true;
             } else {
-                colorTimer.reset();
+                leftDetected = false;
             }
+        }
+
+        if(rightDetected && leftDetected) {
+            colorTimer = new ElapsedTime();
+        } else {
+            colorTimer.reset();
         }
 
         telemetry.update();
