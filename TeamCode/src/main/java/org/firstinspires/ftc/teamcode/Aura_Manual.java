@@ -210,8 +210,8 @@ public class Aura_Manual extends LinearOpMode {
     public void initAurelius() {
         FtcDashboard Dash = auraDashboard;
 
-        Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
         Aurelius.boeing747.init();
+
         Aurelius.hanger.init();
         Aurelius.hanger.update();
 

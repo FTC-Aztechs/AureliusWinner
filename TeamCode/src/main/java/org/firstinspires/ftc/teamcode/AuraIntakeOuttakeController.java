@@ -44,6 +44,8 @@ public class AuraIntakeOuttakeController {
     public ColorRangeSensor Right = null;
     public ElapsedTime flipTimer;
     public ElapsedTime slideTimer;
+
+    public ElapsedTime colorTimer;
     public ElapsedTime wristTimer; // TODO: Remove this after we have color sensors implemented
 
 
@@ -75,6 +77,9 @@ public class AuraIntakeOuttakeController {
     public static double WRIST_WAIT_TIME_LIMIT = 1;
     private Telemetry telemetry;
 
+    public static boolean bPixelsDetected = false;
+    public static boolean rightDetected = false;
+    public static boolean leftDetected = false;
     public boolean safeToUnload = false;
 
     //TODO: change numbers
@@ -208,6 +213,59 @@ public class AuraIntakeOuttakeController {
         }
     }
 
+    public void AuraColor() {
+
+        telemetry.addData("Right Red ", Right.red());
+        telemetry.addData("Right Green ", Right.green());
+        telemetry.addData("Right Blue ", Right.blue());
+
+        telemetry.addData("Left Red ", Left.red());
+        telemetry.addData("Left Green ", Left.green());
+        telemetry.addData("Left Blue ", Left.blue());
+
+        String[] colors = {"White", "Green", "Purple", "Yellow"};
+        int[][] rightRanges = {
+                {1400, 1700, 1600, 1950, 1500, 1800}, // White (Color Ranges are 100 apart original for first was 1355 so range became 1255 && 1455)
+                {264, 364, 468, 568, 237, 337},      // Green
+                {565, 750, 550, 700, 710, 950},      // Purple
+                {782, 882, 584, 684, 312, 412}       // Yellow
+        };
+        int[][] leftRanges = {
+                {2100, 2300, 3600, 4200, 3400, 4000},// White
+                {348, 448, 1065, 1165, 460, 560},    // Green
+                {832, 1100, 1400, 1826, 1205, 2250},  // Purple
+                {1165, 1265, 1571, 1671, 458, 558}   // Yellow
+        };
+
+        // Check the color for Right sensor
+        for (int i = 0; i < colors.length; i++) {
+            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
+                telemetry.addData("Pixel Detected by Right Sensor", colors[i]);
+                rightDetected = true;
+            } else {
+                rightDetected = false;
+            }
+        }
+
+        // Check the color for Left sensor
+        for (int i = 0; i < colors.length; i++) {
+            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
+                telemetry.addData("Pixel Detected by Left Sensor", colors[i]);
+                leftDetected = true;
+            } else {
+                leftDetected = false;
+            }
+        }
+
+        if(rightDetected && leftDetected) {
+            colorTimer = new ElapsedTime();
+        } else {
+            colorTimer.reset();
+        }
+
+        telemetry.update();
+    }
+
     public void updateSlide() {
 
         //if(currSlidePos != targetSlidePos ) {
@@ -241,13 +299,13 @@ public class AuraIntakeOuttakeController {
             updateSlide();
             //updateServo();
 
-//            if (currState == ioState.STATE_1_RFI && flipTimer.milliseconds() > 2000) {
-//                // TODO: Replce this with Color sensor logic
-//                // TODO: GO TO state 3 if TWO PIXELS ARE LOADED.
-//                // TODO: OTHERWISE, REACT TO MANUAL OVERRIDE
-//                //color sensor input = pixel in
-//                //setTargetState(ioState.STATE_3_PS);
-//            }
+            if (currState == ioState.STATE_1_RFI) {
+                if(!bPixelsDetected)
+                    AuraColor();
+                else if (colorTimer.seconds()>0.5) {
+                    setTargetState(ioState.STATE_3_PS);
+                }
+            }
 
             return;
         }
