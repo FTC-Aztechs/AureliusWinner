@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+import static com.qualcomm.hardware.rev.RevBlinkinLedDriver.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static org.firstinspires.ftc.teamcode.AuraRobot.ELBOW_DOWN;
@@ -21,6 +22,7 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_TUCK;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,6 +40,10 @@ public class AuraIntakeOuttakeController {
     private Servo Elbow;
     private Servo LeftFinger;
     private Servo RightFinger;
+
+    private RevBlinkinLedDriver rightBlinkin;
+
+    private RevBlinkinLedDriver leftBlinkin;
 
     public RevColorSensorV3 Left = null;
 
@@ -77,6 +83,11 @@ public class AuraIntakeOuttakeController {
     public static double WRIST_WAIT_TIME_LIMIT = 1;
     private Telemetry telemetry;
 
+    private static final BlinkinPattern WHITE_PATTERN = BlinkinPattern.WHITE;
+    private static final BlinkinPattern GREEN_PATTERN = BlinkinPattern.GREEN;
+    private static final BlinkinPattern PURPLE_PATTERN = BlinkinPattern.VIOLET;
+    private static final BlinkinPattern YELLOW_PATTERN = BlinkinPattern.YELLOW;
+
     public static boolean bPixelsDetected = false;
     public static boolean rightDetected = false;
     public static boolean leftDetected = false;
@@ -96,6 +107,8 @@ public class AuraIntakeOuttakeController {
 
         Left = hardwareMap.get(RevColorSensorV3.class, "Left");
         Right = hardwareMap.get(ColorRangeSensor.class, "Right");
+        rightBlinkin = hardwareMap.get(RevBlinkinLedDriver.class, "RBlink");
+        leftBlinkin = hardwareMap.get(RevBlinkinLedDriver.class, "LBlink");
 
         currState = ioState.STATE_0_UNINITIALIZED;
         targetState = ioState.STATE_1_RFI;
@@ -223,6 +236,8 @@ public class AuraIntakeOuttakeController {
         telemetry.addData("Left Green ", Left.green());
         telemetry.addData("Left Blue ", Left.blue());
 
+
+
         String[] colors = {"White", "Green", "Purple", "Yellow"};
         int[][] rightRanges = {
                 {1400, 1700, 1600, 1950, 1500, 1800}, // White (Color Ranges are 100 apart original for first was 1355 so range became 1255 && 1455)
@@ -257,6 +272,17 @@ public class AuraIntakeOuttakeController {
             }
         }
 
+
+//        if(rightDetected) {
+//            BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
+//            rightBlinkin.setPattern(rightPattern);
+//        }
+//
+//        if(leftDetected) {
+//            BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
+//            leftBlinkin.setPattern(leftPattern);
+//        }
+
         if(rightDetected && leftDetected) {
             colorTimer = new ElapsedTime();
         } else {
@@ -265,6 +291,26 @@ public class AuraIntakeOuttakeController {
 
         telemetry.update();
     }
+//
+//    private BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
+//        for (int i = 0; i < colorNames.length; i++) {
+//            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] &&
+//                    green >= colorRanges[i][2] && green <= colorRanges[i][3] &&
+//                    blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
+//                switch (colorNames[i]) {
+//                    case "White":
+//                        return WHITE_PATTERN;
+//                    case "Green":
+//                        return GREEN_PATTERN;
+//                    case "Purple":
+//                        return PURPLE_PATTERN;
+//                    case "Yellow":
+//                        return YELLOW_PATTERN;
+//                }
+//            }
+//        }
+//        return BlinkinPattern.BREATH_BLUE;  // should bounce blue color
+//    }
 
     public void updateSlide() {
 
