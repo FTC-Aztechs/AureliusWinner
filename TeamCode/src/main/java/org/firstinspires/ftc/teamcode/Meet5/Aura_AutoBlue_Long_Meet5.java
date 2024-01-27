@@ -325,7 +325,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
     private Action dropOffPurpleAtPos2;
     private Action dropOffPurpleAtPos3;
 
-     // Yellow Trajectories
+    // Yellow Trajectories
     private Action dropOffYellowAtPos1;
     private Action dropOffYellowAtPos2;
     private Action dropOffYellowAtPos3;
@@ -413,37 +413,37 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
             switch (PurpleDropOffPos) {
                 case 1:
                     Actions.runBlocking(
-                        new ParallelAction(
-                            new SequentialAction(
-                                beginTrajectoryMarker,
-                                dropOffPurpleAtPos1,
-                                dropOffYellowAtPos1,
-                                endTrajectoryMarker),
-                            updateIOController
-                    ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos1,
+                                            dropOffYellowAtPos1,
+                                            endTrajectoryMarker),
+                                    updateIOController
+                            ));
                     break;
                 case 2:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos2,
-                            dropOffYellowAtPos2,
-                            endTrajectoryMarker),
-                        updateIOController
-                    ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos2,
+                                            dropOffYellowAtPos2,
+                                            endTrajectoryMarker),
+                                    updateIOController
+                            ));
                     break;
                 case 3:
                 default:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos3,
-                            dropOffYellowAtPos3,
-                            endTrajectoryMarker),
-                        updateIOController
-                    ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos3,
+                                            dropOffYellowAtPos3,
+                                            endTrajectoryMarker),
+                                    updateIOController
+                            ));
                     break;
             }
         }
@@ -452,15 +452,15 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
     void buildPurpleTrajectories()
     {
         dropOffPurpleAtPos1 = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-90))
+                .setTangent(Math.toRadians(-135))
+                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-30))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
 
         dropOffPurpleAtPos2 = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-90))
+                .setTangent(Math.toRadians(-30))
+                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(180))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -487,7 +487,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueYellow1Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-				.stopAndAdd(depositYellow)
+                .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(blueParkPos)
                 .afterDisp(0, getReadyForIntake)
@@ -506,7 +506,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-				.stopAndAdd(depositYellow)
+                .stopAndAdd(depositYellow)
                 .strafeTo(blueParkPos)
                 .afterDisp(0, getReadyForIntake)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
@@ -524,7 +524,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                 .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-				.stopAndAdd(depositYellow)
+                .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(blueParkPos)
                 .afterDisp(0, getReadyForIntake)
@@ -642,7 +642,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                 } else {
                     telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
                     telemetry.update();
-                  }
+                }
             }
         }
 
@@ -660,12 +660,12 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                     (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
 
 
-            double deltaHeading = -desiredTag.ftcPose.yaw;
+            double currHeading = -desiredTag.ftcPose.yaw;
 
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(BlueLong.pose.heading.log()));
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
 
-            BlueLong.pose = new Pose2d(currX, currY,Math.toRadians(-90) - Math.toRadians(deltaHeading));
+            BlueLong.pose = new Pose2d(currX, currY, Math.toRadians(currHeading));
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
             return true;
@@ -690,10 +690,10 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
-                visionPortal = new VisionPortal.Builder()
-                        .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
-                        .addProcessor(aprilTag)
-                        .build();
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
+                    .addProcessor(aprilTag)
+                    .build();
         } else {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)

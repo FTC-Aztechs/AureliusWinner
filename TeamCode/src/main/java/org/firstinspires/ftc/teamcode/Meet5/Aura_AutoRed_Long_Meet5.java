@@ -102,9 +102,9 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
     //to find y: subtract robotcentric X pos to field centric start pos y
     //to find heading: add -90 degrees to field centric start pos heading
 
-    Pose2d redStartPos = new Pose2d(-36,-61.5,Math.toRadians(90));//0,0,0
+    Pose2d redStartPos = new Pose2d(-39,-62.5,Math.toRadians(90));//0,0,0
 
-    Pose2d redPurple1Pos = new Pose2d(-38, -34.5 , Math.toRadians(180)); //27,19,-90
+    Pose2d redPurple1Pos = new Pose2d(-39, -34.5 , Math.toRadians(180)); //27,19,-90
     Pose2d redPurple2Pos = new Pose2d(-31,- 33, Math.toRadians(90));  //37,12,-90
     Pose2d redPurple3Pos = new Pose2d(-34, -34.5, Math.toRadians(0));  //27,0,-90
 
@@ -114,12 +114,12 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
     Vector2d redAfterGateTagPos = new Vector2d(15.25, -11.5);//50,51.25
     Vector2d redAfterGatePos = new Vector2d(32, -11.5);//50,68
 
-    Vector2d redYellow3Pos = new Vector2d(45, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(45, -35.5);   //26,37,-90
-    Pose2d redYellow1Pos = new Pose2d(45,-28.5,Math.toRadians(0));    //33,37,-90
+    Vector2d redYellow3Pos = new Vector2d(49.5, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(49.5, -35.5);   //26,37,-90
+    Pose2d redYellow1Pos = new Pose2d(47.5,-28.5,Math.toRadians(0));    //33,37,-90
 
 
-    Vector2d redParkPos = new Vector2d(51.5, -11.5);//50, 82
+    Vector2d redParkPos = new Vector2d(47.5, -11.5);//50, 82
     boolean bProceedToYellow = false;
 
 
@@ -226,7 +226,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
     AuraRobot Aurelius = new AuraRobot();
     AuraIntakeOuttakeController MyIntakeOuttakeController;
     MecanumDrive RedLong;
-    
+
 
 
     private static FtcDashboard auraBoard;
@@ -320,7 +320,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
     private Action dropOffPurpleAtPos2;
     private Action dropOffPurpleAtPos3;
 
-     // Yellow Trajectories
+    // Yellow Trajectories
     private Action dropOffYellowAtPos1;
     private Action dropOffYellowAtPos2;
     private Action dropOffYellowAtPos3;
@@ -407,37 +407,37 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
             switch (PurpleDropOffPos) {
                 case 1:
                     Actions.runBlocking(
-                        new ParallelAction(
-                            new SequentialAction(
-                                beginTrajectoryMarker,
-                                dropOffPurpleAtPos1,
-                                dropOffYellowAtPos1,
-                                endTrajectoryMarker),
-                            updateIOController
-                    ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos1,
+                                            dropOffYellowAtPos1,
+                                            endTrajectoryMarker),
+                                    updateIOController
+                            ));
                     break;
                 case 2:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos2,
-                            dropOffYellowAtPos2,
-                            endTrajectoryMarker),
-                        updateIOController
-                    ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos2,
+                                            dropOffYellowAtPos2,
+                                            endTrajectoryMarker),
+                                    updateIOController
+                            ));
                     break;
                 case 3:
                 default:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos3,
-                            dropOffYellowAtPos3,
-                            endTrajectoryMarker),
-                        updateIOController
-                    ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos3,
+                                            dropOffYellowAtPos3,
+                                            endTrajectoryMarker),
+                                    updateIOController
+                            ));
                     break;
             }
         }
@@ -446,22 +446,22 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
     void buildPurpleTrajectories()
     {
         dropOffPurpleAtPos3 = RedLong.actionBuilder(redStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(redPurple3Pos, Math.toRadians(90))
+                .setTangent(Math.toRadians(135))
+                .splineToLinearHeading(redPurple3Pos, Math.toRadians(30))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
 
         dropOffPurpleAtPos2 = RedLong.actionBuilder(redStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(redPurple2Pos, Math.toRadians(90))
+                .setTangent(Math.toRadians(30))
+                .splineToLinearHeading(redPurple2Pos, Math.toRadians(180))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
 
         dropOffPurpleAtPos1 = RedLong.actionBuilder(redStartPos)
-                .setTangent(Math.toRadians(80))
-                .splineToLinearHeading(redPurple1Pos, Math.toRadians(130))
+                .setTangent(Math.toRadians(110))
+                .splineToLinearHeading(redPurple1Pos, Math.toRadians(90))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -481,7 +481,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redYellow3Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-				.stopAndAdd(depositYellow)
+                .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(redParkPos)
                 .afterDisp(0, getReadyForIntake)
@@ -500,7 +500,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-				.stopAndAdd(depositYellow)
+                .stopAndAdd(depositYellow)
                 .strafeTo(redParkPos)
                 .afterDisp(0, getReadyForIntake)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
@@ -508,7 +508,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
 
         dropOffYellowAtPos1 = RedLong.actionBuilder(redPurple1Pos)
                 .setTangent(Math.toRadians(-90))
-                .lineToX(-34)
+                .strafeTo(new Vector2d(-37,-34.5))
                 .strafeTo(redBeforeGatePos1)
                 .turn(Math.toRadians(-180))
                 .stopAndAdd(rectifyHeadingError)
@@ -518,7 +518,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
                 .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-				.stopAndAdd(depositYellow)
+                .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(redParkPos)
                 .afterDisp(0, getReadyForIntake)
@@ -636,7 +636,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
                 } else {
                     telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
                     telemetry.update();
-                  }
+                }
             }
         }
 
@@ -654,13 +654,12 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
                     (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
 
 
-            double deltaHeading = -desiredTag.ftcPose.yaw;
+            double currHeading = -desiredTag.ftcPose.yaw;
 
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(RedLong.pose.heading.log()));
-//            telemetry.addData("Deltas", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", deltaX, deltaY, deltaHeading);
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", RedLong.pose.position.x, RedLong.pose.position.y, Math.toDegrees(RedLong.pose.heading.log()));
             telemetry.update();
 
-            RedLong.pose = new Pose2d(currX, currY,Math.toRadians(-90) - Math.toRadians(deltaHeading));
+            RedLong.pose = new Pose2d(currX, currY, Math.toRadians(currHeading));
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", RedLong.pose.position.x, RedLong.pose.position.y, Math.toDegrees(RedLong.pose.heading.log()));
             telemetry.update();
             return true;
@@ -686,10 +685,10 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
 
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
-                visionPortal = new VisionPortal.Builder()
-                        .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
-                        .addProcessor(aprilTag)
-                        .build();
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
+                    .addProcessor(aprilTag)
+                    .build();
         } else {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)
