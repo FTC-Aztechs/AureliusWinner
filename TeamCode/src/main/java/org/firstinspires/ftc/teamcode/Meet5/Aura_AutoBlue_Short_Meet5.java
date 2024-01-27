@@ -104,17 +104,17 @@ public class Aura_AutoBlue_Short_Meet5 extends LinearOpMode {
 
 
     // RObot Width = 15; Length = 15.5
-    Pose2d blueStartPos = new Pose2d(12,61.5,Math.toRadians(-90));//0,0,0
+    Pose2d blueStartPos = new Pose2d(15,61.5,Math.toRadians(-90));//0,0,0
 
-    Pose2d bluePurple3Pos = new Pose2d(31, 34.5 , Math.toRadians(-180)); //27,19,-90
+    Pose2d bluePurple3Pos = new Pose2d(10, 34.5 , Math.toRadians(-180)); //27,19,-90
     Pose2d bluePurple2Pos = new Pose2d(17, 33, Math.toRadians(-90));  //37,12,-90
     Pose2d bluePurple1Pos = new Pose2d(14, 34.5, Math.toRadians(0));  //27,0,-90
 
-    Pose2d blueYellow1Pos = new Pose2d(45, 42, Math.toRadians(0));  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(45, 35.5);   //26,37,-90
-    Vector2d blueYellow3Pos = new Vector2d(45,28.5);    //33,37,-90
+    Pose2d blueYellow1Pos = new Pose2d(49.5, 42, Math.toRadians(0));  //27,37,-90
+    Vector2d blueYellow2Pos = new Vector2d(49.5, 35.5);   //26,37,-90
+    Vector2d blueYellow3Pos = new Vector2d(49.5,28.5);    //33,37,-90
 
-    Vector2d blueParkPos = new Vector2d(49, 54.5);  //7, 37
+    Vector2d blueParkPos = new Vector2d(47.5, 54.5);  //7, 37
     boolean bProceedToYellow = false;
 
     //Roadrunner field-centric coordinates quick guide brought to you by Lavanya

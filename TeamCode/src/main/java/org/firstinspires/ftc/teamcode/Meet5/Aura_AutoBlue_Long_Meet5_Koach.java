@@ -452,15 +452,15 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
     void buildPurpleTrajectories()
     {
         dropOffPurpleAtPos1 = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-90))
+                .setTangent(Math.toRadians(-135))
+                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-30))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
 
         dropOffPurpleAtPos2 = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-90))
+                .setTangent(Math.toRadians(-30))
+                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(180))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -658,12 +658,12 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                     (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
 
 
-            double deltaHeading = -desiredTag.ftcPose.yaw;
+            double currHeading = -desiredTag.ftcPose.yaw;
 
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(BlueLong.pose.heading.log()));
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
 
-            BlueLong.pose = new Pose2d(currX, currY,Math.toRadians(-90) - Math.toRadians(deltaHeading));
+            BlueLong.pose = new Pose2d(currX, currY, Math.toRadians(currHeading));
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
             return true;

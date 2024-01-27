@@ -127,11 +127,11 @@ public class AuraRobot
     public static double LEFT_FINGER_UNLOCK = 0.45;
     public static double RIGHT_FINGER_UNLOCK = 0.5;
     public static double WRIST_INTAKE = 0.57;
-    public static double WRIST_TUCK = 0.75;
+    public static double WRIST_TUCK = 0.78;
     public static double ELBOW_DOWN = 0.023;
     public static double ELBOW_UP = 0.65;
     public static int SLIDE_INTAKE_POS = 0;
-    public static int SLIDE_FLIP_HEIGHT = 850;
+    public static int SLIDE_FLIP_HEIGHT = 1000;
     public static int SLIDE_RAISE_LOW = 400;
     public static int SLIDE_RAISE_MED = 500;
     public static int SLIDE_RAISE_HIGH = 3000;
@@ -146,8 +146,10 @@ public class AuraRobot
     public static double HANG_EXTENDER_EXTEND = 0.36;
     public static double HANG_EXTENDER_RETRACT = 0.58; //0
     public static double HANG_FLIPPER_DOWN = 1.0;
-    public static double HANG_FLIPPER_UP = 0.7;
+    public static double HANG_FLIPPER_UP = 0.6;
     public static double HANG_MOTOR_TICKS = 537.7;
+
+    public static double HANG_POWER = 0.2;
     public static double HANG_NUM_MOTOR_ROTATIONS = 3.5;
 
 

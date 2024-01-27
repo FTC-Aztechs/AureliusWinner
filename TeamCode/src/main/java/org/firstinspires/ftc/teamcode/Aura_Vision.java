@@ -51,7 +51,7 @@ public class Aura_Vision extends LinearOpMode {
                         (tag.ftcPose.range * Math.cos(Math.toRadians(tag.ftcPose.bearing)));
 
 
-                double currHeading = tag.ftcPose.yaw + tag.ftcPose.yaw;
+                double currHeading = -tag.ftcPose.yaw;
 
                 telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, currHeading);
                 telemetry.update();
