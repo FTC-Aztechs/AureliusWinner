@@ -107,7 +107,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
     Pose2d blueStartPos = new Pose2d(-39,62.25,Math.toRadians(-90));//0,0,0
 
     Pose2d bluePurple3Pos = new Pose2d(-39, 34.5 , Math.toRadians(-180)); //27,19,-90
-    Pose2d bluePurple2Pos = new Pose2d(-31, 33, Math.toRadians(-90));  //37,12,-90
+    Pose2d bluePurple2Pos = new Pose2d(-31, 34, Math.toRadians(-90));  //37,12,-90
     Pose2d bluePurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
 
     Vector2d blueBeforeGatePos1 = new Vector2d(-38,11.5);//50,2
@@ -116,8 +116,8 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
     Vector2d blueAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
     Vector2d blueAfterGatePos = new Vector2d(32, 11.5);//50,68
 
-    Vector2d blueYellow1Pos = new Vector2d(49.5, 42);  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(49.5, 35.5);   //26,37,-90
+    Vector2d blueYellow1Pos = new Vector2d(52, 42);  //27,37,-90
+    Vector2d blueYellow2Pos = new Vector2d(49.5, 33);   //26,37,-90
     Pose2d blueYellow3Pos = new Pose2d(49.5,28.5,Math.toRadians(0));    //33,37,-90
 
 
@@ -459,8 +459,8 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                 .build();
 
         dropOffPurpleAtPos2 = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(-30))
-                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(180))
+                .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-70))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -606,7 +606,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 2;
         else
-            PurpleDropOffPos = 3;
+            PurpleDropOffPos = 1;
 
         telemetry.addData("Detected Spike Mark X = ", x);
         telemetry.addData("Detected Drop off Position = ", PurpleDropOffPos);

@@ -120,7 +120,6 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
     Vector2d blueYellow2Pos = new Vector2d(49.5, 35.5);   //26,37,-90
     Pose2d blueYellow3Pos = new Pose2d(49.5,28.5,Math.toRadians(0));    //33,37,-90
 
-
     Vector2d blueParkPos = new Vector2d(47.5, 11.5);//50, 82
     boolean bProceedToYellow = false;
 
@@ -459,8 +458,8 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                 .build();
 
         dropOffPurpleAtPos2 = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(-30))
-                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(180))
+                .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-70))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -507,6 +506,7 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                 .strafeTo(blueYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
 				.stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(blueParkPos)
                 .afterDisp(0, getReadyForIntake)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)

@@ -102,15 +102,15 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
 
     Pose2d redStartPos = new Pose2d(12,-61.5,Math.toRadians(90));//0,0,0
 
-    Pose2d redPurple1Pos = new Pose2d(31, -34.5 , Math.toRadians(180)); //27,19,-90
-    Pose2d redPurple2Pos = new Pose2d(17, -33, Math.toRadians(90));  //37,12,-90
-    Pose2d redPurple3Pos = new Pose2d(12, -34.5, Math.toRadians(0));  //27,0,-90
+    Pose2d redPurple1Pos = new Pose2d(7, -34.5, Math.toRadians(180));  //27,0,-90
+    Pose2d redPurple2Pos = new Pose2d(13, -33, Math.toRadians(90));  //37,12,-90
+    Pose2d redPurple3Pos = new Pose2d(25, -34.5 , Math.toRadians(180)); //27,19,-90
 
-    Pose2d redYellow3Pos = new Pose2d(45, -42, Math.toRadians(0));  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(45, -35.5);   //26,37,-90
-    Vector2d redYellow1Pos = new Vector2d(45,-28.5);    //33,37,-90
+    Pose2d redYellow3Pos = new Pose2d(47, -42, Math.toRadians(0));  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(47, -35.5);   //26,37,-90
+    Vector2d redYellow1Pos = new Vector2d(47,-31);    //33,37,-90
 
-    Vector2d redParkPos = new Vector2d(49, -54.5);  //7, 37
+    Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
 
 
 
@@ -432,7 +432,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
     {
         dropOffPurpleAtPos1 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(redPurple3Pos, Math.toRadians(90))
+                .splineToLinearHeading(redPurple1Pos, Math.toRadians(90))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -454,12 +454,13 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
 
     void buildYellowTrajectories()
     {
-        dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple3Pos)
+        dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple1Pos)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(new Vector2d(10,-38.5))
                 .setTangent(Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
                 .splineToLinearHeading(redYellow3Pos, Math.toRadians(90))
+                .strafeTo(redYellow1Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -483,13 +484,12 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
-        dropOffYellowAtPos3 = RedShort.actionBuilder(redPurple1Pos)
+        dropOffYellowAtPos3 = RedShort.actionBuilder(redPurple3Pos)
                 .stopAndAdd(rectifyHeadingError)
                 .lineToX(14)
                 .setTangent(Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
-                .splineToLinearHeading(redYellow3Pos, Math.toRadians(90))
-                .strafeTo(redYellow1Pos)
+//                .splineToLinearHeading(redYellow3Pos, Math.toRadians(0))
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
