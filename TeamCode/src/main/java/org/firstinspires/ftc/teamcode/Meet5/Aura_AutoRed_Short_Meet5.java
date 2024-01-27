@@ -205,8 +205,8 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
 
     public Action updateAfterGatePos = new backwallAprilTagController();
 
-    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 250;
-    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 260;
+    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 500;
+    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 400;
 
     public static int PurpleDropOffPos = 0;
     public static double SplineAngle = 0;
@@ -570,11 +570,11 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
             break;
         }
         if( x > 0 && x < LEFT_SPIKEMARK_BOUNDARY_X )
-            PurpleDropOffPos = 1;
-        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 2;
-        else
+        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 3;
+        else
+            PurpleDropOffPos = 1;
 
         telemetry.addData("Detected Spike Mark X = ", x);
         telemetry.addData("Detected Drop off Position = ", PurpleDropOffPos);
