@@ -106,9 +106,9 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
     Pose2d redPurple2Pos = new Pose2d(13, -33, Math.toRadians(90));  //37,12,-90
     Pose2d redPurple3Pos = new Pose2d(25, -34.5 , Math.toRadians(180)); //27,19,-90
 
-    Pose2d redYellow3Pos = new Pose2d(47, -42, Math.toRadians(0));  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(47, -35.5);   //26,37,-90
-    Vector2d redYellow1Pos = new Vector2d(47,-31);    //33,37,-90
+    Pose2d redYellow3Pos = new Pose2d(46, -42, Math.toRadians(0));  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(46, -35.5);   //26,37,-90
+    Vector2d redYellow1Pos = new Vector2d(46,-31);    //33,37,-90
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
 
@@ -241,7 +241,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
 
     public Action rectifyHeadingError = new IMUController();
 
-    //TODO: declare April Tag stuffi
+    //TODO: declare April Tag stuff
     OpenCvWebcam Sauron = null;
     AprilTagDetectionPipeline pipeline;
 
@@ -486,10 +486,10 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
 
         dropOffYellowAtPos3 = RedShort.actionBuilder(redPurple3Pos)
                 .stopAndAdd(rectifyHeadingError)
-                .lineToX(14)
+                .lineToX(29)
                 .setTangent(Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
-//                .splineToLinearHeading(redYellow3Pos, Math.toRadians(0))
+                .splineToLinearHeading(redYellow3Pos, Math.toRadians(90))
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -526,7 +526,7 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
         // Set the camera (webcam vs. built-in RC phone camera).
-        builder.setCamera(hardwareMap.get(WebcamName.class, "Kemera"));
+        builder.setCamera(hardwareMap.get(WebcamName.class, "Eyeball"));
 
 
         // Set and enable the processor.
@@ -570,11 +570,11 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
             break;
         }
         if( x > 0 && x < LEFT_SPIKEMARK_BOUNDARY_X )
-            PurpleDropOffPos = 1;
-        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 2;
-        else
+        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 3;
+        else
+            PurpleDropOffPos = 1;
 
         telemetry.addData("Detected Spike Mark X = ", x);
         telemetry.addData("Detected Drop off Position = ", PurpleDropOffPos);

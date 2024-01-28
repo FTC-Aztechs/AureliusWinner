@@ -406,7 +406,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
             // Wait 5 seconds to let other robot finish
             runtime.reset();
-            while (runtime.seconds() < 5) {
+            while (runtime.seconds() < 8) {
                 MyIntakeOuttakeController.update();
             }
 
@@ -558,7 +558,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
         // Set the camera (webcam vs. built-in RC phone camera).
-        builder.setCamera(hardwareMap.get(WebcamName.class, "Kemera"));
+        builder.setCamera(hardwareMap.get(WebcamName.class, "Eyeball"));
 
 
         // Set and enable the processor.
@@ -602,9 +602,9 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
             break;
         }
         if( x > 0 && x < LEFT_SPIKEMARK_BOUNDARY_X )
-            PurpleDropOffPos = 1;
-        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 2;
+        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
+            PurpleDropOffPos = 3;
         else
             PurpleDropOffPos = 1;
 

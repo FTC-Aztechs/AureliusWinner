@@ -146,7 +146,7 @@ public class AuraRobot
     public static double HANG_EXTENDER_EXTEND = 0.36;
     public static double HANG_EXTENDER_RETRACT = 0.58; //0
     public static double HANG_FLIPPER_DOWN = 1.0;
-    public static double HANG_FLIPPER_UP = 0.6;
+    public static double HANG_FLIPPER_UP = 0.65;
     public static double HANG_MOTOR_TICKS = 537.7;
 
     public static double HANG_POWER = 0.2;

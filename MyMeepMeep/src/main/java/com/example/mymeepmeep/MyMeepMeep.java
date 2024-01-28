@@ -109,8 +109,8 @@ public class MyMeepMeep {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(blueStartPos)
-                                        .setTangent(Math.toRadians(-135))
-                                        .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-30))
+                                        .setTangent(Math.toRadians(-90))
+                                        .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-30))
                                         .waitSeconds(1)
                                         .setTangent(Math.toRadians(90))
                                         .splineToLinearHeading(new Pose2d(-50,45, Math.toRadians(0)),Math.toRadians(180))
