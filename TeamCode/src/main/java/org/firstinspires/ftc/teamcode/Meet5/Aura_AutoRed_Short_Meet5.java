@@ -205,8 +205,8 @@ public class Aura_AutoRed_Short_Meet5 extends LinearOpMode {
 
     public Action updateAfterGatePos = new backwallAprilTagController();
 
-    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 250;
-    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 260;
+    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 500;
+    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 400;
 
     public static int PurpleDropOffPos = 0;
     public static double SplineAngle = 0;

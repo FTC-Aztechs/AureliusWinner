@@ -106,7 +106,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
 
     Pose2d redPurple1Pos = new Pose2d(-39, -34.5 , Math.toRadians(180)); //27,19,-90
     Pose2d redPurple2Pos = new Pose2d(-31,- 33, Math.toRadians(90));  //37,12,-90
-    Pose2d redPurple3Pos = new Pose2d(-32, -34.5, Math.toRadians(0));  //27,0,-90
+    Pose2d redPurple3Pos = new Pose2d(-34, -34.5, Math.toRadians(0));  //27,0,-90
 
     Vector2d redBeforeGatePos3 = new Vector2d(-38,-11.5);//50,2
     Vector2d redBeforeGatePos2 = new Vector2d(-50,-11.5);//50,-14
@@ -114,9 +114,9 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
     Vector2d redAfterGateTagPos = new Vector2d(15.25, -11.5);//50,51.25
     Vector2d redAfterGatePos = new Vector2d(32, -11.5);//50,68
 
-    Vector2d redYellow3Pos = new Vector2d(52, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(52, -35.5);   //26,37,-90
-    Pose2d redYellow1Pos = new Pose2d(49,-26,Math.toRadians(0));    //33,37,-90
+    Vector2d redYellow3Pos = new Vector2d(49.5, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(49.5, -35.5);   //26,37,-90
+    Pose2d redYellow1Pos = new Pose2d(47.5,-28.5,Math.toRadians(0));    //33,37,-90
 
 
     Vector2d redParkPos = new Vector2d(47.5, -11.5);//50, 82
@@ -214,8 +214,8 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
 
     public Action updateAfterGatePos = new backwallAprilTagController();
 
-    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 280;
-    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 290;
+    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 250;
+    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 260;
 
     public static int PurpleDropOffPos = 0;
     public static double SplineAngle = 0;
@@ -400,7 +400,7 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
 
             // Wait 5 seconds to let other robot finish
             runtime.reset();
-            while (runtime.seconds() < 7) {
+            while (runtime.seconds() < 5) {
                 MyIntakeOuttakeController.update();
             }
 
@@ -453,8 +453,8 @@ public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
                 .build();
 
         dropOffPurpleAtPos2 = RedLong.actionBuilder(redStartPos)
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(redPurple2Pos, Math.toRadians(70))
+                .setTangent(Math.toRadians(30))
+                .splineToLinearHeading(redPurple2Pos, Math.toRadians(180))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
