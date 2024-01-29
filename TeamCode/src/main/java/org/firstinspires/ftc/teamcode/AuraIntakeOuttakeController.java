@@ -266,15 +266,15 @@ public class AuraIntakeOuttakeController {
         }
 
 
-//        if(rightDetected) {
-//            BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
-//            rightBlinkin.setPattern(rightPattern);
-//        }
-//
-//        if(leftDetected) {
-//            BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
-//            leftBlinkin.setPattern(leftPattern);
-//        }
+        if(rightDetected) {
+            BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
+            rightBlinkin.setPattern(rightPattern);
+        }
+
+        if(leftDetected) {
+            BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
+            leftBlinkin.setPattern(leftPattern);
+        }
 
         if(rightDetected && leftDetected) {
             colorTimer.reset();
@@ -284,26 +284,26 @@ public class AuraIntakeOuttakeController {
 
         telemetry.update();
     }
-//
-//    private BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
-//        for (int i = 0; i < colorNames.length; i++) {
-//            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] &&
-//                    green >= colorRanges[i][2] && green <= colorRanges[i][3] &&
-//                    blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
-//                switch (colorNames[i]) {
-//                    case "White":
-//                        return WHITE_PATTERN;
-//                    case "Green":
-//                        return GREEN_PATTERN;
-//                    case "Purple":
-//                        return PURPLE_PATTERN;
-//                    case "Yellow":
-//                        return YELLOW_PATTERN;
-//                }
-//            }
-//        }
-//        return BlinkinPattern.BREATH_BLUE;  // should bounce blue color
-//    }
+
+    private BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
+        for (int i = 0; i < colorNames.length; i++) {
+            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] &&
+                    green >= colorRanges[i][2] && green <= colorRanges[i][3] &&
+                    blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
+                switch (colorNames[i]) {
+                    case "White":
+                        return WHITE_PATTERN;
+                    case "Green":
+                        return GREEN_PATTERN;
+                    case "Purple":
+                        return PURPLE_PATTERN;
+                    case "Yellow":
+                        return YELLOW_PATTERN;
+                }
+            }
+        }
+        return BlinkinPattern.BREATH_BLUE;  // should bounce blue color
+    }
 
     public void updateSlide() {
 
