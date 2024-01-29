@@ -39,6 +39,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.INTAKE;
+import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -61,6 +63,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.AuraHangController;
 import org.firstinspires.ftc.teamcode.AuraHeadingEstimator;
 import org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController;
 import org.firstinspires.ftc.teamcode.AuraRobot;
@@ -100,9 +103,10 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
     //to find heading: add -90 degrees to field centric start pos heading
 
 
-    Pose2d blueStartPos = new Pose2d(-36,61.5,Math.toRadians(-90));//0,0,0
+    // RObot Width = 15; Length = 15.5
+    Pose2d blueStartPos = new Pose2d(-39,62.25,Math.toRadians(-90));//0,0,0
 
-    Pose2d bluePurple3Pos = new Pose2d(-38, 34.5 , Math.toRadians(-180)); //27,19,-90
+    Pose2d bluePurple3Pos = new Pose2d(-39, 34.5 , Math.toRadians(-180)); //27,19,-90
     Pose2d bluePurple2Pos = new Pose2d(-31, 33, Math.toRadians(-90));  //37,12,-90
     Pose2d bluePurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
 
@@ -112,19 +116,11 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
     Vector2d blueAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
     Vector2d blueAfterGatePos = new Vector2d(32, 11.5);//50,68
 
-    Vector2d blueYellow1Pos = new Vector2d(45, 42);  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(45, 35.5);   //26,37,-90
-    Pose2d blueYellow3Pos = new Pose2d(45,28.5,Math.toRadians(0));    //33,37,-90
+    Vector2d blueYellow1Pos = new Vector2d(49.5, 42);  //27,37,-90
+    Vector2d blueYellow2Pos = new Vector2d(49.5, 35.5);   //26,37,-90
+    Pose2d blueYellow3Pos = new Pose2d(49.5,28.5,Math.toRadians(0));    //33,37,-90
 
-
-    Pose2d blueParkPos = new Pose2d(51.5, 11.5,Math.toRadians(0));//50, 82
-    
-    double AfterGateHeading = -180;//90
-
-    // Set these manually from the Robot once it is at AfterGatePos.
-    double RangeCalibrated   = 40;
-    double YawCalibrated     = 0.0;
-    double BearingCalibrated = 17;
+    Vector2d blueParkPos = new Vector2d(47.5, 11.5);//50, 82
     boolean bProceedToYellow = false;
 
 
@@ -152,12 +148,7 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
     public class PurpleDumper implements Action {
         @Override
         public boolean run(TelemetryPacket tPkt) {
-            ElapsedTime actionTimer = new ElapsedTime();
-            actionTimer.reset();
-            while(actionTimer.seconds() < 0.8) {
-                Aurelius.setPower(INTAKE, -0.2);
-            }
-            Aurelius.setPower(INTAKE, 0);
+            Aurelius.PurpleDumper.setPosition(PURPLE_UNLOCK);
             return false;
         }
     }
@@ -240,7 +231,6 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
     AuraRobot Aurelius = new AuraRobot();
     AuraIntakeOuttakeController MyIntakeOuttakeController;
     MecanumDrive BlueLong;
-    
 
 
     private static FtcDashboard auraBoard;
@@ -353,8 +343,13 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
 
         // Initialize...
         Aurelius.init(hardwareMap);
+        Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
+        Aurelius.boeing747.init();
+        Aurelius.hanger.init();
+        Aurelius.hanger.update();
         telemetry.addLine(String.format("%d. Aura Initialized!", iTeleCt++));
         telemetry.update();
+
 
         double volts = getBatteryVoltage();
         telemetry.addLine(String.format("%d. Battery voltage: %.1f volts", iTeleCt++, volts));
@@ -374,7 +369,6 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
         telemetry.update();
         buildPurpleTrajectories();
         buildYellowTrajectories();
-        buildParkTrajectories();
         telemetry.addData("Status: ", "Building Trajectories......done");
         telemetry.update();
 
@@ -394,7 +388,6 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
 
-
         while (!isStarted()) {
             telemetryTfod();
             MyIntakeOuttakeController.update();
@@ -407,6 +400,8 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
         if (opModeIsActive()) {
             DetectPurpleDropoffPos();
             visionPortal.close();
+            telemetry.addData("Going to position:", "PurpleDropOffPos");
+            telemetry.update();
 
             // Wait 5 seconds to let other robot finish
             runtime.reset();
@@ -414,67 +409,40 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                 MyIntakeOuttakeController.update();
             }
 
-            // Parallel action trajectories => call first action, then second, then first, then second until both actions finish
-            //     In our logic, we use the dropOff trajectory as one parallel action
-            //     and updateIOController as teh second which lets the slide PIDs and all others work.
-            //     Within the drop off trajectories, we simply tweak the state machine states at different points
-            //     in the trajectory and allow the updateIoController take care of letting the SM achieve the states as
-            //     needed. All of this happens in parallel.
-            //     bRunningTrajectory, beginTrajectoryMarker & endTrajectoryMarker
-            //        - We use the bRunningTrajectory flag as a way to keep the updateIOController calls keep running until
-            //          the trajectory run is completed. The begin & end Markers ensure that the flag is turned on before
-            //          the trajectory is started and turned off when it is completed.
-
-            // Set this outside the Parllel actions - need to make sure that updateIOController has
-            // a chance to enter it while(bRunningTrajectory) loop when parallel actions are started.
-            bRunningTrajectory = true;
-
-
             switch (PurpleDropOffPos) {
                 case 1:
-                    Actions.runBlocking( new SequentialAction(
-                            new ParallelAction(
+                    Actions.runBlocking(
+                        new ParallelAction(
+                            new SequentialAction(
+                                beginTrajectoryMarker,
                                 dropOffPurpleAtPos1,
-                                updateIOController
-                            ),
-                            beginTrajectoryMarker,
-                            new ParallelAction(
                                 dropOffYellowAtPos1,
-                                updateIOController
-                            )
-                        )
-                    );
+                                endTrajectoryMarker),
+                            updateIOController
+                    ));
                     break;
                 case 2:
-                    // Go to position 2
-                    Actions.runBlocking( new SequentialAction(
-                                    new ParallelAction(
-                                            dropOffPurpleAtPos2,
-                                            updateIOController
-                                    ),
-                                    beginTrajectoryMarker,
-                                    new ParallelAction(
-                                            dropOffYellowAtPos2,
-                                            updateIOController
-                                    )
-                            )
-                    );
+                    Actions.runBlocking(
+                    new ParallelAction(
+                        new SequentialAction(
+                            beginTrajectoryMarker,
+                            dropOffPurpleAtPos2,
+                            dropOffYellowAtPos2,
+                            endTrajectoryMarker),
+                        updateIOController
+                    ));
                     break;
                 case 3:
                 default:
-                    // Go to position 2
-                    Actions.runBlocking( new SequentialAction(
-                                    new ParallelAction(
-                                            dropOffPurpleAtPos3,
-                                            updateIOController
-                                    ),
-                                    beginTrajectoryMarker,
-                                    new ParallelAction(
-                                            dropOffYellowAtPos3,
-                                            updateIOController
-                                    )
-                            )
-                    );
+                    Actions.runBlocking(
+                    new ParallelAction(
+                        new SequentialAction(
+                            beginTrajectoryMarker,
+                            dropOffPurpleAtPos3,
+                            dropOffYellowAtPos3,
+                            endTrajectoryMarker),
+                        updateIOController
+                    ));
                     break;
             }
         }
@@ -483,27 +451,24 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
     void buildPurpleTrajectories()
     {
         dropOffPurpleAtPos1 = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-90))
+                .setTangent(Math.toRadians(-135))
+                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-30))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
-                .stopAndAdd(endTrajectoryMarker)
                 .build();
 
         dropOffPurpleAtPos2 = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-90))
+                .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-70))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
-                .stopAndAdd(endTrajectoryMarker)
                 .build();
 
         dropOffPurpleAtPos3 = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(-80))
-                .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-130))
+                .setTangent(Math.toRadians(-110))
+                .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-90))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
-                .stopAndAdd(endTrajectoryMarker)
                 .build();
     }
 
@@ -516,15 +481,16 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueAfterGateTagPos)
                 .afterDisp(0, getReadyForOutTake)
-                .stopAndAdd(updateAfterGatePos)
+                //.stopAndAdd(updateAfterGatePos)
                 .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueYellow1Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
 				.stopAndAdd(depositYellow)
-                .afterTime(AUTO_WAIT_FOR_YELLOW_DROP, getReadyForIntake)
-                .splineToLinearHeading(blueParkPos, Math.toRadians(0))
-                .stopAndAdd(endTrajectoryMarker)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .strafeTo(blueParkPos)
+                .afterDisp(0, getReadyForIntake)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos2 = BlueLong.actionBuilder(bluePurple2Pos)
@@ -534,20 +500,21 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueAfterGateTagPos)
                 .afterDisp(0, getReadyForOutTake)
-                .stopAndAdd(updateAfterGatePos)
+                //.stopAndAdd(updateAfterGatePos)
                 .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
 				.stopAndAdd(depositYellow)
-                .afterTime(AUTO_WAIT_FOR_YELLOW_DROP, getReadyForIntake)
-                .splineToLinearHeading(blueParkPos, Math.toRadians(0))
-                .stopAndAdd(endTrajectoryMarker)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .strafeTo(blueParkPos)
+                .afterDisp(0, getReadyForIntake)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos3 = BlueLong.actionBuilder(bluePurple3Pos)
                 .setTangent(Math.toRadians(90))
-                .strafeTo(new Vector2d(-32,34.5))
+                .strafeTo(new Vector2d(-37,34.5))
                 .strafeTo(blueBeforeGatePos3)
                 .turn(Math.toRadians(180))
                 .stopAndAdd(rectifyHeadingError)
@@ -559,33 +526,11 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
 				.stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .splineToLinearHeading(blueParkPos, Math.toRadians(0))
+                .strafeTo(blueParkPos)
                 .afterDisp(0, getReadyForIntake)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-                .stopAndAdd(endTrajectoryMarker)
                 .build();
     }
-
-    void buildParkTrajectories()
-    {
-//        dropOffYellowAtPark = BlueLong.actionBuilder(new Pose2d(AfterGatePos.x, AfterGatePos.y, Math.toRadians(90)))
-//                .strafeTo(ParkPos)
-//                .stopAndAdd(depositYellow)
-//                .build();
-        return;
-    }
-
-
-
-//TODO: Use April Tags to get current pos
-
-//TODO: write trajectories as different functions
-
-    //TODO: add any motors/servos that initialized later
-    void initMotorsAndServos(boolean run_to_position)
-    {
-    }
-
     private double getBatteryVoltage() {
         double result = Double.POSITIVE_INFINITY;
         for (VoltageSensor sensor : hardwareMap.voltageSensor) {
@@ -597,9 +542,6 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
         return result;
     }
 
-    //TODO: April Tag detection function - might need updating
-//TODO: TFOD functions here
-    //TFOD ConceptTensorFlowObjectDetectionEasy functions
     private void initTfod() {
 
         // Create the TensorFlow processor the easy way.
@@ -643,7 +585,7 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
         }   // end for() loop
-
+        telemetry.update();
     }   // end method telemetryTfod()
 
     void DetectPurpleDropoffPos()
@@ -663,9 +605,6 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
             PurpleDropOffPos = 2;
         else
             PurpleDropOffPos = 3;
-
-//        //TODO REmove this override
-//        PurpleDropOffPos = 1;
 
         telemetry.addData("Detected Spike Mark X = ", x);
         telemetry.addData("Detected Drop off Position = ", PurpleDropOffPos);
@@ -704,11 +643,7 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                   }
             }
         }
-        // TODO: Once April Tag detection works, remove this false override
-        //       Also, the correction logic here needs to be updated to just get the position
-        //       from the AprilTag and udpate the localizer. No need to calibrate or consult the
-        //       calibrated value.
-        targetFound = false;
+
         if(targetFound) {
             telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.fieldPosition);
             telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
@@ -723,13 +658,12 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
                     (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
 
 
-            double deltaHeading = -desiredTag.ftcPose.yaw;
+            double currHeading = -desiredTag.ftcPose.yaw;
 
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(BlueLong.pose.heading.log()));
-//            telemetry.addData("Deltas", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", deltaX, deltaY, deltaHeading);
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
 
-            BlueLong.pose = new Pose2d(currX, currY,Math.toRadians(-90) - Math.toRadians(deltaHeading));
+            BlueLong.pose = new Pose2d(currX, currY, Math.toRadians(currHeading));
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
             return true;
@@ -738,7 +672,6 @@ public class Aura_AutoBlue_Long_Meet5_Koach extends LinearOpMode {
         telemetry.update();
         return false;
     }
-
 
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.

@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -74,6 +75,7 @@ public class AuraRobot
     public DcMotor intakeMotor = null;
     public CRServo Roller = null;
     public DcMotor Hang = null;
+    public Servo   PurpleDumper = null;
 
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
@@ -125,11 +127,11 @@ public class AuraRobot
     public static double LEFT_FINGER_UNLOCK = 0.45;
     public static double RIGHT_FINGER_UNLOCK = 0.5;
     public static double WRIST_INTAKE = 0.57;
-    public static double WRIST_TUCK = 0.75;
+    public static double WRIST_TUCK = 0.78;
     public static double ELBOW_DOWN = 0.023;
     public static double ELBOW_UP = 0.65;
     public static int SLIDE_INTAKE_POS = 0;
-    public static int SLIDE_FLIP_HEIGHT = 850;
+    public static int SLIDE_FLIP_HEIGHT = 1000;
     public static int SLIDE_RAISE_LOW = 400;
     public static int SLIDE_RAISE_MED = 500;
     public static int SLIDE_RAISE_HIGH = 3000;
@@ -138,17 +140,21 @@ public class AuraRobot
     public static int HighJunction   = 15400; // 15400
     public static int HighJunction_Auto = 15250;
     public static int UpperLimit     = 3000;
+    public static double PURPLE_LOCK    = 1.0;
+    public static double PURPLE_UNLOCK  = 0.5;
 
     public static double HANG_EXTENDER_EXTEND = 0.36;
     public static double HANG_EXTENDER_RETRACT = 0.58; //0
     public static double HANG_FLIPPER_DOWN = 1.0;
-    public static double HANG_FLIPPER_UP = 0.7;
+    public static double HANG_FLIPPER_UP = 0.65;
     public static double HANG_MOTOR_TICKS = 537.7;
+
+    public static double HANG_POWER = 0.2;
     public static double HANG_NUM_MOTOR_ROTATIONS = 3.5;
 
 
     public static double AUTO_WAIT_FOR_OUTTAKE = 1.0;
-    public static double AUTO_WAIT_FOR_YELLOW_DROP = 1.0;
+    public static double AUTO_WAIT_FOR_YELLOW_DROP = 2.0;
     public static double AUTO_WAIT_RETURN_TO_INTAKE = 3.0;
 
 
@@ -180,6 +186,7 @@ public class AuraRobot
         Slide = hwMap.get(DcMotor.class, "Slide");
         Roller = hwMap.get(CRServo.class, "Roller");
         Hang = hwMap.get(DcMotor.class, "hangMotor");
+        PurpleDumper = hwMap.get(Servo.class, "purple");
 
         // Define and Initialize Color Sensors
         Left = hwMap.get(RevColorSensorV3.class, "Left");
@@ -210,6 +217,7 @@ public class AuraRobot
         noodleWash = new AuraIntakeController(hwMap);
         boeing747 = new AuraLaunchController(hwMap);
         hanger = new AuraHangController(hwMap);
+
 //        depositFlipper = new Aura_DepositController(hwMap);
     }
     String formatAngle( AngleUnit angleUnit, double angle) {

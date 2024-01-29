@@ -123,6 +123,8 @@ public class AuraIntakeOuttakeController {
         wristTimer = new ElapsedTime();
         wristTimer.reset();
 
+        colorTimer = new ElapsedTime();
+        colorTimer.reset();
 
         currSlidePos = 0;
         targetSlidePos = SLIDE_INTAKE_POS;
@@ -228,13 +230,6 @@ public class AuraIntakeOuttakeController {
 
     public void AuraColor() {
 
-        telemetry.addData("Right Red ", Right.red());
-        telemetry.addData("Right Green ", Right.green());
-        telemetry.addData("Right Blue ", Right.blue());
-
-        telemetry.addData("Left Red ", Left.red());
-        telemetry.addData("Left Green ", Left.green());
-        telemetry.addData("Left Blue ", Left.blue());
 
 
 
@@ -255,7 +250,6 @@ public class AuraIntakeOuttakeController {
         // Check the color for Right sensor
         for (int i = 0; i < colors.length; i++) {
             if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
-                telemetry.addData("Pixel Detected by Right Sensor", colors[i]);
                 rightDetected = true;
             } else {
                 rightDetected = false;
@@ -265,7 +259,6 @@ public class AuraIntakeOuttakeController {
         // Check the color for Left sensor
         for (int i = 0; i < colors.length; i++) {
             if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
-                telemetry.addData("Pixel Detected by Left Sensor", colors[i]);
                 leftDetected = true;
             } else {
                 leftDetected = false;
@@ -284,7 +277,7 @@ public class AuraIntakeOuttakeController {
 //        }
 
         if(rightDetected && leftDetected) {
-            colorTimer = new ElapsedTime();
+            colorTimer.reset();
         } else {
             colorTimer.reset();
         }
@@ -345,13 +338,16 @@ public class AuraIntakeOuttakeController {
             updateSlide();
             //updateServo();
 
-            if (currState == ioState.STATE_1_RFI) {
-                if(!bPixelsDetected)
-                    AuraColor();
-                else if (colorTimer.seconds()>0.5) {
-                    setTargetState(ioState.STATE_3_PS);
-                }
-            }
+//            if (currState == ioState.STATE_1_RFI) {
+//                if(!bPixelsDetected)
+//                    AuraColor();
+//                else
+//                {
+//                    if (colorTimer.seconds()>0.5) {
+//                        setTargetState(ioState.STATE_3_PS);
+//                    }
+//                }
+//            }
 
             return;
         }

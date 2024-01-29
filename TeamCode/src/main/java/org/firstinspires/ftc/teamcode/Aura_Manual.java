@@ -39,9 +39,10 @@ import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Hang;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.targetSlidePos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.HANG;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
+import static org.firstinspires.ftc.teamcode.AuraRobot.HANG_POWER;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
-import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
@@ -162,7 +163,6 @@ public class Aura_Manual extends LinearOpMode {
         LeftFinger = hardwareMap.get(Servo.class, "lefty");
         RightFinger = hardwareMap.get(Servo.class, "righty");
 
-
         myIntakeOuttakeController = new AuraIntakeOuttakeController (hardwareMap, true);
         initAurelius();
 
@@ -177,6 +177,7 @@ public class Aura_Manual extends LinearOpMode {
             AuraLauncher();
             AuraFingers();
             AuraHang();
+//            AuraColor();
             //AuraHang();//            AuraColor();
 
         }
@@ -223,7 +224,39 @@ public class Aura_Manual extends LinearOpMode {
         telemetry.update();
     }
 
+    public void AuraColor() {
 
+        String[] colors = {"White", "Green", "Purple", "Yellow"};
+        int[][] rightRanges = {
+                {1255, 1455, 1480, 1580, 1346, 1446}, // White (Color Ranges are 100 apart original for first was 1355 so range became 1255 && 1455)
+                {264, 364, 468, 568, 237, 337},      // Green
+                {565, 665, 550, 650, 710, 810},      // Purple
+                {782, 882, 584, 684, 312, 412}       // Yellow
+        };
+        int[][] leftRanges = {
+                {1365, 1465, 2382, 2482, 2244, 2344},// White
+                {348, 448, 1065, 1165, 460, 560},    // Green
+                {832, 932, 1726, 1826, 1205, 1305},  // Purple
+                {1165, 1265, 1571, 1671, 458, 558}   // Yellow
+        };
+
+        // Check the color for Right sensor
+        for (int i = 0; i < colors.length; i++) {
+            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
+                telemetry.addData("Pixel Detected by Right Sensor", colors[i]);
+
+            }
+        }
+
+        // Check the color for Left sensor
+        for (int i = 0; i < colors.length; i++) {
+            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
+                telemetry.addData("Pixel Detected by Left Sensor", colors[i]);
+            }
+        }
+
+        telemetry.update();
+    }
 
     public void AuraManualDrive() {
         // changing the speed
@@ -284,37 +317,36 @@ public class Aura_Manual extends LinearOpMode {
     }
 
     public void AuraHang() {
-        if(gamepad2.dpad_left) {
+        if (gamepad2.x) {
             if (!changingState) {
-                timer_gp2_dpad_left.reset();
+                timer_gp2_x.reset();
                 changingState = true;
-            } else if (timer_gp2_dpad_left.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            } else if (timer_gp2_x.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 Aurelius.hanger.setTargetState(AuraHangController.HangState.Idle);
+                Aurelius.hanger.update();
                 telemetry.addData("State ", " Idle");
                 changingState = false;
             }
         }
-        if (gamepad2.dpad_up) {
+        if (gamepad2.y) {
             if (!changingState) {
-                timer_gp2_dpad_up.reset();
+                timer_gp2_y.reset();
                 changingState = true;
-            } else if (timer_gp2_dpad_up.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            } else if (timer_gp2_y.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 Aurelius.hanger.setTargetState(AuraHangController.HangState.Up);
+                Aurelius.hanger.update();
                 telemetry.addData("State ", " Up");
                 changingState = false;
             }
         }
-        if (gamepad2.dpad_down) {
-            if (!changingState) {
-                timer_gp2_dpad_down.reset();
-                changingState = true;
-            } else if (timer_gp2_dpad_down.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                Aurelius.hanger.setTargetState(AuraHangController.HangState.Hang);
-                telemetry.addData("State ", " Hang");
-                changingState = false;
-            }
+        if (gamepad2.dpad_down == true) {
+            Aurelius.Hang.setPower(HANG_POWER);
+        } else if (gamepad2.dpad_up == true) {
+            Aurelius.Hang.setPower(-HANG_POWER);
+        } else {
+            Aurelius.Hang.setPower(0);
         }
-        Aurelius.hanger.update();
+
     }
 
     public void AuraIntakeRoller() {

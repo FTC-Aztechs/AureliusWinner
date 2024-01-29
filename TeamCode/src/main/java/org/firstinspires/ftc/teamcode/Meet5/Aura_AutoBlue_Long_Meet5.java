@@ -32,17 +32,22 @@ package org.firstinspires.ftc.teamcode.Meet5;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_PS;
-import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_4_BF;
-import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.INTAKE;
+import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -58,6 +63,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.AuraHangController;
 import org.firstinspires.ftc.teamcode.AuraHeadingEstimator;
 import org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController;
 import org.firstinspires.ftc.teamcode.AuraRobot;
@@ -97,10 +103,11 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
     //to find heading: add -90 degrees to field centric start pos heading
 
 
-    Pose2d blueStartPos = new Pose2d(-36,61.5,Math.toRadians(-90));//0,0,0
+    // RObot Width = 15; Length = 15.5
+    Pose2d blueStartPos = new Pose2d(-39,62.25,Math.toRadians(-90));//0,0,0
 
-    Pose2d bluePurple3Pos = new Pose2d(-38, 34.5 , Math.toRadians(-180)); //27,19,-90
-    Pose2d bluePurple2Pos = new Pose2d(-31, 33, Math.toRadians(-90));  //37,12,-90
+    Pose2d bluePurple3Pos = new Pose2d(-39, 34.5 , Math.toRadians(-180)); //27,19,-90
+    Pose2d bluePurple2Pos = new Pose2d(-31, 34, Math.toRadians(-90));  //37,12,-90
     Pose2d bluePurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
 
     Vector2d blueBeforeGatePos1 = new Vector2d(-38,11.5);//50,2
@@ -109,19 +116,12 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
     Vector2d blueAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
     Vector2d blueAfterGatePos = new Vector2d(32, 11.5);//50,68
 
-    Vector2d blueYellow1Pos = new Vector2d(45, 42);  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(45, 35.5);   //26,37,-90
-    Pose2d blueYellow3Pos = new Pose2d(45,28.5,Math.toRadians(0));    //33,37,-90
+    Vector2d blueYellow1Pos = new Vector2d(52, 42);  //27,37,-90
+    Vector2d blueYellow2Pos = new Vector2d(49.5, 33);   //26,37,-90
+    Pose2d blueYellow3Pos = new Pose2d(49.5,28.5,Math.toRadians(0));    //33,37,-90
 
 
-    Pose2d blueParkPos = new Pose2d(51.5, 11.5,Math.toRadians(0));//50, 82
-    
-    double AfterGateHeading = -180;//90
-
-    // Set these manually from the Robot once it is at AfterGatePos.
-    double RangeCalibrated   = 40;
-    double YawCalibrated     = 0.0;
-    double BearingCalibrated = 17;
+    Vector2d blueParkPos = new Vector2d(47.5, 11.5);//50, 82
     boolean bProceedToYellow = false;
 
 
@@ -146,6 +146,79 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
     //************
 
+    public class PurpleDumper implements Action {
+        @Override
+        public boolean run(TelemetryPacket tPkt) {
+            Aurelius.PurpleDumper.setPosition(PURPLE_UNLOCK);
+            return false;
+        }
+    }
+    public Action ejectPurple = new PurpleDumper();
+
+    public class YellowDropper implements Action {
+        @Override
+        public boolean run (TelemetryPacket tPkt) {
+            MyIntakeOuttakeController.setTargetState(STATE_6_PR_BOTH);
+            return false;
+        }
+    }
+    public Action depositYellow = new YellowDropper();
+
+    public class GotoOuttakeAction implements Action {
+        @Override
+        public boolean run(TelemetryPacket tPkt) {
+            MyIntakeOuttakeController.setTargetState(STATE_5_RFO_MANUAL);
+            return false;
+        }
+    }
+    public Action getReadyForOutTake = new GotoOuttakeAction();
+
+    public class GotoIntakeAction implements Action {
+        @Override
+        public boolean run(TelemetryPacket tPkt) {
+            MyIntakeOuttakeController.setTargetState(STATE_1_RFI);
+            return false;
+        }
+    }
+    public Action getReadyForIntake = new GotoIntakeAction();
+
+    public class IntakeOuttakeControllerAction implements Action {
+        public boolean run(TelemetryPacket tPkt) {
+            MyIntakeOuttakeController.update();
+            return bRunningTrajectory;
+        }
+    }
+    public Action updateIOController = new IntakeOuttakeControllerAction();
+
+    public class beginTrajectory implements Action {
+        public boolean run(TelemetryPacket tPkt) {
+            bRunningTrajectory=true;
+            return false;
+        }
+    }
+    public Action beginTrajectoryMarker = new beginTrajectory();
+
+    public class endTrajectory implements Action {
+        public boolean run(TelemetryPacket tPkt) {
+            bRunningTrajectory=false;
+            return false;
+        }
+    }
+    public Action endTrajectoryMarker = new endTrajectory();
+
+    public class backwallAprilTagController implements Action {
+        @Override
+        public boolean run(TelemetryPacket tPkt) {
+            if(updatePosfromBackwallAprilTag()) {
+                bProceedToYellow = true;
+            } else {
+                bProceedToYellow = false;
+            }
+            return false;
+        }
+    }
+
+    public Action updateAfterGatePos = new backwallAprilTagController();
 
     private static final double LEFT_SPIKEMARK_BOUNDARY_X = 250;
     private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 260;
@@ -154,10 +227,11 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
     public static double SplineAngle = 0;
     public static double TangentAngle = -70;
 
+    boolean bRunningTrajectory = false;
+
     AuraRobot Aurelius = new AuraRobot();
-    AuraIntakeOuttakeController MyIntakeOuttakeController = new AuraIntakeOuttakeController(hardwareMap, false);
+    AuraIntakeOuttakeController MyIntakeOuttakeController;
     MecanumDrive BlueLong;
-    
 
 
     private static FtcDashboard auraBoard;
@@ -182,20 +256,6 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
     }
 
     public Action rectifyHeadingError = new IMUController();
-
-    public class backwallAprilTagController implements Action {
-        @Override
-        public boolean run(TelemetryPacket tPkt) {
-            if(updatePosfromBackwallAprilTag()) {
-                bProceedToYellow = true;
-            } else {
-                bProceedToYellow = false;
-            }
-            return false;
-        }
-    }
-
-    public Action updateAfterGatePos = new backwallAprilTagController();
 
     //TODO: declare April Tag stuff
     OpenCvWebcam Sauron = null;
@@ -261,161 +321,128 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
     // TODO: define trajectory variables here
     // Purple Trajectories
-    private Action trajPos1Purple;
-    private Action trajPos2Purple;
-    private Action trajPos3Purple;
+    private Action dropOffPurpleAtPos1;
+    private Action dropOffPurpleAtPos2;
+    private Action dropOffPurpleAtPos3;
 
     // Yellow Trajectories
-    private Action trajPos1Yellow;
-    private Action trajPos2Yellow;
-    private Action trajPos3Yellow;
+    private Action dropOffYellowAtPos1;
+    private Action dropOffYellowAtPos2;
+    private Action dropOffYellowAtPos3;
 
     // Park Trajectories
-    private Action trajPos1ToPark;
-    private Action trajPos2ToPark;
-    private Action trajPos3ToPark;
+    private Action dropOffYellowAtPark;
 
     private ElapsedTime runtime = new ElapsedTime();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // TODO: Assume this will be our Auto. The pseudo code below is for camera detection
-        //   Option 1: Use TFOD - in this case, we simply use the ConceptTFod detector and extend it with our trained model
-        //   Option 2: Develop our own OpenCV based image processor
-        //               1. Implement a new VisionProcessor (kemmaProcessor)
-        //                  - Implement init, processFrame and onDrawFrame methods - look at the AprilTagProcessorImpl and TfodProcesorImpl for examples.
-        //                  - ProcessFrame needs to have the algorithm to detect the black (color of team element) pixels in the rectangle
-        //               2. Use the VisionPortal pattern to implement camera detection (see AprilTag and tFodProcessor examples)
-        //               3. Register the kemmaProcessor with VisionPortal
-        //               4. Implement a method on kemmaProcessor to return detected position based on which of the 3 rectangles returns most positive
-        //   Option 3: Ditch the VisionProcessor and use EasyOpenCV directly
-
-        Aurelius.init(hardwareMap);
-
-        BlueLong = new MecanumDrive(Aurelius.hwMap, blueStartPos);
-        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, blueStartPos);
-        ElapsedTime trajectoryTimer = new ElapsedTime(MILLISECONDS);
 
         auraBoard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
+        // Initialize...
+        Aurelius.init(hardwareMap);
+        Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
+        Aurelius.boeing747.init();
+        Aurelius.hanger.init();
+        Aurelius.hanger.update();
         telemetry.addLine(String.format("%d. Aura Initialized!", iTeleCt++));
+        telemetry.update();
+
 
         double volts = getBatteryVoltage();
         telemetry.addLine(String.format("%d. Battery voltage: %.1f volts", iTeleCt++, volts));
-
-        //TODO: Initialize any essential starting motor/servo positions here
-
-        MyIntakeOuttakeController.setTargetState(STATE_3_PS);
-        runtime.reset();
-        while(runtime.seconds() < 1) {
-            MyIntakeOuttakeController.update();
-        }
-
-        telemetry.addData("Status: ", "Building Trajectories......");
         telemetry.update();
 
-        //TODO: Build trajectories here
+        BlueLong = new MecanumDrive(Aurelius.hwMap, blueStartPos);
+        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, blueStartPos);
+        telemetry.addLine(String.format("%d. myHeadingEstimator Initialized!", iTeleCt++));
+        telemetry.update();
+
+        ElapsedTime trajectoryTimer = new ElapsedTime(MILLISECONDS);
+        MyIntakeOuttakeController = new AuraIntakeOuttakeController(hardwareMap, false);
+        MyIntakeOuttakeController.setTargetState(STATE_3_PS);
+
+        // Build trajectories here ...
+        telemetry.addData("Status: ", "Building Trajectories......");
+        telemetry.update();
+        buildPurpleTrajectories();
+        buildYellowTrajectories();
+        telemetry.addData("Status: ", "Building Trajectories......done");
         telemetry.update();
 
         // Initialize TFOD and report what's detected until start is pushed
+        telemetry.addData("Status: ", "Initializing Tensor Flow ......");
+        telemetry.update();
         initTfod();
+        runtime.reset();
+        while(runtime.seconds() < 3)
+            idle();
+        telemetry.addData("Status: ", "Tensor flow ready!");
+        telemetry.update();
+
 
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
 
-        buildPurpleTrajectories();
-        buildYellowTrajectories();
-        buildParkTrajectories();
-
         while (!isStarted()) {
             telemetryTfod();
+            MyIntakeOuttakeController.update();
         }
 
+        // Set zero direction on IMU
         Aurelius.myHeadingEstimator.resetYaw();
 
         runtime.reset();
         if (opModeIsActive()) {
             DetectPurpleDropoffPos();
             visionPortal.close();
+            telemetry.addData("Going to position:", "PurpleDropOffPos");
+            telemetry.update();
 
+            // Wait 5 seconds to let other robot finish
             runtime.reset();
-            while (runtime.seconds() < 5) {
-                idle();
+            while (runtime.seconds() < 8) {
+                MyIntakeOuttakeController.update();
             }
 
-            //TODO: Run Trajectories
             switch (PurpleDropOffPos) {
                 case 1:
                     Actions.runBlocking(
-                            new SequentialAction(
-                                    trajPos1Purple,
-                                    new Action() {
-                                        @Override
-                                        public boolean run(TelemetryPacket tPkt) {
-//                                            dropOffPurplePixel();
-                                            return false;
-                                        }
-                                    },
-                                    trajPos1Yellow,
-                                    new Action() {
-                                        @Override
-                                        public boolean run(TelemetryPacket tPkt) {
-//                                            dropOffYellowPixel();
-                                            return false;
-                                        }
-                                    }
-                                    ,trajPos1ToPark
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos1,
+                                            dropOffYellowAtPos1,
+                                            endTrajectoryMarker),
+                                    updateIOController
                             ));
                     break;
                 case 2:
-                    // Go to position 2
                     Actions.runBlocking(
-                            new SequentialAction(
-                                    trajPos2Purple,
-                                    new Action() {
-                                        @Override
-                                        public boolean run(TelemetryPacket tPkt) {
-//                                            dropOffPurplePixel();
-                                            return false;
-                                        }
-                                    },
-                                    trajPos2Yellow,
-                                    new Action() {
-                                        @Override
-                                        public boolean run(TelemetryPacket tPkt) {
-//                                            dropOffYellowPixel();
-                                            return false;
-                                        }
-                                    },
-                                    trajPos2ToPark
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos2,
+                                            dropOffYellowAtPos2,
+                                            endTrajectoryMarker),
+                                    updateIOController
                             ));
                     break;
                 case 3:
                 default:
-                    // Go to position 3
                     Actions.runBlocking(
-                            new SequentialAction(
-                                    trajPos3Purple,
-                                    new Action() {
-                                        @Override
-                                        public boolean run(TelemetryPacket tPkt) {
-//                                            dropOffPurplePixel();
-                                            return false;
-                                        }
-                                    },
-                                    trajPos3Yellow,
-                                    new Action() {
-                                        @Override
-                                        public boolean run(TelemetryPacket tPkt) {
-//                                            dropOffYellowPixel();
-                                            return false;
-                                        }
-                                    },
-                                    trajPos3ToPark
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos3,
+                                            dropOffYellowAtPos3,
+                                            endTrajectoryMarker),
+                                    updateIOController
                             ));
                     break;
             }
@@ -424,152 +451,86 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
     void buildPurpleTrajectories()
     {
-        trajPos1Purple = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-90))
+        dropOffPurpleAtPos1 = BlueLong.actionBuilder(blueStartPos)
+                .setTangent(Math.toRadians(-135))
+                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-30))
+                .stopAndAdd(ejectPurple)
+                .waitSeconds(1)
                 .build();
 
-        trajPos2Purple = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-90))
+        dropOffPurpleAtPos2 = BlueLong.actionBuilder(blueStartPos)
+                .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-70))
+                .stopAndAdd(ejectPurple)
+                .waitSeconds(1)
                 .build();
 
-        trajPos3Purple = BlueLong.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(-80))
-                .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-130))
+        dropOffPurpleAtPos3 = BlueLong.actionBuilder(blueStartPos)
+                .setTangent(Math.toRadians(-110))
+                .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-90))
+                .stopAndAdd(ejectPurple)
+                .waitSeconds(1)
                 .build();
     }
 
     void buildYellowTrajectories()
     {
-        trajPos1Yellow = BlueLong.actionBuilder(bluePurple1Pos)
+        dropOffYellowAtPos1 = BlueLong.actionBuilder(bluePurple1Pos)
                 .setReversed(false)
                 .lineToX(-38)
                 .strafeTo(blueBeforeGatePos1)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueAfterGateTagPos)
-                .stopAndAdd(updateAfterGatePos)
+                .afterDisp(0, getReadyForOutTake)
+                //.stopAndAdd(updateAfterGatePos)
                 .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueYellow1Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .strafeTo(blueParkPos)
+                .afterDisp(0, getReadyForIntake)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
-        trajPos2Yellow = BlueLong.actionBuilder(bluePurple2Pos)
+        dropOffYellowAtPos2 = BlueLong.actionBuilder(bluePurple2Pos)
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-50,45, Math.toRadians(0)),Math.toRadians(180))
                 .strafeTo(blueBeforeGatePos2)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueAfterGateTagPos)
-                .stopAndAdd(updateAfterGatePos)
+                .afterDisp(0, getReadyForOutTake)
+                //.stopAndAdd(updateAfterGatePos)
                 .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueYellow2Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .strafeTo(blueParkPos)
+                .afterDisp(0, getReadyForIntake)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
-        trajPos3Yellow = BlueLong.actionBuilder(bluePurple3Pos)
+        dropOffYellowAtPos3 = BlueLong.actionBuilder(bluePurple3Pos)
                 .setTangent(Math.toRadians(90))
-                .lineToX(-34)
+                .strafeTo(new Vector2d(-37,34.5))
                 .strafeTo(blueBeforeGatePos3)
                 .turn(Math.toRadians(180))
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueAfterGateTagPos)
-                .stopAndAdd(updateAfterGatePos)
+                .afterDisp(0, getReadyForOutTake)
+                //.stopAndAdd(updateAfterGatePos)
                 .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .strafeTo(blueParkPos)
+                .afterDisp(0, getReadyForIntake)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
     }
-
-    void buildParkTrajectories()
-    {
-        trajPos1ToPark = BlueLong.actionBuilder(new Pose2d(blueYellow1Pos.x, blueYellow1Pos.y, Math.toRadians(0)))
-                .splineToLinearHeading(blueParkPos,Math.toRadians(0))
-                .build();
-
-        trajPos2ToPark = BlueLong.actionBuilder(new Pose2d(blueYellow2Pos.x, blueYellow2Pos.y, Math.toRadians(0)))
-                .splineToLinearHeading(blueParkPos,Math.toRadians(0))
-                .build();
-
-        trajPos3ToPark = BlueLong.actionBuilder(blueYellow3Pos)
-                .splineToLinearHeading(blueParkPos,Math.toRadians(0))
-                .build();
-    }
-    void dropOffPurplePixel()
-    {
-        runtime.reset();
-        while(runtime.seconds() < 0.8) {
-            Aurelius.setPower(INTAKE, -0.17);
-        }
-        Aurelius.setPower(INTAKE, 0);
-    }
-
-    void dropOffYellowPixel()
-    {
-        telemetry.addData("Deposit State", "down");
-        telemetry.update();
-
-        MyIntakeOuttakeController.setTargetState(STATE_4_BF);
-        runtime.reset();
-        while(runtime.milliseconds() < 500)
-            MyIntakeOuttakeController.update();
-        MyIntakeOuttakeController.setTargetState(STATE_5_RFO_LOW);
-        runtime.reset();
-        while(runtime.milliseconds() < 200)
-            MyIntakeOuttakeController.update();
-        MyIntakeOuttakeController.setTargetState(STATE_6_PR_BOTH);
-        runtime.reset();
-        while(runtime.milliseconds() < 300)
-            MyIntakeOuttakeController.update();
-        MyIntakeOuttakeController.setTargetState(STATE_5_RFO_LOW);
-        runtime.reset();
-        while(runtime.milliseconds() < 200)
-            MyIntakeOuttakeController.update();
-        MyIntakeOuttakeController.setTargetState(STATE_4_BF);
-        runtime.reset();
-        while(runtime.milliseconds() < 200)
-            MyIntakeOuttakeController.update();
-        MyIntakeOuttakeController.setTargetState(STATE_3_PS);
-        runtime.reset();
-        while(runtime.seconds() < 1) {
-            MyIntakeOuttakeController.update();
-        MyIntakeOuttakeController.setTargetState(STATE_1_RFI);
-            runtime.reset();
-            while(runtime.milliseconds() < 200)
-                MyIntakeOuttakeController.update();
-        }
-
-
-//        Aurelius.depositFlipper.setTargetState(Up);
-//        Aurelius.depositFlipper.update();
-//        telemetry.addData("Deposit State", "up");
-//        telemetry.update();
-//
-//        sleep(1500);
-//
-//        Aurelius.depositFlipper.setTargetState(Open);
-//        Aurelius.depositFlipper.update();
-//        telemetry.addData("Deposit State", "open");
-//        telemetry.update();
-//
-//        sleep(500);
-//
-//        Aurelius.depositFlipper.setTargetState(Down);
-//        Aurelius.depositFlipper.update();
-//        telemetry.addData("Deposit State", "down");
-//        telemetry.update();
-//
-//        sleep(500);
-    }
-
-
-//TODO: Use April Tags to get current pos
-
-//TODO: write trajectories as different functions
-
-    //TODO: add any motors/servos that initialized later
-    void initMotorsAndServos(boolean run_to_position)
-    {
-    }
-
     private double getBatteryVoltage() {
         double result = Double.POSITIVE_INFINITY;
         for (VoltageSensor sensor : hardwareMap.voltageSensor) {
@@ -581,9 +542,6 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         return result;
     }
 
-    //TODO: April Tag detection function - might need updating
-//TODO: TFOD functions here
-    //TFOD ConceptTensorFlowObjectDetectionEasy functions
     private void initTfod() {
 
         // Create the TensorFlow processor the easy way.
@@ -600,7 +558,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
         // Set the camera (webcam vs. built-in RC phone camera).
-        builder.setCamera(hardwareMap.get(WebcamName.class, "Kemera"));
+        builder.setCamera(hardwareMap.get(WebcamName.class, "Eyeball"));
 
 
         // Set and enable the processor.
@@ -629,7 +587,7 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
         }   // end for() loop
-
+        telemetry.update();
     }   // end method telemetryTfod()
 
     void DetectPurpleDropoffPos()
@@ -644,14 +602,11 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
             break;
         }
         if( x > 0 && x < LEFT_SPIKEMARK_BOUNDARY_X )
-            PurpleDropOffPos = 1;
-        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 2;
-        else
+        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 3;
-
-//        //TODO REmove this override
-//        PurpleDropOffPos = 1;
+        else
+            PurpleDropOffPos = 1;
 
         telemetry.addData("Detected Spike Mark X = ", x);
         telemetry.addData("Detected Drop off Position = ", PurpleDropOffPos);
@@ -687,9 +642,10 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                 } else {
                     telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
                     telemetry.update();
-                  }
+                }
             }
         }
+
         if(targetFound) {
             telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.fieldPosition);
             telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
@@ -704,13 +660,12 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
                     (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
 
 
-            double deltaHeading = -desiredTag.ftcPose.yaw;
+            double currHeading = -desiredTag.ftcPose.yaw;
 
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(BlueLong.pose.heading.log()));
-//            telemetry.addData("Deltas", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", deltaX, deltaY, deltaHeading);
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
 
-            BlueLong.pose = new Pose2d(currX, currY,Math.toRadians(-90) - Math.toRadians(deltaHeading));
+            BlueLong.pose = new Pose2d(currX, currY, Math.toRadians(currHeading));
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
             telemetry.update();
             return true;
@@ -719,7 +674,6 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
         telemetry.update();
         return false;
     }
-
 
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.
@@ -736,10 +690,10 @@ public class Aura_AutoBlue_Long_Meet5 extends LinearOpMode {
 
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
-                visionPortal = new VisionPortal.Builder()
-                        .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
-                        .addProcessor(aprilTag)
-                        .build();
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
+                    .addProcessor(aprilTag)
+                    .build();
         } else {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)

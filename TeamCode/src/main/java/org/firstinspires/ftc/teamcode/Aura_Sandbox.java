@@ -45,6 +45,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.UPPER_RIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
@@ -150,7 +152,8 @@ public class Aura_Sandbox extends LinearOpMode
         SMD_INTAKE_OUTTAKE,
         HANG,
         APRIL,
-        SERVOTESTER
+        SERVOTESTER,
+        PURPLE
     }
     public static SandboxMode sandboxMode = SandboxMode.SMD_INTAKE_OUTTAKE;
 
@@ -197,6 +200,7 @@ public class Aura_Sandbox extends LinearOpMode
         Aurelius.hanger.init();
         Aurelius.hanger.setTargetState(Idle);
         Aurelius.hanger.update();
+        Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
 
         // Telemetry and HTML Log file
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -240,6 +244,9 @@ public class Aura_Sandbox extends LinearOpMode
                     break;
                 case APRIL:
                     AprilSandbox();
+                    break;
+                case PURPLE:
+                    PurpleSandbox();
                     break;
                 case SMD_WHEEL_MOTOR_PROFILER:
                     logFile = new File("/sdcard/FIRST/www/SandboxTelemetry.html");
@@ -691,6 +698,13 @@ public class Aura_Sandbox extends LinearOpMode
             gainControl.setGain(gain);
             sleep(20);
         }
+    }
+
+    public void PurpleSandbox()
+    {
+        if (gamepad2.x) {
+                Aurelius.PurpleDumper.setPosition(PURPLE_UNLOCK);
+            }
     }
 
     public void HangSandbox () {
