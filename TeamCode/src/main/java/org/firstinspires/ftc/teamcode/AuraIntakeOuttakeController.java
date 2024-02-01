@@ -41,9 +41,9 @@ public class AuraIntakeOuttakeController {
     private Servo LeftFinger;
     private Servo RightFinger;
 
-    private RevBlinkinLedDriver rightBlinkin;
-
-    private RevBlinkinLedDriver leftBlinkin;
+//    private RevBlinkinLedDriver rightBlinkin;
+//
+//    private RevBlinkinLedDriver leftBlinkin;
 
     public RevColorSensorV3 Left = null;
 
@@ -107,8 +107,8 @@ public class AuraIntakeOuttakeController {
 
         Left = hardwareMap.get(RevColorSensorV3.class, "Left");
         Right = hardwareMap.get(ColorRangeSensor.class, "Right");
-        rightBlinkin = hardwareMap.get(RevBlinkinLedDriver.class, "RBlink");
-        leftBlinkin = hardwareMap.get(RevBlinkinLedDriver.class, "LBlink");
+//        rightBlinkin = hardwareMap.get(RevBlinkinLedDriver.class, "RBlink");
+//        leftBlinkin = hardwareMap.get(RevBlinkinLedDriver.class, "LBlink");
 
         currState = ioState.STATE_0_UNINITIALIZED;
         targetState = ioState.STATE_1_RFI;
@@ -268,12 +268,12 @@ public class AuraIntakeOuttakeController {
 
         if(rightDetected) {
             BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
-            rightBlinkin.setPattern(rightPattern);
+//            rightBlinkin.setPattern(rightPattern);
         }
 
         if(leftDetected) {
             BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
-            leftBlinkin.setPattern(leftPattern);
+//            leftBlinkin.setPattern(leftPattern);
         }
 
         if(rightDetected && leftDetected) {

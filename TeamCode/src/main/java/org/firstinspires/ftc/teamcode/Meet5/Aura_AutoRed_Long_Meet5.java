@@ -91,7 +91,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Red_Long", group="Linear OpMode")
+@Autonomous(name="Red_Long_5", group="Linear OpMode")
 
 public class Aura_AutoRed_Long_Meet5 extends LinearOpMode {
 

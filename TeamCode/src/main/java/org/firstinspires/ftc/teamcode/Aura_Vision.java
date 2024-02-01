@@ -45,16 +45,15 @@ public class Aura_Vision extends LinearOpMode {
                 double yaw = tag.ftcPose.yaw;
 
                 double currX = tag.metadata.fieldPosition.getData()[0] -
-                        (tag.ftcPose.range * Math.sin(Math.toRadians(tag.ftcPose.bearing)));
+                        (range * Math.sin(bearing)) - 5;
 
                 double currY = tag.metadata.fieldPosition.getData()[1] -
-                        (tag.ftcPose.range * Math.cos(Math.toRadians(tag.ftcPose.bearing)));
+                        (range * Math.cos(bearing)) - 7.6;
 
-
-                double currHeading = -tag.ftcPose.yaw;
+                double currHeading = -yaw;
 
                 telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, currHeading);
-                telemetry.update();
+                telemetry.addData("tagPos", "X: %5.1f Y: %5.1f", tag.metadata.fieldPosition.getData()[0],tag.metadata.fieldPosition.getData()[1]);
                 telemetry.addData("yaw", tag.ftcPose.yaw);
                 telemetry.addData("bearing", tag.ftcPose.bearing);
                 telemetry.addData("range", tag.ftcPose.range);
@@ -64,6 +63,7 @@ public class Aura_Vision extends LinearOpMode {
                 telemetry.addData("roll", tag.ftcPose.roll);
                 telemetry.addData("pitch", tag.ftcPose.pitch);
                 telemetry.addData("yaw", tag.ftcPose.yaw);
+                telemetry.update();
             }
             telemetry.update();
         }

@@ -46,6 +46,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -83,6 +84,7 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 @Autonomous(name="Red_Long4", group="Linear OpMode")
+@Disabled
 
 public class Aura_AutoRed_Long_Meet4 extends LinearOpMode {
 
