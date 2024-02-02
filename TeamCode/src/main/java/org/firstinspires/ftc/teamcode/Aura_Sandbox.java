@@ -218,10 +218,9 @@ public class Aura_Sandbox extends LinearOpMode
         telemetry.addData("Left Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_LEFT));
         telemetry.addData("Right Tracking wheel: ", Aurelius.getCurrentPosition(UPPER_RIGHT));
         telemetry.addData("Strafe Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_RIGHT));
-//        initAprilTag();
-//        if(USE_WEBCAM) {
-//            setManualExposure(6,250);
-//        }
+
+        initAprilTag(); // initializing the april tag processor
+        setManualExposure(6, 250); // accounting for motion blur
 
         waitForStart();
         //getUserInput();
@@ -596,6 +595,8 @@ public class Aura_Sandbox extends LinearOpMode
         desiredTag = null;
 
         int desiredTagID = CAMERA_SIDE ? 3 : 4;
+        telemetry.addData("Looking for tag: %d",desiredTagID );
+        telemetry.update();
 
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         for (AprilTagDetection detection : currentDetections) {
@@ -623,6 +624,18 @@ public class Aura_Sandbox extends LinearOpMode
             telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
             telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
             bKeepGoing = false;
+
+            double currX = desiredTag.metadata.fieldPosition.getData()[0] -
+                    (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
+
+            double currY = desiredTag.metadata.fieldPosition.getData()[1] -
+                    (desiredTag.ftcPose.range * Math.sin(Math.toRadians(desiredTag.ftcPose.bearing)));
+
+            double currHeading = -desiredTag.ftcPose.yaw;
+
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(currHeading));
+            telemetry.update();
+
         } else {
             telemetry.addData("Target:", "Not Found!");
         }

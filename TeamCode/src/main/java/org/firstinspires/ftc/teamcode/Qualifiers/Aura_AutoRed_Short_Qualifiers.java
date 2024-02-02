@@ -619,11 +619,14 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
             telemetry.update();
 
+            // TODO: 1. Calibrate camera
+            //       2. Offset currX and currY from camera to robot center
+
             double currX = desiredTag.metadata.fieldPosition.getData()[0] -
-                    (desiredTag.ftcPose.range * Math.sin(Math.toRadians(desiredTag.ftcPose.bearing)));
+                    (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
 
             double currY = desiredTag.metadata.fieldPosition.getData()[1] -
-                    (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
+                    (desiredTag.ftcPose.range * Math.sin(Math.toRadians(desiredTag.ftcPose.bearing)));
 
 
             double deltaHeading = -desiredTag.ftcPose.yaw;
