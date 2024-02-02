@@ -41,13 +41,10 @@ public class AuraIntakeOuttakeController {
     private Servo LeftFinger;
     private Servo RightFinger;
 
-//    private RevBlinkinLedDriver rightBlinkin;
-//
-//    private RevBlinkinLedDriver leftBlinkin;
+    private RevBlinkinLedDriver BlinkBoard;
 
-    public RevColorSensorV3 Left = null;
-
-    public ColorRangeSensor Right = null;
+    public RevColorSensorV3 Left;
+    public ColorRangeSensor Right;
     public ElapsedTime flipTimer;
     public ElapsedTime slideTimer;
 
@@ -83,10 +80,6 @@ public class AuraIntakeOuttakeController {
     public static double WRIST_WAIT_TIME_LIMIT = 1;
     private Telemetry telemetry;
 
-    private static final BlinkinPattern WHITE_PATTERN = BlinkinPattern.WHITE;
-    private static final BlinkinPattern GREEN_PATTERN = BlinkinPattern.GREEN;
-    private static final BlinkinPattern PURPLE_PATTERN = BlinkinPattern.VIOLET;
-    private static final BlinkinPattern YELLOW_PATTERN = BlinkinPattern.YELLOW;
 
     public static boolean bPixelsDetected = false;
     public static boolean rightDetected = false;
@@ -104,11 +97,8 @@ public class AuraIntakeOuttakeController {
         LeftFinger = hardwareMap.get(Servo.class, "lefty");
         RightFinger = hardwareMap.get(Servo.class, "righty");
         Slide = hardwareMap.get(DcMotor.class, "Slide");
-
         Left = hardwareMap.get(RevColorSensorV3.class, "Left");
         Right = hardwareMap.get(ColorRangeSensor.class, "Right");
-//        rightBlinkin = hardwareMap.get(RevBlinkinLedDriver.class, "RBlink");
-//        leftBlinkin = hardwareMap.get(RevBlinkinLedDriver.class, "LBlink");
 
         currState = ioState.STATE_0_UNINITIALIZED;
         targetState = ioState.STATE_1_RFI;
@@ -131,7 +121,6 @@ public class AuraIntakeOuttakeController {
 
         isManual = Manual;
     }
-
     public void init() {
         Left.initialize();
         Left.enableLed(true);
@@ -230,9 +219,6 @@ public class AuraIntakeOuttakeController {
 
     public void AuraColor() {
 
-
-
-
         String[] colors = {"White", "Green", "Purple", "Yellow"};
         int[][] rightRanges = {
                 {1400, 1700, 1600, 1950, 1500, 1800}, // White (Color Ranges are 100 apart original for first was 1355 so range became 1255 && 1455)
@@ -241,10 +227,10 @@ public class AuraIntakeOuttakeController {
                 {782, 882, 584, 684, 312, 412}       // Yellow
         };
         int[][] leftRanges = {
-                {2100, 2300, 3600, 4200, 3400, 4000},// White
+                {1365, 1465, 2382, 2482, 2244, 2344},// White
                 {348, 448, 1065, 1165, 460, 560},    // Green
-                {832, 1100, 1400, 1826, 1205, 2250},  // Purple
-                {1165, 1265, 1571, 1671, 458, 558}   // Yellow
+                {832, 932, 1726, 1826, 1205, 1305},  // Purple
+                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
         };
 
         // Check the color for Right sensor
@@ -266,16 +252,6 @@ public class AuraIntakeOuttakeController {
         }
 
 
-        if(rightDetected) {
-            BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
-//            rightBlinkin.setPattern(rightPattern);
-        }
-
-        if(leftDetected) {
-            BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
-//            leftBlinkin.setPattern(leftPattern);
-        }
-
         if(rightDetected && leftDetected) {
             colorTimer.reset();
         } else {
@@ -285,25 +261,6 @@ public class AuraIntakeOuttakeController {
         telemetry.update();
     }
 
-    private BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
-        for (int i = 0; i < colorNames.length; i++) {
-            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] &&
-                    green >= colorRanges[i][2] && green <= colorRanges[i][3] &&
-                    blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
-                switch (colorNames[i]) {
-                    case "White":
-                        return WHITE_PATTERN;
-                    case "Green":
-                        return GREEN_PATTERN;
-                    case "Purple":
-                        return PURPLE_PATTERN;
-                    case "Yellow":
-                        return YELLOW_PATTERN;
-                }
-            }
-        }
-        return BlinkinPattern.BREATH_BLUE;  // should bounce blue color
-    }
 
     public void updateSlide() {
 
