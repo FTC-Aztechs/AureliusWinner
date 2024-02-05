@@ -127,7 +127,7 @@ public class AuraRobot
     public static double LEFT_FINGER_UNLOCK = 0.45;
     public static double RIGHT_FINGER_UNLOCK = 0.5;
     public static double WRIST_INTAKE = 0.57;
-    public static double WRIST_TUCK = 0.78;
+    public static double WRIST_TUCK = 0.79;
     public static double ELBOW_DOWN = 0.023;
     public static double ELBOW_UP = 0.65;
     public static int SLIDE_INTAKE_POS = 0;

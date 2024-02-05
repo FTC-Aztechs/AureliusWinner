@@ -622,19 +622,32 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             // TODO: 1. Calibrate camera
             //       2. Offset currX and currY from camera to robot center
 
-            double currX = desiredTag.metadata.fieldPosition.getData()[0] -
-                    (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
+            double range = desiredTag.ftcPose.range;
+            double bearing = desiredTag.ftcPose.bearing;
+            double yaw = desiredTag.ftcPose.yaw;
 
-            double currY = desiredTag.metadata.fieldPosition.getData()[1] -
-                    (desiredTag.ftcPose.range * Math.sin(Math.toRadians(desiredTag.ftcPose.bearing)));
+            double robotOffsetX = -7;
+            double robotOffsetY = + 5.5;
 
+            double offsetX = (range * Math.cos(Math.toRadians(bearing)));
 
-            double deltaHeading = -desiredTag.ftcPose.yaw;
+            double offsetY = (range * Math.sin(Math.toRadians(bearing)));
+
+            double currHeading = Math.toRadians(-yaw);
+
+            double rotateX = (robotOffsetX * Math.cos(currHeading)) + (robotOffsetY * -Math.sin(currHeading));
+            double rotateY = (robotOffsetX * Math.sin(currHeading)) + (robotOffsetY * Math.cos(currHeading));
+
+            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] +
+                    offsetX);
+
+            double currY = rotateY + (desiredTag.metadata.fieldPosition.getData()[1] -
+                    offsetY);
 
             telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(RedShort.pose.heading.log()));
             telemetry.update();
 
-            RedShort.pose = new Pose2d(currX, currY,Math.toRadians(-90) - Math.toRadians(deltaHeading));
+            RedShort.pose = new Pose2d(currX, currY,currHeading);
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", RedShort.pose.position.x, RedShort.pose.position.y, Math.toDegrees(RedShort.pose.heading.log()));
             telemetry.update();
             return true;

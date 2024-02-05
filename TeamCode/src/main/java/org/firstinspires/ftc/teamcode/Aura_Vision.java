@@ -22,6 +22,7 @@ public class Aura_Vision extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         AprilTagProcessor tagProcessor = new AprilTagProcessor.Builder()
+                .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
                 .setDrawTagID(true)
@@ -44,16 +45,27 @@ public class Aura_Vision extends LinearOpMode {
                 double bearing = tag.ftcPose.bearing;
                 double yaw = tag.ftcPose.yaw;
 
-                double currX = tag.metadata.fieldPosition.getData()[0] -
-                        (range * Math.sin(bearing)) - 5;
+                double robotOffsetX = -7;
+                double robotOffsetY = +5.5;
 
-                double currY = tag.metadata.fieldPosition.getData()[1] -
-                        (range * Math.cos(bearing)) - 7.6;
+                double offsetX = (range * Math.cos(Math.toRadians(bearing)));
+
+                double offsetY = (range * Math.sin(Math.toRadians(bearing)));
 
                 double currHeading = -yaw;
 
-                telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, currHeading);
+                double rotateX = (robotOffsetX * Math.cos(currHeading)) + (robotOffsetY * -Math.sin(currHeading));
+                double rotateY = (robotOffsetX * Math.sin(currHeading)) + (robotOffsetY * Math.cos(currHeading));
+
+                double currX = rotateX + (tag.metadata.fieldPosition.getData()[0] +
+                        offsetX);
+
+                double currY = rotateY + (tag.metadata.fieldPosition.getData()[1] -
+                        offsetY);
+
+                telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(currHeading));
                 telemetry.addData("tagPos", "X: %5.1f Y: %5.1f", tag.metadata.fieldPosition.getData()[0],tag.metadata.fieldPosition.getData()[1]);
+                telemetry.addData("offset", "X: %5.1f Y: %5.1f",offsetX,offsetY);
                 telemetry.addData("yaw", tag.ftcPose.yaw);
                 telemetry.addData("bearing", tag.ftcPose.bearing);
                 telemetry.addData("range", tag.ftcPose.range);
