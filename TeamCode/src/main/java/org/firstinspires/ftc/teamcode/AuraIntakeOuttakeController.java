@@ -32,6 +32,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.concurrent.TimeUnit;
+
 
 @Config
 public class AuraIntakeOuttakeController {
@@ -253,12 +255,13 @@ public class AuraIntakeOuttakeController {
 
 
         if(rightDetected && leftDetected) {
-            colorTimer.reset();
+            if(colorTimer.seconds() > .5) {
+                setTargetState(ioState.STATE_3_PS);
+                colorTimer.reset();
+            }
         } else {
             colorTimer.reset();
         }
-
-        telemetry.update();
     }
 
 
@@ -293,19 +296,6 @@ public class AuraIntakeOuttakeController {
         if(currState == targetState)
         {
             updateSlide();
-            //updateServo();
-
-//            if (currState == ioState.STATE_1_RFI) {
-//                if(!bPixelsDetected)
-//                    AuraColor();
-//                else
-//                {
-//                    if (colorTimer.seconds()>0.5) {
-//                        setTargetState(ioState.STATE_3_PS);
-//                    }
-//                }
-//            }
-
             return;
         }
 
@@ -313,7 +303,7 @@ public class AuraIntakeOuttakeController {
 
         switch(nextState) {
             case STATE_1_RFI:
-
+                AuraColor();
                 // Ensure the Robot enforces these states on all motors & servos
                 targetSlidePos = SLIDE_INTAKE_POS;
                 Elbow.setPosition(ELBOW_DOWN);

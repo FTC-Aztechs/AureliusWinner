@@ -32,28 +32,18 @@ package org.firstinspires.ftc.teamcode;
 //import com.acmerobotics.dashboard.FtcDashboard;
 //import com.acmerobotics.dashboard.config.Config;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
-import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Hang;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.targetSlidePos;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.HANG;
 import static org.firstinspires.ftc.teamcode.AuraRobot.BUTTON_TRIGGER_TIMER_MS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.HANG_POWER;
-import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
-import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
-import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_FLIP_HEIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.bumperSpeedAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.dPadSpeedAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 import static org.firstinspires.ftc.teamcode.AuraRobot.speedAdjust;
-
-import android.graphics.Color;
-import android.transition.Slide;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -66,8 +56,6 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -122,8 +110,10 @@ public class Aura_Manual extends LinearOpMode {
     private static ElapsedTime timer_gp2_dpad_up = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp2_dpad_down = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp2_rb = new ElapsedTime(MILLISECONDS);
-    private static ElapsedTime timer_gp2_rt = new ElapsedTime(MILLISECONDS);
-    private static ElapsedTime timer_gp2_lt = new ElapsedTime(MILLISECONDS);
+    private static ElapsedTime timer_gp1_rt = new ElapsedTime(MILLISECONDS);
+    private static ElapsedTime timer_gp1_lt = new ElapsedTime(MILLISECONDS);
+
+    private static ElapsedTime timer_gp1_lb = new ElapsedTime(MILLISECONDS);
     //    private static ElapsedTime timer_gp2_buttonA = new ElapsedTime(MILLISECONDS);
 //    private static ElapsedTime timer_gp2_buttonX = new ElapsedTime(MILLISECONDS);
 //    private static ElapsedTime timer_gp2_buttonY = new ElapsedTime(MILLISECONDS);
@@ -135,7 +125,7 @@ public class Aura_Manual extends LinearOpMode {
     private static ElapsedTime timer_gp2_dpad_right = new ElapsedTime(MILLISECONDS);
 
     private static ElapsedTime timer_gp1_left_bumper = new ElapsedTime(MILLISECONDS);
-    private static ElapsedTime timer_gp1_left_trigger = new ElapsedTime(MILLISECONDS);
+    private static ElapsedTime timer_gp1_y = new ElapsedTime(MILLISECONDS);
 
     //slide button booleans
     private boolean assumingHighPosition = false;
@@ -203,22 +193,32 @@ public class Aura_Manual extends LinearOpMode {
 
     public void AuraFingers()
     {
-        if(gamepad2.left_trigger == 1f) {
+        if(gamepad1.left_trigger == 1f) {
             if(!changingState) {
-                timer_gp2_lt.reset();
+                timer_gp1_lt.reset();
                 changingState = true;
-            } else if (timer_gp2_lt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            } else if (timer_gp1_lt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
                 changingState = false;
             }
         }
-        if(gamepad2.right_trigger == 1f) {
+        if(gamepad1.right_trigger == 1f) {
             if(!changingState) {
-                timer_gp2_rt.reset();
+                timer_gp1_rt.reset();
                 changingState = true;
-            } else if (timer_gp2_lt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            } else if (timer_gp1_lt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK);
                 changingState = false;
+            }
+        }
+
+        if(gamepad1.left_bumper) {
+            if(!changingState) {
+                timer_gp1_lb.reset();
+                changingState = true;
+            } else if (timer_gp1_lb.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                RightFinger.setPosition(RIGHT_FINGER_UNLOCK);
+                LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
             }
         }
     }
@@ -452,11 +452,11 @@ public void AuraIntakeOuttake() {
 }
 
     public void AuraLauncher(){
-        if (gamepad1.left_trigger == 1f) {
+        if (gamepad1.y) {
             if (!changingLauncherSpeed) {
-                timer_gp1_left_trigger.reset();
+                timer_gp1_y.reset();
                 changingLauncherSpeed = true;
-            } else if (timer_gp1_left_trigger.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            } else if (timer_gp1_y.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
                 if (PlaneLaunched == false) {
                     Aurelius.boeing747.setTargetState(AuraLaunchController.launchState.Launch);
                     Aurelius.boeing747.update();
