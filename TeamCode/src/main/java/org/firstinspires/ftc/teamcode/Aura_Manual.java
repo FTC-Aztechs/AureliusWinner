@@ -57,6 +57,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 
 @Config
@@ -139,6 +140,9 @@ public class Aura_Manual extends LinearOpMode {
     private boolean leftDetected = false;
     private RevBlinkinLedDriver.BlinkinPattern rightPattern;
     private RevBlinkinLedDriver.BlinkinPattern leftPattern;
+
+    public ElapsedTime PatternTimer;
+
     private static final RevBlinkinLedDriver.BlinkinPattern WHITE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.WHITE;
     private static final RevBlinkinLedDriver.BlinkinPattern GREEN_PATTERN = RevBlinkinLedDriver.BlinkinPattern.GREEN;
     private static final RevBlinkinLedDriver.BlinkinPattern PURPLE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
@@ -167,6 +171,8 @@ public class Aura_Manual extends LinearOpMode {
         BlinkinBoard = hardwareMap.get(RevBlinkinLedDriver.class, "Blink");
         Left = hardwareMap.get(RevColorSensorV3.class, "Left");
         Right = hardwareMap.get(ColorRangeSensor.class, "Right");
+        PatternTimer = new ElapsedTime();
+        PatternTimer.reset();
 
         myIntakeOuttakeController = new AuraIntakeOuttakeController (hardwareMap, true);
         initAurelius();
@@ -243,7 +249,7 @@ public class Aura_Manual extends LinearOpMode {
 
         String[] colors = {"White", "Green", "Purple", "Yellow"};
         int[][] rightRanges = {
-                {1400, 1700, 1600, 1950, 1500, 1800}, // White (Color Ranges are 100 apart original for first was 1355 so range became 1255 && 1455)
+                {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
                 {264, 364, 468, 568, 237, 337},      // Green
                 {565, 750, 550, 700, 710, 950},      // Purple
                 {782, 882, 584, 684, 312, 412}       // Yellow
@@ -254,6 +260,13 @@ public class Aura_Manual extends LinearOpMode {
                 {832, 932, 1726, 1826, 1205, 1305},  // Purple
                 {1100, 1300, 1400, 1770, 420, 590}   // Yellow
         };
+
+        telemetry.addData("Right Red: ", Right.red()); // color range
+        telemetry.addData("Right Green: ", Right.green());
+        telemetry.addData("Right Blue: ", Right.blue());
+        telemetry.addData("Left Red: ", Left.red()); // rev
+        telemetry.addData("Left Green: ", Left.green());
+        telemetry.addData("Left Blue: ", Left.blue());
 
         // Check the color for Right sensor
         for (int i = 0; i < colors.length; i++) {
@@ -276,14 +289,19 @@ public class Aura_Manual extends LinearOpMode {
         RevBlinkinLedDriver.BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
         RevBlinkinLedDriver.BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
 
-        for(int i=0; i<=60; i++)
-        {
-            if(i<=30)
-                BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
-            else
+        if(leftDetected) {
+            BlinkinBoard.setPattern(leftPattern);
+            if(PatternTimer.seconds() > .3) {
+                BlinkinBoard.setPattern(rightPattern);
+            }
+        } else if (rightDetected) {
+            BlinkinBoard.setPattern(rightPattern);
+            if(PatternTimer.seconds() > .3) {
                 BlinkinBoard.setPattern(leftPattern);
+            }
+        } else {
+            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
         }
-
 
         telemetry.update();
     }

@@ -255,7 +255,7 @@ public class AuraIntakeOuttakeController {
 
 
         if(rightDetected && leftDetected) {
-            if(colorTimer.seconds() > .5) {
+            if(colorTimer.seconds() > .4) {
                 setTargetState(ioState.STATE_3_PS);
                 colorTimer.reset();
             }
