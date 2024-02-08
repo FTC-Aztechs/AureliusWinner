@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.Qualifiers;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_PS;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
@@ -163,7 +164,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
     public class GotoOuttakeAction implements Action {
         @Override
         public boolean run(TelemetryPacket tPkt) {
-            MyIntakeOuttakeController.setTargetState(STATE_5_RFO_MANUAL);
+            MyIntakeOuttakeController.setTargetState(STATE_5_RFO_LOW);
             return false;
         }
     }
@@ -474,7 +475,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redAfterGateTagPos)
                 .afterDisp(0, getReadyForOutTake)
-                //.stopAndAdd(updateAfterGatePos)
+                .stopAndAdd(updateAfterGatePos)
                 .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redYellow3Pos)
@@ -493,7 +494,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redAfterGateTagPos)
                 .afterDisp(0, getReadyForOutTake)
-                //.stopAndAdd(updateAfterGatePos)
+                .stopAndAdd(updateAfterGatePos)
                 .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redYellow2Pos)
@@ -512,7 +513,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redAfterGateTagPos)
                 .afterDisp(0, getReadyForOutTake)
-                //.stopAndAdd(updateAfterGatePos)
+                .stopAndAdd(updateAfterGatePos)
                 .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
                 .stopAndAdd(rectifyHeadingError)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
@@ -659,12 +660,12 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
 
             double offsetY = (range * Math.sin(Math.toRadians(bearing)));
 
-            double currHeading = Math.toRadians(-yaw);
+            double currHeading = -Math.toRadians(yaw);
 
             double rotateX = (robotOffsetX * Math.cos(currHeading)) + (robotOffsetY * -Math.sin(currHeading));
             double rotateY = (robotOffsetX * Math.sin(currHeading)) + (robotOffsetY * Math.cos(currHeading));
 
-            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] +
+            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] -
                     offsetX);
 
             double currY = rotateY + (desiredTag.metadata.fieldPosition.getData()[1] -

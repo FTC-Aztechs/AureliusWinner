@@ -132,8 +132,8 @@ public class AuraRobot
     public static double ELBOW_UP = 0.65;
     public static int SLIDE_INTAKE_POS = 0;
     public static int SLIDE_FLIP_HEIGHT = 1000;
-    public static int SLIDE_RAISE_LOW = 400;
-    public static int SLIDE_RAISE_MED = 500;
+    public static int SLIDE_RAISE_LOW = 800;
+    public static int SLIDE_RAISE_MED = 1700;
     public static int SLIDE_RAISE_HIGH = 3000;
     public static double slideTicks_stepSize = 125;
     public static int FloorPosition  = 600;
@@ -159,7 +159,7 @@ public class AuraRobot
 
 
 
-    public static double APRILTAG_TIMEOUT = 5;
+    public static double APRILTAG_TIMEOUT = 2;
 
    //------------------------------------------------------------
 

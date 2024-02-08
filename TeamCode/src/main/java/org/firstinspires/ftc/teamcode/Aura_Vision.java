@@ -52,12 +52,12 @@ public class Aura_Vision extends LinearOpMode {
 
                 double offsetY = (range * Math.sin(Math.toRadians(bearing)));
 
-                double currHeading = -yaw;
+                double currHeading = -Math.toRadians(yaw);
 
                 double rotateX = (robotOffsetX * Math.cos(currHeading)) + (robotOffsetY * -Math.sin(currHeading));
                 double rotateY = (robotOffsetX * Math.sin(currHeading)) + (robotOffsetY * Math.cos(currHeading));
 
-                double currX = rotateX + (tag.metadata.fieldPosition.getData()[0] +
+                double currX = rotateX + (tag.metadata.fieldPosition.getData()[0] -
                         offsetX);
 
                 double currY = rotateY + (tag.metadata.fieldPosition.getData()[1] -

@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.Qualifiers;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_PS;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
@@ -104,7 +105,9 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
     Pose2d redPurple2Pos = new Pose2d(13, -33, Math.toRadians(90));  //37,12,-90
     Pose2d redPurple3Pos = new Pose2d(25, -34.5 , Math.toRadians(180)); //27,19,-90
 
-    Pose2d redYellow3Pos = new Pose2d(46, -42, Math.toRadians(0));  //27,37,-90
+    Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
+
+    Vector2d redYellow3Pos = new Vector2d(46, -42);  //27,37,-90
     Vector2d redYellow2Pos = new Vector2d(46, -35.5);   //26,37,-90
     Vector2d redYellow1Pos = new Vector2d(46,-31);    //33,37,-90
 
@@ -154,7 +157,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
     public class GotoOuttakeAction implements Action {
         @Override
         public boolean run(TelemetryPacket tPkt) {
-            MyIntakeOuttakeController.setTargetState(STATE_5_RFO_MANUAL);
+            MyIntakeOuttakeController.setTargetState(STATE_5_RFO_LOW);
             return false;
         }
     }
@@ -456,8 +459,10 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(new Vector2d(10,-38.5))
                 .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(redTagPos, Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
-                .splineToLinearHeading(redYellow3Pos, Math.toRadians(90))
+                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow3Pos)
                 .strafeTo(redYellow1Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
@@ -471,8 +476,10 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .lineToY(-44.5)
                 .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(redTagPos, Math.toRadians(90))
                 .afterDisp(0, getReadyForOutTake)
-                .splineToLinearHeading(redYellow3Pos, Math.toRadians(90))
+                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow3Pos)
                 .strafeTo(redYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
@@ -486,8 +493,10 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .lineToX(29)
                 .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(redTagPos, Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
-                .splineToLinearHeading(redYellow3Pos, Math.toRadians(90))
+                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow3Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -608,7 +617,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 } else {
                     telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
                     telemetry.update();
-                  }
+                }
             }
         }
 
@@ -627,27 +636,27 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             double yaw = desiredTag.ftcPose.yaw;
 
             double robotOffsetX = -7;
-            double robotOffsetY = + 5.5;
+            double robotOffsetY = -2.25;
 
             double offsetX = (range * Math.cos(Math.toRadians(bearing)));
 
             double offsetY = (range * Math.sin(Math.toRadians(bearing)));
 
-            double currHeading = Math.toRadians(-yaw);
+            double currHeading = -Math.toRadians(yaw);
 
             double rotateX = (robotOffsetX * Math.cos(currHeading)) + (robotOffsetY * -Math.sin(currHeading));
             double rotateY = (robotOffsetX * Math.sin(currHeading)) + (robotOffsetY * Math.cos(currHeading));
 
-            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] +
+            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] -
                     offsetX);
 
             double currY = rotateY + (desiredTag.metadata.fieldPosition.getData()[1] -
                     offsetY);
 
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(RedShort.pose.heading.log()));
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", RedShort.pose.position.x, RedShort.pose.position.y, Math.toDegrees(RedShort.pose.heading.log()));
             telemetry.update();
 
-            RedShort.pose = new Pose2d(currX, currY,currHeading);
+            RedShort.pose = new Pose2d(currX, currY, currHeading);
             telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", RedShort.pose.position.x, RedShort.pose.position.y, Math.toDegrees(RedShort.pose.heading.log()));
             telemetry.update();
             return true;

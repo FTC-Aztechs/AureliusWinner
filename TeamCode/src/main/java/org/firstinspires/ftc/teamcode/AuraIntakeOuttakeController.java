@@ -191,7 +191,7 @@ public class AuraIntakeOuttakeController {
                     if (isManual) { // TODO: UNless we need to adjust slide pos to something else in Auto...
                         nextState = ioState.STATE_5_RFO_MANUAL;
                     } else {
-                        nextState = ioState.STATE_5_RFO_MANUAL;
+                        nextState = ioState.STATE_5_RFO_LOW;
                     }
                 } else {
                     nextState = ioState.STATE_3_PS;
@@ -199,11 +199,14 @@ public class AuraIntakeOuttakeController {
                 break;
             case STATE_5_RFO_MANUAL:
                 if (goingUp) {
-                    if (isManual) {
                         nextState = ioState.STATE_5_RFO_MANUAL;
-                    } else {
-                        nextState = ioState.STATE_6_PR_BOTH;
-                    }
+                } else {
+                    nextState = ioState.STATE_4_BF;
+                }
+                break;
+            case STATE_5_RFO_LOW:
+                if (goingUp) {
+                    nextState = ioState.STATE_6_PR_BOTH;
                 } else {
                     nextState = ioState.STATE_4_BF;
                 }
@@ -362,6 +365,25 @@ public class AuraIntakeOuttakeController {
 
             case STATE_5_RFO_MANUAL: // Ready for Outtake = main state in manual
                 if(goingUp) {
+                    Elbow.setPosition(ELBOW_UP);
+                    if (flipTimer.seconds() > FLIP_WAIT_TIME_LIMIT) {
+                        currState = nextState;
+
+                        // Reset Slide Timer such that state 4 has a fresh timer to count
+                        slideTimer.reset();
+                    }
+                }
+                else {
+                    currState = nextState;
+
+                    // Reset Slide Timer such that state 4 has a fresh timer to count
+                    slideTimer.reset();
+                }
+                break;
+
+            case STATE_5_RFO_LOW: // Ready for Outtake = main state in manual
+                if(goingUp) {
+                    targetSlidePos = SLIDE_RAISE_LOW;
                     Elbow.setPosition(ELBOW_UP);
                     if (flipTimer.seconds() > FLIP_WAIT_TIME_LIMIT) {
                         currState = nextState;

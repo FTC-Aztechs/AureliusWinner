@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.Qualifiers;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_PS;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
@@ -159,7 +160,7 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
     public class GotoOuttakeAction implements Action {
         @Override
         public boolean run(TelemetryPacket tPkt) {
-            MyIntakeOuttakeController.setTargetState(STATE_5_RFO_MANUAL);
+            MyIntakeOuttakeController.setTargetState(STATE_5_RFO_LOW);
             return false;
         }
     }
@@ -208,8 +209,8 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
 
     public Action updateAfterGatePos = new backwallAprilTagController();
 
-    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 280;
-    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 290;
+    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 350;
+    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 450;
 
     public static int PurpleDropOffPos = 0;
     public static double SplineAngle = 0;
@@ -644,12 +645,12 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
 
             double offsetY = (range * Math.sin(Math.toRadians(bearing)));
 
-            double currHeading = Math.toRadians(-yaw);
+            double currHeading = -Math.toRadians(yaw);
 
             double rotateX = (robotOffsetX * Math.cos(currHeading)) + (robotOffsetY * -Math.sin(currHeading));
             double rotateY = (robotOffsetX * Math.sin(currHeading)) + (robotOffsetY * Math.cos(currHeading));
 
-            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] +
+            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] -
                     offsetX);
 
             double currY = rotateY + (desiredTag.metadata.fieldPosition.getData()[1] -
@@ -684,7 +685,7 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
                 visionPortal = new VisionPortal.Builder()
-                        .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
+                        .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
                         .addProcessor(aprilTag)
                         .build();
         } else {
