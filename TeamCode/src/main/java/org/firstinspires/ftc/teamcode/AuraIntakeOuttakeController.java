@@ -27,6 +27,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -99,8 +100,8 @@ public class AuraIntakeOuttakeController {
         LeftFinger = hardwareMap.get(Servo.class, "lefty");
         RightFinger = hardwareMap.get(Servo.class, "righty");
         Slide = hardwareMap.get(DcMotor.class, "Slide");
-        Left = hardwareMap.get(RevColorSensorV3.class, "Left");
-        Right = hardwareMap.get(ColorRangeSensor.class, "Right");
+//        Left = hardwareMap.get(RevColorSensorV3.class, "Left");
+//        Right = hardwareMap.get(ColorRangeSensor.class, "Right");
 
         currState = ioState.STATE_0_UNINITIALIZED;
         targetState = ioState.STATE_1_RFI;
@@ -222,50 +223,50 @@ public class AuraIntakeOuttakeController {
         }
     }
 
-    public void AuraColor() {
-
-        String[] colors = {"White", "Green", "Purple", "Yellow"};
-        int[][] rightRanges = {
-                {1400, 1700, 1600, 1950, 1500, 1800}, // White (Color Ranges are 100 apart original for first was 1355 so range became 1255 && 1455)
-                {264, 364, 468, 568, 237, 337},      // Green
-                {565, 750, 550, 700, 710, 950},      // Purple
-                {782, 882, 584, 684, 312, 412}       // Yellow
-        };
-        int[][] leftRanges = {
-                {1365, 1465, 2382, 2482, 2244, 2344},// White
-                {348, 448, 1065, 1165, 460, 560},    // Green
-                {832, 932, 1726, 1826, 1205, 1305},  // Purple
-                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
-        };
-
-        // Check the color for Right sensor
-        for (int i = 0; i < colors.length; i++) {
-            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
-                rightDetected = true;
-            } else {
-                rightDetected = false;
-            }
-        }
-
-        // Check the color for Left sensor
-        for (int i = 0; i < colors.length; i++) {
-            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
-                leftDetected = true;
-            } else {
-                leftDetected = false;
-            }
-        }
-
-
-        if(rightDetected && leftDetected) {
-            if(colorTimer.seconds() > .4) {
-                setTargetState(ioState.STATE_3_PS);
-                colorTimer.reset();
-            }
-        } else {
-            colorTimer.reset();
-        }
-    }
+//    public void AuraColor() {
+//
+//        String[] colors = {"White", "Green", "Purple", "Yellow"};
+//        int[][] rightRanges = {
+//                {1400, 1700, 1600, 1950, 1500, 1800}, // White (Color Ranges are 100 apart original for first was 1355 so range became 1255 && 1455)
+//                {264, 364, 468, 568, 237, 337},      // Green
+//                {565, 750, 550, 700, 710, 950},      // Purple
+//                {782, 882, 584, 684, 312, 412}       // Yellow
+//        };
+//        int[][] leftRanges = {
+//                {1365, 1465, 2382, 2482, 2244, 2344},// White
+//                {348, 448, 1065, 1165, 460, 560},    // Green
+//                {832, 932, 1726, 1826, 1205, 1305},  // Purple
+//                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
+//        };
+//
+//        // Check the color for Right sensor
+//        for (int i = 0; i < colors.length; i++) {
+//            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
+//                rightDetected = true;
+//            } else {
+//                rightDetected = false;
+//            }
+//        }
+//
+//        // Check the color for Left sensor
+//        for (int i = 0; i < colors.length; i++) {
+//            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
+//                leftDetected = true;
+//            } else {
+//                leftDetected = false;
+//            }
+//        }
+//
+//
+//        if(rightDetected && leftDetected) {
+//            if(colorTimer.seconds() > .4) {
+//                setTargetState(ioState.STATE_3_PS);
+//                colorTimer.reset();
+//            }
+//        } else {
+//            colorTimer.reset();
+//        }
+//    }
 
 
     public void updateSlide() {
@@ -306,7 +307,7 @@ public class AuraIntakeOuttakeController {
 
         switch(nextState) {
             case STATE_1_RFI:
-                AuraColor();
+//                AuraColor();
                 // Ensure the Robot enforces these states on all motors & servos
                 targetSlidePos = SLIDE_INTAKE_POS;
                 Elbow.setPosition(ELBOW_DOWN);
