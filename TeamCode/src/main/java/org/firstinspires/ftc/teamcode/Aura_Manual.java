@@ -169,8 +169,8 @@ public class Aura_Manual extends LinearOpMode {
         LeftFinger = hardwareMap.get(Servo.class, "lefty");
         RightFinger = hardwareMap.get(Servo.class, "righty");
         BlinkinBoard = hardwareMap.get(RevBlinkinLedDriver.class, "Blink");
-//        Left = hardwareMap.get(RevColorSensorV3.class, "Left");
-//        Right = hardwareMap.get(ColorRangeSensor.class, "Right");
+        Left = hardwareMap.get(RevColorSensorV3.class, "Left");
+        Right = hardwareMap.get(ColorRangeSensor.class, "Right");
         PatternTimer = new ElapsedTime();
         PatternTimer.reset();
 
@@ -188,7 +188,7 @@ public class Aura_Manual extends LinearOpMode {
             AuraLauncher();
             AuraFingers();
             AuraHang();
-//            AuraColor();
+            AuraColor();
             //AuraHang();//            AuraColor();
 
         }
@@ -245,66 +245,67 @@ public class Aura_Manual extends LinearOpMode {
         telemetry.update();
     }
 
-//    public void AuraColor() {
-//
-//        String[] colors = {"White", "Green", "Purple", "Yellow"};
-//        int[][] rightRanges = {
-//                {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
-//                {264, 364, 468, 568, 237, 337},      // Green
-//                {565, 750, 550, 700, 710, 950},      // Purple
-//                {782, 882, 584, 684, 312, 412}       // Yellow
-//        };
-//        int[][] leftRanges = {
-//                {1365, 1465, 2382, 2482, 2244, 2344},// White
-//                {348, 448, 1065, 1165, 460, 560},    // Green
-//                {832, 932, 1726, 1826, 1205, 1305},  // Purple
-//                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
-//        };
-//
-//        telemetry.addData("Right Red: ", Right.red()); // color range
-//        telemetry.addData("Right Green: ", Right.green());
-//        telemetry.addData("Right Blue: ", Right.blue());
-//        telemetry.addData("Left Red: ", Left.red()); // rev
-//        telemetry.addData("Left Green: ", Left.green());
-//        telemetry.addData("Left Blue: ", Left.blue());
-//
-//        // Check the color for Right sensor
-//        for (int i = 0; i < colors.length; i++) {
-//            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
-//                rightDetected = true;
-//            } else {
-//                rightDetected = false;
-//            }
-//        }
-//
-//        // Check the color for Left sensor
-//        for (int i = 0; i < colors.length; i++) {
-//            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
-//                leftDetected = true;
-//            } else {
-//                leftDetected = false;
-//            }
-//        }
-//
-//        RevBlinkinLedDriver.BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
-//        RevBlinkinLedDriver.BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
-//
-//        if(leftDetected) {
-//            BlinkinBoard.setPattern(leftPattern);
-//            if(PatternTimer.seconds() > .3) {
-//                BlinkinBoard.setPattern(rightPattern);
-//            }
-//        } else if (rightDetected) {
-//            BlinkinBoard.setPattern(rightPattern);
-//            if(PatternTimer.seconds() > .3) {
-//                BlinkinBoard.setPattern(leftPattern);
-//            }
-//        } else {
-//            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
-//        }
-//
-//        telemetry.update();
-//    }
+    public void AuraColor() {
+
+        String[] colors = {"White", "Green", "Purple", "Yellow"};
+        int[][] rightRanges = {
+                {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
+                {264, 364, 468, 568, 237, 337},      // Green
+                {500, 750, 550, 720, 710, 950},      // Purple
+                {782, 882, 584, 684, 312, 412}       // Yellow
+        };
+        int[][] leftRanges = {
+                {1365, 1465, 2382, 2482, 2244, 2344},// White
+                {348, 448, 1065, 1165, 460, 560},    // Green
+                {800, 1100, 1200, 1650, 1600, 2300},  // Purple
+                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
+        };
+
+        telemetry.addData("Right Red: ", Right.red()); // color range
+        telemetry.addData("Right Green: ", Right.green());
+        telemetry.addData("Right Blue: ", Right.blue());
+        telemetry.addData("Left Red: ", Left.red()); // rev
+        telemetry.addData("Left Green: ", Left.green());
+        telemetry.addData("Left Blue: ", Left.blue());
+
+        // Check the color for Right sensor
+        for (int i = 0; i < colors.length; i++) {
+            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
+                rightDetected = true;
+                telemetry.addData("Right Detected" , "T");
+            } else {
+                rightDetected = false;
+            }
+        }
+
+        // Check the color for Left sensor
+        for (int i = 0; i < colors.length; i++) {
+            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
+                leftDetected = true;
+                telemetry.addData("Left Detected" , "T");
+            } else {
+                leftDetected = false;
+            }
+        }
+
+        RevBlinkinLedDriver.BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
+        RevBlinkinLedDriver.BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
+
+        if(leftDetected) {
+            BlinkinBoard.setPattern(leftPattern);
+            if(PatternTimer.seconds() > .3) {
+                BlinkinBoard.setPattern(rightPattern);
+            }
+        } else if (rightDetected) {
+            BlinkinBoard.setPattern(rightPattern);
+            if(PatternTimer.seconds() > .3) {
+                BlinkinBoard.setPattern(leftPattern);
+            }
+        } else {
+            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+        }
+        telemetry.update();
+    }
 
 
     private RevBlinkinLedDriver.BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
