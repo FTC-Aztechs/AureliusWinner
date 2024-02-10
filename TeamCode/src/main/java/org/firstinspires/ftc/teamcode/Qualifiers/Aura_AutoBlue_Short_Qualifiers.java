@@ -105,9 +105,10 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
     // RObot Width = 15; Length = 15.5
     Pose2d blueStartPos = new Pose2d(15,61.5,Math.toRadians(-90));//0,0,0
 
-    Pose2d bluePurple3Pos = new Pose2d(8.5, 33 , Math.toRadians(-180)); //27,19,-90
-    Pose2d bluePurple2Pos = new Pose2d(16, 32, Math.toRadians(-90));  //37,12,-90
     Pose2d bluePurple1Pos = new Pose2d(14, 33, Math.toRadians(0));  //27,0,-90
+    Pose2d bluePurple2Pos = new Pose2d(16, 32, Math.toRadians(-90));  //37,12,-90
+    Pose2d bluePurple3Pos = new Pose2d(8.5, 33 , Math.toRadians(-180)); //27,19,-90
+
 
     Pose2d blueTagPos = new Pose2d(36,45, Math.toRadians(0));
 
