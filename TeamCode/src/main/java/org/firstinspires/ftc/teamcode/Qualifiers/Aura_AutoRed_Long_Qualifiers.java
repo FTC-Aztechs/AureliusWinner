@@ -307,7 +307,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
     private VisionPortal visionPortal;
 
     private static final boolean USE_WEBCAM = true;
-    public static final int DESIRED_TAG_ID = 4;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    public static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private org.firstinspires.ftc.vision.apriltag.AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected

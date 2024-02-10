@@ -107,9 +107,9 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
-    Vector2d redYellow3Pos = new Vector2d(46, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(46, -35.5);   //26,37,-90
-    Vector2d redYellow1Pos = new Vector2d(46,-31);    //33,37,-90
+    Vector2d redYellow3Pos = new Vector2d(49.5, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(49.5, -37);   //26,37,-90
+    Vector2d redYellow1Pos = new Vector2d(49.5,-27.5);    //33,37,-90
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
 
@@ -206,8 +206,8 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     public Action updateAfterGatePos = new backwallAprilTagController();
 
-    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 500;
-    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 400;
+    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 300;
+    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 130;
 
     public static int PurpleDropOffPos = 0;
     public static double SplineAngle = 0;
@@ -298,7 +298,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
     private VisionPortal visionPortal;
 
     private static final boolean USE_WEBCAM = true;
-    public static final int DESIRED_TAG_ID = 3;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    public static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private org.firstinspires.ftc.vision.apriltag.AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
