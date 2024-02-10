@@ -3,12 +3,6 @@ package com.example.newmeepmeeper;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
-<<<<<<< HEAD
-import com.noahbres.meepmeep.core.colorscheme.ColorHex;
-import com.noahbres.meepmeep.core.colorscheme.ColorManager;
-import com.noahbres.meepmeep.core.colorscheme.ColorScheme;
-=======
->>>>>>> 0f586e3 (Fixed minor error in long programs)
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueDark;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueLight;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
@@ -16,30 +10,14 @@ import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedLight;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-<<<<<<< HEAD
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.Color;
-
-import jdk.internal.org.jline.utils.ColorPalette;
-
-public class newMeepMeeper {
-    public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(800);
-=======
 public class newMeepMeeper {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(500);
->>>>>>> 0f586e3 (Fixed minor error in long programs)
 
 
         //***************************************************************************************
         //TODO: CHOOSE RANDOMIZATION HERE
-<<<<<<< HEAD
-        int Randomization = 2;
-=======
         int Randomization = 3;
->>>>>>> 0f586e3 (Fixed minor error in long programs)
 
         //***************************************************************************************
         //TODO: Declare Poses here
@@ -49,52 +27,30 @@ public class newMeepMeeper {
 
         Pose2d blueShortPurple1Pos = new Pose2d(14, 33, Math.toRadians(0));  //27,0,-90
         Pose2d blueShortPurple2Pos = new Pose2d(16, 32, Math.toRadians(-90));  //37,12,-90
-<<<<<<< HEAD
-        Pose2d blueShortPurple3Pos = new Pose2d(8, 33 , Math.toRadians(-180)); //27,19,-90
-=======
         Pose2d blueShortPurple3Pos = new Pose2d(8.5, 33 , Math.toRadians(-180)); //27,19,-90
->>>>>>> 0f586e3 (Fixed minor error in long programs)
 
 
         Pose2d blueShortTagPos = new Pose2d(36,45, Math.toRadians(0));
 
-<<<<<<< HEAD
-        Vector2d blueShortYellow1Pos = new Vector2d(50.5, 42);  //27,37,-90
-        Vector2d blueShortYellow2Pos = new Vector2d(50.5, 36);   //26,37,-90
-        Vector2d blueShortYellow3Pos = new Vector2d(50.5,27.5);    //33,37,-90
-
-        Vector2d blueShortParkPos = new Vector2d(45, 54.5);  //7, 37
-=======
         Vector2d blueShortYellow1Pos = new Vector2d(51.5, 42);  //27,37,-90
         Vector2d blueShortYellow2Pos = new Vector2d(51.5, 36);   //26,37,-90
         Vector2d blueShortYellow3Pos = new Vector2d(51.5,27.5);    //33,37,-90
 
         Vector2d blueShortParkPos = new Vector2d(47.5, 54.5);  //7, 37
->>>>>>> 0f586e3 (Fixed minor error in long programs)
 
         //Todo: RedShort
         Pose2d redShortStartPos = new Pose2d(15,-61.5,Math.toRadians(90));//0,0,0
 
         Pose2d redShortPurple3Pos = new Pose2d(14, -33, Math.toRadians(0)); //27,19,-90
         Pose2d redShortPurple2Pos = new Pose2d(16, -32, Math.toRadians(90));  //37,12,-90
-<<<<<<< HEAD
-        Pose2d redShortPurple1Pos = new Pose2d(8, -33, Math.toRadians(180));  //27,0,-90
-=======
         Pose2d redShortPurple1Pos = new Pose2d(8.5, -33, Math.toRadians(180));  //27,0,-90
->>>>>>> 0f586e3 (Fixed minor error in long programs)
 
 
         Pose2d redShortTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
-<<<<<<< HEAD
-        Vector2d redShortYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
-        Vector2d redShortYellow2Pos = new Vector2d(50.5, -36);   //26,37,-90
-        Vector2d redShortYellow1Pos = new Vector2d(50.5,-27.5);    //33,37,-90
-=======
         Vector2d redShortYellow3Pos = new Vector2d(51.5, -42);  //27,37,-90
         Vector2d redShortYellow2Pos = new Vector2d(51.5, -36);   //26,37,-90
         Vector2d redShortYellow1Pos = new Vector2d(51.5,-27.5);    //33,37,-90
->>>>>>> 0f586e3 (Fixed minor error in long programs)
 
         Vector2d redShortParkPos = new Vector2d(45, -54.5);  //7, 37
 
@@ -102,11 +58,7 @@ public class newMeepMeeper {
         Pose2d blueLongStartPos = new Pose2d(-39,61.25,Math.toRadians(-90));//0,0,0
 
         Pose2d blueLongPurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
-<<<<<<< HEAD
-        Pose2d blueLongPurple2Pos = new Pose2d(-39, 34, Math.toRadians(-90));  //37,12,-90
-=======
         Pose2d blueLongPurple2Pos = new Pose2d(-31, 34, Math.toRadians(-90));  //37,12,-90
->>>>>>> 0f586e3 (Fixed minor error in long programs)
         Pose2d blueLongPurple3Pos = new Pose2d(-39, 34.5 , Math.toRadians(-180)); //27,19,-90
 
 
@@ -117,31 +69,18 @@ public class newMeepMeeper {
         Vector2d blueLongAfterGatePos = new Vector2d(32, 11.5);//50,68
 
 
-<<<<<<< HEAD
-        Vector2d blueLongYellow1Pos = new Vector2d(50.5, 42);  //27,37,-90
-        Vector2d blueLongYellow2Pos = new Vector2d(50.5, 36);   //26,37,-90
-        Pose2d blueLongYellow3Pos = new Pose2d(50.5,27.5, Math.toRadians(0));    //33,37,-90
-
-
-        Vector2d blueLongParkPos = new Vector2d(45, 11.5);//50, 82
-=======
         Vector2d blueLongYellow1Pos = new Vector2d(51.5, 42);  //27,37,-90
         Vector2d blueLongYellow2Pos = new Vector2d(51.5, 36);   //26,37,-90
         Pose2d blueLongYellow3Pos = new Pose2d(51.5,27.5, Math.toRadians(0));    //33,37,-90
 
 
         Vector2d blueLongParkPos = new Vector2d(47.5, 11.5);//50, 82
->>>>>>> 0f586e3 (Fixed minor error in long programs)
 
         //Todo:RedLong
         Pose2d redLongStartPos = new Pose2d(-39,-61.25,Math.toRadians(90));//0,0,0
 
         Pose2d redLongPurple3Pos = new Pose2d(-34, -34.5, Math.toRadians(0));  //27,0,-90
-<<<<<<< HEAD
-        Pose2d redLongPurple2Pos = new Pose2d(-39,- 34, Math.toRadians(90));  //37,12,-90
-=======
         Pose2d redLongPurple2Pos = new Pose2d(-31,- 34, Math.toRadians(90));  //37,12,-90
->>>>>>> 0f586e3 (Fixed minor error in long programs)
         Pose2d redLongPurple1Pos = new Pose2d(-39, -34.5 , Math.toRadians(180)); //27,19,-90
 
         Vector2d redLongBeforeGatePos3 = new Vector2d(-38,-11.5);//50,2
@@ -150,107 +89,18 @@ public class newMeepMeeper {
         Vector2d redLongAfterGateTagPos = new Vector2d(15.25, -11.5);//50,51.25
         Vector2d redLongAfterGatePos = new Vector2d(32, -11.5);//50,68
 
-<<<<<<< HEAD
-        Vector2d redLongYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
-        Vector2d redLongYellow2Pos = new Vector2d(50.5, -36);   //26,37,-90
-        Pose2d redLongYellow1Pos = new Pose2d(50.5,-27.5, Math.toRadians(0));    //33,37,-90
-
-
-        Vector2d redLongParkPos = new Vector2d(45, -11.5);//50, 82
-=======
         Vector2d redLongYellow3Pos = new Vector2d(51.5, -42);  //27,37,-90
         Vector2d redLongYellow2Pos = new Vector2d(51.5, -36);   //26,37,-90
         Pose2d redLongYellow1Pos = new Pose2d(51.5,-27.5, Math.toRadians(0));    //33,37,-90
 
 
         Vector2d redLongParkPos = new Vector2d(47.5, -11.5);//50, 82
->>>>>>> 0f586e3 (Fixed minor error in long programs)
 
 
         //***************************************************************************************
         RoadRunnerBotEntity BlueShort = new DefaultBotBuilder(meepMeep)
                 //TODO: This is BLUE_SHORT
-<<<<<<< HEAD
-                .setColorScheme(new ColorScheme() {
-                    @Override
-                    public boolean isDark() {
-                        return true;
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_BODY_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getTEAL_600();
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_WHEEL_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getTEAL_800();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_DIRECTION_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getTEAL_800();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getAXIS_X_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getAXIS_Y_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
-
-                    @Override
-                    public double getAXIS_NORMAL_OPACITY() {
-                        return 100;
-                    }
-
-                    @Override
-                    public double getAXIS_HOVER_OPACITY() {
-                        return 100;
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_PATH_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getTEAL_700();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_TURN_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getTEAL_600();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_MARKER_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getTEAL_400();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_SLIDER_BG() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_700();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_SLIDER_FG() {
-                        return ColorManager.COLOR_PALETTE.getTEAL_700();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_TEXT_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_300();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getUI_MAIN_BG() {
-                        return ColorManager.COLOR_PALETTE.getTEAL_900();                    }
-                })
-=======
                 .setColorScheme(new ColorSchemeBlueLight())
->>>>>>> 0f586e3 (Fixed minor error in long programs)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
@@ -298,87 +148,7 @@ public class newMeepMeeper {
         //***************************************************************************************
         RoadRunnerBotEntity BlueLong = new DefaultBotBuilder(meepMeep)
                 //TODO: This is BLUE_LONG
-<<<<<<< HEAD
-                .setColorScheme(new ColorScheme() {
-                    @Override
-                    public boolean isDark() {
-                        return true;
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_BODY_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getBLUE_700();
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_WHEEL_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getBLUE_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_DIRECTION_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getBLUE_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getAXIS_X_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getAXIS_Y_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
-
-                    @Override
-                    public double getAXIS_NORMAL_OPACITY() {
-                        return 100;
-                    }
-
-                    @Override
-                    public double getAXIS_HOVER_OPACITY() {
-                        return 100;
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_PATH_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getBLUE_700();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_TURN_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getBLUE_600();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_MARKER_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getBLUE_400();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_SLIDER_BG() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();            }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_SLIDER_FG() {
-                        return ColorManager.COLOR_PALETTE.getBLUE_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_TEXT_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_300();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getUI_MAIN_BG() {
-                        return ColorManager.COLOR_PALETTE.getBLUE_900();                    }
-                })
-=======
                 .setColorScheme(new ColorSchemeBlueDark())
->>>>>>> 0f586e3 (Fixed minor error in long programs)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
@@ -431,87 +201,7 @@ public class newMeepMeeper {
         //***************************************************************************************
         RoadRunnerBotEntity RedShort = new DefaultBotBuilder(meepMeep)
                 //TODO: This is RED_SHORT
-<<<<<<< HEAD
-                .setColorScheme(new ColorScheme() {
-                    @Override
-                    public boolean isDark() {
-                        return true;
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_BODY_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_500();
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_WHEEL_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_700();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_DIRECTION_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getPINK_600();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getAXIS_X_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getAXIS_Y_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
-
-                    @Override
-                    public double getAXIS_NORMAL_OPACITY() {
-                        return 100;
-                    }
-
-                    @Override
-                    public double getAXIS_HOVER_OPACITY() {
-                        return 100;
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_PATH_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_500();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_TURN_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_300();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_MARKER_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_200();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_SLIDER_BG() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_700();             }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_SLIDER_FG() {
-                        return ColorManager.COLOR_PALETTE.getRED_500();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_TEXT_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_300();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getUI_MAIN_BG() {
-                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
-                })
-=======
                 .setColorScheme(new ColorSchemeRedLight())
->>>>>>> 0f586e3 (Fixed minor error in long programs)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
@@ -560,88 +250,7 @@ public class newMeepMeeper {
         //***************************************************************************************
         RoadRunnerBotEntity RedLong = new DefaultBotBuilder(meepMeep)
                 //TODO: This is RED_LONG
-<<<<<<< HEAD
-
-                .setColorScheme(new ColorScheme() {
-                    @Override
-                    public boolean isDark() {
-                        return true;
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_BODY_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_700();
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_WHEEL_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getBOT_DIRECTION_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getAXIS_X_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getAXIS_Y_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
-
-                    @Override
-                    public double getAXIS_NORMAL_OPACITY() {
-                        return 100;
-                    }
-
-                    @Override
-                    public double getAXIS_HOVER_OPACITY() {
-                        return 100;
-                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_PATH_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_700();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_TURN_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_700();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_MARKER_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getRED_600();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_SLIDER_BG() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_SLIDER_FG() {
-                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getTRAJECTORY_TEXT_COLOR() {
-                        return ColorManager.COLOR_PALETTE.getGRAY_300();                    }
-
-                    @NotNull
-                    @Override
-                    public Color getUI_MAIN_BG() {
-                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
-                })
-=======
                 .setColorScheme(new ColorSchemeRedDark())
->>>>>>> 0f586e3 (Fixed minor error in long programs)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
@@ -654,11 +263,7 @@ public class newMeepMeeper {
                         .setTangent(Math.toRadians(-90))
                         .strafeTo(new Vector2d(-37,-34.5))
                         .strafeTo(redLongBeforeGatePos1)
-<<<<<<< HEAD
-                        .turn(Math.toRadians(180))
-=======
                         .turn(Math.toRadians(-180))
->>>>>>> 0f586e3 (Fixed minor error in long programs)
                         .strafeTo(redLongAfterGateTagPos)
                         .splineToLinearHeading(redLongYellow1Pos,Math.toRadians(0))
                         .strafeTo(redLongParkPos)
@@ -667,13 +272,8 @@ public class newMeepMeeper {
 
             case 2:
                 RedLong.runAction(RedLong.getDrive().actionBuilder(redLongStartPos)
-<<<<<<< HEAD
-                        .setTangent(Math.toRadians(90))
-                        .splineToLinearHeading(redLongPurple2Pos, Math.toRadians(70))
-=======
                         .setTangent(Math.toRadians(30))
                         .splineToLinearHeading(redLongPurple2Pos, Math.toRadians(180))
->>>>>>> 0f586e3 (Fixed minor error in long programs)
                         .setTangent(Math.toRadians(-90))
                         .splineToLinearHeading(new Pose2d(-50,-45, Math.toRadians(0)),Math.toRadians(-180))
                         .strafeTo(redLongBeforeGatePos2)
