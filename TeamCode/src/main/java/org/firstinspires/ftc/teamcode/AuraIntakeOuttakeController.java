@@ -27,6 +27,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -226,15 +227,15 @@ public class AuraIntakeOuttakeController {
 
         String[] colors = {"White", "Green", "Purple", "Yellow"};
         int[][] rightRanges = {
-                {1400, 1700, 1600, 1950, 1500, 1800}, // White (Color Ranges are 100 apart original for first was 1355 so range became 1255 && 1455)
+                {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
                 {264, 364, 468, 568, 237, 337},      // Green
-                {565, 750, 550, 700, 710, 950},      // Purple
+                {500, 750, 550, 720, 710, 950},      // Purple
                 {782, 882, 584, 684, 312, 412}       // Yellow
         };
         int[][] leftRanges = {
                 {1365, 1465, 2382, 2482, 2244, 2344},// White
                 {348, 448, 1065, 1165, 460, 560},    // Green
-                {832, 932, 1726, 1826, 1205, 1305},  // Purple
+                {800, 1100, 1200, 1650, 1600, 2300},  // Purple
                 {1100, 1300, 1400, 1770, 420, 590}   // Yellow
         };
 
@@ -299,6 +300,7 @@ public class AuraIntakeOuttakeController {
         if(currState == targetState)
         {
             updateSlide();
+            AuraColor();
             return;
         }
 
@@ -306,7 +308,7 @@ public class AuraIntakeOuttakeController {
 
         switch(nextState) {
             case STATE_1_RFI:
-                AuraColor();
+//                AuraColor();
                 // Ensure the Robot enforces these states on all motors & servos
                 targetSlidePos = SLIDE_INTAKE_POS;
                 Elbow.setPosition(ELBOW_DOWN);
