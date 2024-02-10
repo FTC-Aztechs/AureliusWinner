@@ -3,12 +3,21 @@ package com.example.newmeepmeeper;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
+import com.noahbres.meepmeep.core.colorscheme.ColorHex;
+import com.noahbres.meepmeep.core.colorscheme.ColorManager;
+import com.noahbres.meepmeep.core.colorscheme.ColorScheme;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueDark;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueLight;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedLight;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.awt.Color;
+
+import jdk.internal.org.jline.utils.ColorPalette;
 
 public class newMeepMeeper {
     public static void main(String[] args) {
@@ -100,7 +109,83 @@ public class newMeepMeeper {
         //***************************************************************************************
         RoadRunnerBotEntity BlueShort = new DefaultBotBuilder(meepMeep)
                 //TODO: This is BLUE_SHORT
-                .setColorScheme(new ColorSchemeBlueLight())
+                .setColorScheme(new ColorScheme() {
+                    @Override
+                    public boolean isDark() {
+                        return true;
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_BODY_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getTEAL_600();
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_WHEEL_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getTEAL_800();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_DIRECTION_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getTEAL_800();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getAXIS_X_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getAXIS_Y_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
+
+                    @Override
+                    public double getAXIS_NORMAL_OPACITY() {
+                        return 100;
+                    }
+
+                    @Override
+                    public double getAXIS_HOVER_OPACITY() {
+                        return 100;
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_PATH_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getTEAL_700();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_TURN_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getTEAL_600();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_MARKER_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getTEAL_400();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_SLIDER_BG() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_700();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_SLIDER_FG() {
+                        return ColorManager.COLOR_PALETTE.getTEAL_700();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_TEXT_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_300();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getUI_MAIN_BG() {
+                        return ColorManager.COLOR_PALETTE.getTEAL_900();                    }
+                })
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
@@ -148,7 +233,83 @@ public class newMeepMeeper {
         //***************************************************************************************
         RoadRunnerBotEntity BlueLong = new DefaultBotBuilder(meepMeep)
                 //TODO: This is BLUE_LONG
-                .setColorScheme(new ColorSchemeBlueDark())
+                .setColorScheme(new ColorScheme() {
+                    @Override
+                    public boolean isDark() {
+                        return true;
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_BODY_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getBLUE_700();
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_WHEEL_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getBLUE_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_DIRECTION_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getBLUE_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getAXIS_X_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getAXIS_Y_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
+
+                    @Override
+                    public double getAXIS_NORMAL_OPACITY() {
+                        return 100;
+                    }
+
+                    @Override
+                    public double getAXIS_HOVER_OPACITY() {
+                        return 100;
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_PATH_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getBLUE_700();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_TURN_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getBLUE_600();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_MARKER_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getBLUE_400();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_SLIDER_BG() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();            }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_SLIDER_FG() {
+                        return ColorManager.COLOR_PALETTE.getBLUE_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_TEXT_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_300();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getUI_MAIN_BG() {
+                        return ColorManager.COLOR_PALETTE.getBLUE_900();                    }
+                })
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
@@ -201,7 +362,83 @@ public class newMeepMeeper {
         //***************************************************************************************
         RoadRunnerBotEntity RedShort = new DefaultBotBuilder(meepMeep)
                 //TODO: This is RED_SHORT
-                .setColorScheme(new ColorSchemeRedLight())
+                .setColorScheme(new ColorScheme() {
+                    @Override
+                    public boolean isDark() {
+                        return true;
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_BODY_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_500();
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_WHEEL_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_700();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_DIRECTION_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getPINK_600();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getAXIS_X_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getAXIS_Y_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
+
+                    @Override
+                    public double getAXIS_NORMAL_OPACITY() {
+                        return 100;
+                    }
+
+                    @Override
+                    public double getAXIS_HOVER_OPACITY() {
+                        return 100;
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_PATH_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_500();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_TURN_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_300();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_MARKER_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_200();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_SLIDER_BG() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_700();             }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_SLIDER_FG() {
+                        return ColorManager.COLOR_PALETTE.getRED_500();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_TEXT_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_300();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getUI_MAIN_BG() {
+                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
+                })
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
@@ -250,7 +487,84 @@ public class newMeepMeeper {
         //***************************************************************************************
         RoadRunnerBotEntity RedLong = new DefaultBotBuilder(meepMeep)
                 //TODO: This is RED_LONG
-                .setColorScheme(new ColorSchemeRedDark())
+
+                .setColorScheme(new ColorScheme() {
+                    @Override
+                    public boolean isDark() {
+                        return true;
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_BODY_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_700();
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_WHEEL_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getBOT_DIRECTION_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getAXIS_X_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getAXIS_Y_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
+
+                    @Override
+                    public double getAXIS_NORMAL_OPACITY() {
+                        return 100;
+                    }
+
+                    @Override
+                    public double getAXIS_HOVER_OPACITY() {
+                        return 100;
+                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_PATH_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_700();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_TURN_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_700();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_MARKER_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getRED_600();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_SLIDER_BG() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_SLIDER_FG() {
+                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getTRAJECTORY_TEXT_COLOR() {
+                        return ColorManager.COLOR_PALETTE.getGRAY_300();                    }
+
+                    @NotNull
+                    @Override
+                    public Color getUI_MAIN_BG() {
+                        return ColorManager.COLOR_PALETTE.getRED_900();                    }
+                })
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
@@ -263,7 +577,7 @@ public class newMeepMeeper {
                         .setTangent(Math.toRadians(-90))
                         .strafeTo(new Vector2d(-37,-34.5))
                         .strafeTo(redLongBeforeGatePos1)
-                        .turn(Math.toRadians(-180))
+                        .turn(Math.toRadians(180))
                         .strafeTo(redLongAfterGateTagPos)
                         .splineToLinearHeading(redLongYellow1Pos,Math.toRadians(0))
                         .strafeTo(redLongParkPos)
