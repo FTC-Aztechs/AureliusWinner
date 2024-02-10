@@ -500,6 +500,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .strafeTo(redYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(redParkPos)
                 .afterDisp(0, getReadyForIntake)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
