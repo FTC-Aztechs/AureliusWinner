@@ -99,21 +99,19 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     //**** Roadrunner Pose2ds ****
 
-    Pose2d redStartPos = new Pose2d(15,-61.5,Math.toRadians(90));//0,0,0
+    Pose2d redStartPos = new Pose2d(12,-61.5,Math.toRadians(90));//0,0,0
 
-    Pose2d redPurple3Pos = new Pose2d(14, -33, Math.toRadians(0)); //27,19,-90
-    Pose2d redPurple2Pos = new Pose2d(16, -32, Math.toRadians(90));  //37,12,-90
-    Pose2d redPurple1Pos = new Pose2d(8.5, -33, Math.toRadians(180));  //27,0,-90
-
+    Pose2d redPurple1Pos = new Pose2d(7, -34.5, Math.toRadians(180));  //27,0,-90
+    Pose2d redPurple2Pos = new Pose2d(13, -33, Math.toRadians(90));  //37,12,-90
+    Pose2d redPurple3Pos = new Pose2d(25, -34.5 , Math.toRadians(180)); //27,19,-90
 
     Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
-    Vector2d redYellow3Pos = new Vector2d(51.5, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(51.5, -36);   //26,37,-90
-    Vector2d redYellow1Pos = new Vector2d(51.5,-27.5);    //33,37,-90
+    Vector2d redYellow3Pos = new Vector2d(46, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(46, -35.5);   //26,37,-90
+    Vector2d redYellow1Pos = new Vector2d(46,-31);    //33,37,-90
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
-    boolean bProceedToYellow = false;
 
 
 
@@ -208,8 +206,8 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     public Action updateAfterGatePos = new backwallAprilTagController();
 
-    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 300;
-    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 130;
+    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 500;
+    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 400;
 
     public static int PurpleDropOffPos = 0;
     public static double SplineAngle = 0;
@@ -300,7 +298,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
     private VisionPortal visionPortal;
 
     private static final boolean USE_WEBCAM = true;
-    public static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    public static final int DESIRED_TAG_ID = 3;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private org.firstinspires.ftc.vision.apriltag.AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
@@ -433,9 +431,9 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     void buildPurpleTrajectories()
     {
-        dropOffPurpleAtPos3 = RedShort.actionBuilder(redStartPos)
+        dropOffPurpleAtPos1 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(redPurple3Pos, Math.toRadians(90))
+                .splineToLinearHeading(redPurple1Pos, Math.toRadians(90))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -447,9 +445,9 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .waitSeconds(1)
                 .build();
 
-        dropOffPurpleAtPos1 = RedShort.actionBuilder(redStartPos)
+        dropOffPurpleAtPos3 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(80))
-                .splineToLinearHeading(redPurple1Pos, Math.toRadians(130))
+                .splineToLinearHeading(redPurple3Pos, Math.toRadians(130))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -457,14 +455,15 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     void buildYellowTrajectories()
     {
-        dropOffYellowAtPos3 = RedShort.actionBuilder(redPurple1Pos)
+        dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple1Pos)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(new Vector2d(10,-38.5))
                 .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(redTagPos, Math.toRadians(90))
+                .splineToLinearHeading(redTagPos, Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
                 .stopAndAdd(updateAfterGatePos)
                 .strafeTo(redYellow3Pos)
+                .strafeTo(redYellow1Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -490,15 +489,14 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
-        dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple3Pos)
+        dropOffYellowAtPos3 = RedShort.actionBuilder(redPurple3Pos)
                 .stopAndAdd(rectifyHeadingError)
-                .lineToX(14)
+                .lineToX(29)
                 .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(redTagPos, Math.toRadians(90))
+                .splineToLinearHeading(redTagPos, Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
                 .stopAndAdd(updateAfterGatePos)
                 .strafeTo(redYellow3Pos)
-                .strafeTo(redYellow1Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)

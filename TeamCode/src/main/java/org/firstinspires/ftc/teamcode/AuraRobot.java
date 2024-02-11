@@ -83,7 +83,7 @@ public class AuraRobot
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
     public AuraHangController hanger;
-    //    public Aura_DepositController depositFlipper;
+//    public Aura_DepositController depositFlipper;
     public AuraIntakeOuttakeController myIntakeController;
     public AuraHeadingEstimator myHeadingEstimator;
 
@@ -109,7 +109,7 @@ public class AuraRobot
 
 
     public RevColorSensorV3 Left = null;
-    //turn off color unless being used?
+//turn off color unless being used?
     public ColorRangeSensor Right = null;
 
     //claw variables
@@ -146,7 +146,7 @@ public class AuraRobot
     public static double ELBOW_UP = 0.65;
     public static int SLIDE_INTAKE_POS = 0;
     public static int SLIDE_FLIP_HEIGHT = 1000;
-    public static int SLIDE_RAISE_LOW = 700;
+    public static int SLIDE_RAISE_LOW = 800;
     public static int SLIDE_RAISE_MED = 1700;
     public static int SLIDE_RAISE_HIGH = 3000;
     public static double slideTicks_stepSize = 25;
@@ -178,7 +178,7 @@ public class AuraRobot
 
     public static double APRILTAG_TIMEOUT = 5;
 
-    //------------------------------------------------------------
+   //------------------------------------------------------------
 
     /* local OpMode members. */
     public  HardwareMap hwMap           =  null;
@@ -423,3 +423,4 @@ public class AuraRobot
     }
 
 }
+
