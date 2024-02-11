@@ -116,7 +116,7 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
     Vector2d blueYellow2Pos = new Vector2d(51.5, 36);   //26,37,-90
     Vector2d blueYellow3Pos = new Vector2d(51.5,27.5);    //33,37,-90
 
-    Vector2d blueParkPos = new Vector2d(47.5, 54.5);  //7, 37
+    Vector2d blueParkPos = new Vector2d(45, 54.5);  //7, 37
     boolean bProceedToYellow = false;
 
     //Roadrunner field-centric coordinates quick guide brought to you by Lavanya

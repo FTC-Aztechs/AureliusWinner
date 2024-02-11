@@ -122,7 +122,7 @@ public class Aura_AutoBlue_Long_Qualifiers extends LinearOpMode {
     Pose2d blueYellow3Pos = new Pose2d(51.5,27.5, Math.toRadians(0));    //33,37,-90
 
 
-    Vector2d blueParkPos = new Vector2d(47.5, 11.5);//50, 82
+    Vector2d blueParkPos = new Vector2d(45, 11.5);//50, 82
     boolean bProceedToYellow = false;
 
 
