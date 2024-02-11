@@ -151,6 +151,9 @@ public class Aura_Manual extends LinearOpMode {
     private static final RevBlinkinLedDriver.BlinkinPattern PURPLE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
     private static final RevBlinkinLedDriver.BlinkinPattern YELLOW_PATTERN = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
 
+    String rightDetectedColor = "";
+    String leftDetectedColor = "";
+
     // Define Fingers
     private Servo LeftFinger = null;
     private Servo RightFinger = null;
@@ -250,6 +253,8 @@ public class Aura_Manual extends LinearOpMode {
 
     public void AuraColor() {
 
+
+
         String[] colors = {"White", "Green", "Purple", "Yellow"};
         int[][] rightRanges = {
                 {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
@@ -276,9 +281,13 @@ public class Aura_Manual extends LinearOpMode {
             if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
                 rightDetected = true;
                 telemetry.addData("Right", "Detected");
+                rightDetectedColor = colors[i]; // Update detected color
+
             } else {
                 rightDetected = false;
                 telemetry.addData("Right", "False");
+                leftDetectedColor = colors[i];
+
             }
         }
 
@@ -287,7 +296,7 @@ public class Aura_Manual extends LinearOpMode {
             if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
                 leftDetected = true;
                 telemetry.addData("Left", "Detected");
-
+                leftDetectedColor = colors[i];
             } else {
                 leftDetected = false;
                 telemetry.addData("Left", "False");
@@ -296,20 +305,22 @@ public class Aura_Manual extends LinearOpMode {
 
         RevBlinkinLedDriver.BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
         RevBlinkinLedDriver.BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
+
+        telemetry.addData("Right Detected Color", rightDetectedColor);
+        telemetry.addData("Left Detected Color", leftDetectedColor);
+
         if(leftDetected && rightDetected) {
             BlinkinBoard.setPattern(leftPattern);
             if(PatternTimer.seconds() > .3) {
                 BlinkinBoard.setPattern(rightPattern);
                 PatternTimer.reset();
             }
-        }
-        if (leftDetected) {
+        } else if (leftDetected) {
             if(PatternTimer.seconds() > .3) {
                 BlinkinBoard.setPattern(leftPattern);
                 PatternTimer.reset();
             }
-        }
-        if (rightDetected) {
+        } else if (rightDetected) {
             if(PatternTimer.seconds() > .3) {
                 BlinkinBoard.setPattern(rightPattern);
                 PatternTimer.reset();
