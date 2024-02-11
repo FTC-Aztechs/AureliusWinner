@@ -56,6 +56,8 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -138,6 +140,7 @@ public class Aura_Manual extends LinearOpMode {
 
     private boolean rightDetected = false;
     private boolean leftDetected = false;
+
     private RevBlinkinLedDriver.BlinkinPattern rightPattern;
     private RevBlinkinLedDriver.BlinkinPattern leftPattern;
 
@@ -147,6 +150,9 @@ public class Aura_Manual extends LinearOpMode {
     private static final RevBlinkinLedDriver.BlinkinPattern GREEN_PATTERN = RevBlinkinLedDriver.BlinkinPattern.GREEN;
     private static final RevBlinkinLedDriver.BlinkinPattern PURPLE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
     private static final RevBlinkinLedDriver.BlinkinPattern YELLOW_PATTERN = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+
+    String rightDetectedColor = "";
+    String leftDetectedColor = "";
 
     // Define Fingers
     private Servo LeftFinger = null;
@@ -304,15 +310,14 @@ public class Aura_Manual extends LinearOpMode {
         } else {
             BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
         }
+
         telemetry.update();
     }
 
 
     private RevBlinkinLedDriver.BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
         for (int i = 0; i < colorNames.length; i++) {
-            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] &&
-                    green >= colorRanges[i][2] && green <= colorRanges[i][3] &&
-                    blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
+            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] && green >= colorRanges[i][2] && green <= colorRanges[i][3] && blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
                 switch (colorNames[i]) {
                     case "White":
                         return WHITE_PATTERN;
@@ -327,6 +332,7 @@ public class Aura_Manual extends LinearOpMode {
         }
         return RevBlinkinLedDriver.BlinkinPattern.BLACK;
     }
+
 
     public void AuraManualDrive() {
         // changing the speed
