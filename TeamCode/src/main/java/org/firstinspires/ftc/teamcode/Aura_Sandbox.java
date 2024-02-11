@@ -71,6 +71,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 //import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -116,8 +118,8 @@ public class Aura_Sandbox extends LinearOpMode
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
-//    public I2cDeviceSynch Left;
-//    public I2cDeviceSynch Right;
+    public I2cDeviceSynch Left;
+    public I2cDeviceSynch Right;
     public static boolean CAMERA_SIDE = false;
     private ElapsedTime runtime = new ElapsedTime();
     AuraRobot Aurelius = new AuraRobot();
@@ -132,15 +134,13 @@ public class Aura_Sandbox extends LinearOpMode
     private static ElapsedTime timer_gp2_dpad_up = new ElapsedTime();
     private static ElapsedTime timer_gp2_dpad_down = new ElapsedTime();
 
-    public RevBlinkinLedDriver BlinkinBoard;
+    private static final I2cAddr RIGHT_SENSOR_ADDRESS = I2cAddr.create8bit(0x00);
+    private static final I2cAddr LEFT_SENSOR_ADDRESS = I2cAddr.create8bit(0x00);
 
     private Servo LeftFinger;
     private Servo   RightFinger;
     public CRServo Roller;
 
-    public RevColorSensorV3 Left;
-
-    public ColorRangeSensor Right;
     boolean changingWheelSpeed = false;
     boolean targetFound = false;    // Set to true when an AprilTag target is detected
     boolean changingState = false;
@@ -148,7 +148,8 @@ public class Aura_Sandbox extends LinearOpMode
     public static int SANDBOX_MODE = 0;
     AuraIntakeOuttakeController myController;
 
-    public static int BlinkinColor = 0;
+    private boolean rightDetected = false;
+    private boolean leftDetected = false;
     public static double ServoPosition = 0;
 
     public static int Smd_profileTime = 5000;
@@ -159,7 +160,6 @@ public class Aura_Sandbox extends LinearOpMode
 
     ArrayList<String> htmlLog = new ArrayList<>();
 
-
     enum SandboxMode
     {
         ENCODER_TESTING,   // Default - prints encoder ticks.
@@ -168,7 +168,7 @@ public class Aura_Sandbox extends LinearOpMode
         HANG,
         APRIL,
         SERVOTESTER,
-        BLINKIN,
+        COLOR,
         PURPLE
     }
     public static SandboxMode sandboxMode = SandboxMode.SMD_INTAKE_OUTTAKE;
@@ -212,7 +212,12 @@ public class Aura_Sandbox extends LinearOpMode
         myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
         LeftFinger = hardwareMap.get(Servo.class, "lefty");
         RightFinger = hardwareMap.get(Servo.class, "righty");
-        BlinkinBoard = hardwareMap.get(RevBlinkinLedDriver.class, "Blink");
+        Left = hardwareMap.get(I2cDeviceSynch.class, "Left");
+        Right = hardwareMap.get(I2cDeviceSynch.class, "Right");
+        Right.setI2cAddress(RIGHT_SENSOR_ADDRESS);
+        Left.setI2cAddress(LEFT_SENSOR_ADDRESS);
+        Right.engage();
+        Left.engage();
 
         Aurelius.hanger.init();
         Aurelius.hanger.setTargetState(Idle);
@@ -258,17 +263,14 @@ public class Aura_Sandbox extends LinearOpMode
                     break;
                 case SERVOTESTER:
                     break;
-//                case COLOR:
-//                    ColorSandbox();
-//                    break;
+                case COLOR:
+                    ColorSandbox();
+                    break;
                 case APRIL:
                     AprilSandbox();
                     break;
                 case PURPLE:
                     PurpleSandbox();
-                    break;
-                case BLINKIN:
-//                    BlinkSandbox();
                     break;
                 case SMD_WHEEL_MOTOR_PROFILER:
                     logFile = new File("/sdcard/FIRST/www/SandboxTelemetry.html");
@@ -313,8 +315,6 @@ public class Aura_Sandbox extends LinearOpMode
         // Run motor at 1.0 speed for 1 second - write out encoder ticks
         // Run motor at speeds accelerating along a sine curve for 3 seconds - write out encoder ticks
         ElapsedTime timer = new ElapsedTime();
-
-
         Aurelius.setRunMode(ALL_DRIVES, RUN_WITHOUT_ENCODER);
         Aurelius.setRunMode(ALL_DRIVES, STOP_AND_RESET_ENCODER);
         timer.reset();
@@ -625,71 +625,70 @@ public class Aura_Sandbox extends LinearOpMode
         Roller.setPower(-1.25 * gamepad2.right_stick_y);
     }
 
+    public void ColorSandbox() {
 
-//    public void ColorSandbox() {
-//
-//
-////        String[] colors = {"White", "Green", "Purple", "Yellow"};
-////        int[][] rightRanges = {
-////                {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
-////                {264, 364, 468, 568, 237, 337},      // Green
-////                {565, 750, 550, 700, 710, 950},      // Purple
-////                {782, 882, 584, 684, 312, 412}       // Yellow
-////        };
-////        int[][] leftRanges = {
-////                {1365, 1465, 2382, 2482, 2244, 2344},// White
-////                {348, 448, 1065, 1165, 460, 560},    // Green
-////                {832, 932, 1726, 1826, 1205, 1305},  // Purple
-////                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
-////        };
-////
-////        // Read raw I2C data from sensors
-////        byte[] rightSensorData = Right.read(0x00, 6); // Adjust the starting register and data length
-////        byte[] leftSensorData = Left.read(0x00, 6);
-////
-////        // Interpret the color data
-////        int rightRed = rightSensorData[0] & 0xFF;
-////        int rightGreen = rightSensorData[1] & 0xFF;
-////        int rightBlue = rightSensorData[2] & 0xFF;
-////        int leftRed = leftSensorData[0] & 0xFF;
-////        int leftGreen = leftSensorData[1] & 0xFF;
-////        int leftBlue = leftSensorData[2] & 0xFF;
-////
-////        for (int i = 0; i < colors.length; i++) {
-////            if (rightRed >= rightRanges[i][0] && rightRed <= rightRanges[i][1] &&
-////                    rightGreen >= rightRanges[i][2] && rightGreen <= rightRanges[i][3] &&
-////                    rightBlue >= rightRanges[i][4] && rightBlue <= rightRanges[i][5]) {
-////                rightDetected = true;
-////                telemetry.addData("Right Detected ", "True");
-////            } else {
-////                rightDetected = false;
-////                telemetry.addData("Right Detected ", "False");
-////
-////            }
-////        }
-//
-//// Check the color for Left sensor using the interpreted RGB values
-////        for (int i = 0; i < colors.length; i++) {
-////            if (leftRed >= leftRanges[i][0] && leftRed <= leftRanges[i][1] &&
-////                    leftGreen >= leftRanges[i][2] && leftGreen <= leftRanges[i][3] &&
-////                    leftBlue >= leftRanges[i][4] && leftBlue <= leftRanges[i][5]) {
-////                leftDetected = true;
-////                telemetry.addData("Left Detected ", "True");
-////            } else {
-////                leftDetected = false;
-////                telemetry.addData("Left Detected ", "False");
-////
-////            }
-////        }
-////        // Telemetry for debugging
-////        telemetry.addData("Right Red", rightRed);
-////        telemetry.addData("Right Green", rightGreen);
-////        telemetry.addData("Right Blue", rightBlue);
-////        telemetry.addData("Left Red", leftRed);
-////        telemetry.addData("Left Green", leftGreen);
-////        telemetry.addData("Left Blue", leftBlue);
-////        telemetry.update();
-//    }
+
+        String[] colors = {"White", "Green", "Purple", "Yellow"};
+        int[][] rightRanges = {
+                {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
+                {264, 364, 468, 568, 237, 337},      // Green
+                {565, 750, 550, 700, 710, 950},      // Purple
+                {782, 882, 584, 684, 312, 412}       // Yellow
+        };
+        int[][] leftRanges = {
+                {1365, 1465, 2382, 2482, 2244, 2344},// White
+                {348, 448, 1065, 1165, 460, 560},    // Green
+                {832, 932, 1726, 1826, 1205, 1305},  // Purple
+                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
+        };
+
+        // Read raw I2C data from sensors
+        byte[] rightSensorData = Right.read(0x00, 6); // Adjust the starting register and data length
+        byte[] leftSensorData = Left.read(0x00, 6);
+
+        // Interpret the color data
+        int rightRed = rightSensorData[0] & 0xFF;
+        int rightGreen = rightSensorData[1] & 0xFF;
+        int rightBlue = rightSensorData[2] & 0xFF;
+        int leftRed = leftSensorData[0] & 0xFF;
+        int leftGreen = leftSensorData[1] & 0xFF;
+        int leftBlue = leftSensorData[2] & 0xFF;
+
+        for (int i = 0; i < colors.length; i++) {
+            if (rightRed >= rightRanges[i][0] && rightRed <= rightRanges[i][1] &&
+                    rightGreen >= rightRanges[i][2] && rightGreen <= rightRanges[i][3] &&
+                    rightBlue >= rightRanges[i][4] && rightBlue <= rightRanges[i][5]) {
+                rightDetected = true;
+                telemetry.addData("Right Detected ", "True");
+            } else {
+                rightDetected = false;
+                telemetry.addData("Right Detected ", "False");
+
+            }
+        }
+
+// Check the color for Left sensor using the interpreted RGB values
+        for (int i = 0; i < colors.length; i++) {
+            if (leftRed >= leftRanges[i][0] && leftRed <= leftRanges[i][1] &&
+                    leftGreen >= leftRanges[i][2] && leftGreen <= leftRanges[i][3] &&
+                    leftBlue >= leftRanges[i][4] && leftBlue <= leftRanges[i][5]) {
+                leftDetected = true;
+                telemetry.addData("Left Detected ", "True");
+            } else {
+                leftDetected = false;
+                telemetry.addData("Left Detected ", "False");
+
+            }
+        }
+        // Telemetry for debugging
+        telemetry.addData("Right Red", rightRed);
+        telemetry.addData("Right Green", rightGreen);
+        telemetry.addData("Right Blue", rightBlue);
+        telemetry.addData("Left Red", leftRed);
+        telemetry.addData("Left Green", leftGreen);
+        telemetry.addData("Left Blue", leftBlue);
+        telemetry.update();
+    }
 
 
     public void SandboxManualDrive () {
