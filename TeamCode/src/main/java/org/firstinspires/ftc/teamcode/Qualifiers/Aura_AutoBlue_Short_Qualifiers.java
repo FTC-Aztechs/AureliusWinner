@@ -105,15 +105,16 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
     // RObot Width = 15; Length = 15.5
     Pose2d blueStartPos = new Pose2d(15,61.5,Math.toRadians(-90));//0,0,0
 
-    Pose2d bluePurple3Pos = new Pose2d(10, 34.5 , Math.toRadians(-180)); //27,19,-90
+    Pose2d bluePurple1Pos = new Pose2d(14, 33, Math.toRadians(0));  //27,0,-90
     Pose2d bluePurple2Pos = new Pose2d(16, 32, Math.toRadians(-90));  //37,12,-90
-    Pose2d bluePurple1Pos = new Pose2d(14, 34.5, Math.toRadians(0));  //27,0,-90
+    Pose2d bluePurple3Pos = new Pose2d(8.5, 33 , Math.toRadians(-180)); //27,19,-90
+
 
     Pose2d blueTagPos = new Pose2d(36,45, Math.toRadians(0));
 
-    Vector2d blueYellow1Pos = new Vector2d(49.5, 42);  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(49.5, 37);   //26,37,-90
-    Vector2d blueYellow3Pos = new Vector2d(49.5,27.5);    //33,37,-90
+    Vector2d blueYellow1Pos = new Vector2d(51.5, 42);  //27,37,-90
+    Vector2d blueYellow2Pos = new Vector2d(51.5, 36);   //26,37,-90
+    Vector2d blueYellow3Pos = new Vector2d(51.5,27.5);    //33,37,-90
 
     Vector2d blueParkPos = new Vector2d(47.5, 54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -301,7 +302,7 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
     private VisionPortal visionPortal;
 
     private static final boolean USE_WEBCAM = true;
-    public static final int DESIRED_TAG_ID = 1;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    public static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private org.firstinspires.ftc.vision.apriltag.AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
@@ -313,7 +314,7 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
     private Action dropOffPurpleAtPos2;
     private Action dropOffPurpleAtPos3;
 
-     // Yellow Trajectories
+    // Yellow Trajectories
     private Action dropOffYellowAtPos1;
     private Action dropOffYellowAtPos2;
     private Action dropOffYellowAtPos3;
@@ -396,37 +397,37 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
             switch (PurpleDropOffPos) {
                 case 1:
                     Actions.runBlocking(
-                        new ParallelAction(
-                            new SequentialAction(
-                                beginTrajectoryMarker,
-                                dropOffPurpleAtPos1,
-                                dropOffYellowAtPos1,
-                                endTrajectoryMarker),
-                            updateIOController
-                    ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos1,
+                                            dropOffYellowAtPos1,
+                                            endTrajectoryMarker),
+                                    updateIOController
+                            ));
                     break;
                 case 2:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos2,
-                            dropOffYellowAtPos2,
-                            endTrajectoryMarker),
-                        updateIOController
-                    ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos2,
+                                            dropOffYellowAtPos2,
+                                            endTrajectoryMarker),
+                                    updateIOController
+                            ));
                     break;
                 case 3:
                 default:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos3,
-                            dropOffYellowAtPos3,
-                            endTrajectoryMarker),
-                        updateIOController
-                    ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos3,
+                                            dropOffYellowAtPos3,
+                                            endTrajectoryMarker),
+                                    updateIOController
+                            ));
                     break;
             }
         }
@@ -684,10 +685,10 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
 
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
-                visionPortal = new VisionPortal.Builder()
-                        .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
-                        .addProcessor(aprilTag)
-                        .build();
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
+                    .addProcessor(aprilTag)
+                    .build();
         } else {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)

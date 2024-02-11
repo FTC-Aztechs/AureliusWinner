@@ -103,11 +103,12 @@ public class Aura_AutoBlue_Long_Qualifiers extends LinearOpMode {
 
 
     // RObot Width = 15; Length = 15.5
-    Pose2d blueStartPos = new Pose2d(-39,62.25,Math.toRadians(-90));//0,0,0
+    Pose2d blueStartPos = new Pose2d(-39,61.25,Math.toRadians(-90));//0,0,0
 
-    Pose2d bluePurple3Pos = new Pose2d(-39, 34.5 , Math.toRadians(-180)); //27,19,-90
-    Pose2d bluePurple2Pos = new Pose2d(-31, 34, Math.toRadians(-90));  //37,12,-90
     Pose2d bluePurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
+    Pose2d bluePurple2Pos = new Pose2d(-31, 35, Math.toRadians(-90));  //37,12,-90
+    Pose2d bluePurple3Pos = new Pose2d(-39, 34.5 , Math.toRadians(-180)); //27,19,-90
+
 
     Vector2d blueBeforeGatePos1 = new Vector2d(-38,11.5);//50,2
     Vector2d blueBeforeGatePos2 = new Vector2d(-50, 11.5);//50,-14
@@ -115,9 +116,10 @@ public class Aura_AutoBlue_Long_Qualifiers extends LinearOpMode {
     Vector2d blueAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
     Vector2d blueAfterGatePos = new Vector2d(32, 11.5);//50,68
 
-    Vector2d blueYellow1Pos = new Vector2d(52, 42);  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(49.5, 33);   //26,37,-90
-    Pose2d blueYellow3Pos = new Pose2d(49.5,28.5,Math.toRadians(0));    //33,37,-90
+
+    Vector2d blueYellow1Pos = new Vector2d(51.5, 42);  //27,37,-90
+    Vector2d blueYellow2Pos = new Vector2d(51.5, 36);   //26,37,-90
+    Pose2d blueYellow3Pos = new Pose2d(51.5,27.5, Math.toRadians(0));    //33,37,-90
 
 
     Vector2d blueParkPos = new Vector2d(47.5, 11.5);//50, 82
@@ -208,11 +210,7 @@ public class Aura_AutoBlue_Long_Qualifiers extends LinearOpMode {
     public class backwallAprilTagController implements Action {
         @Override
         public boolean run(TelemetryPacket tPkt) {
-            if(updatePosfromBackwallAprilTag()) {
-                bProceedToYellow = true;
-            } else {
-                bProceedToYellow = false;
-            }
+            updatePosfromBackwallAprilTag();
             return false;
         }
     }
@@ -312,7 +310,7 @@ public class Aura_AutoBlue_Long_Qualifiers extends LinearOpMode {
     private VisionPortal visionPortal;
 
     private static final boolean USE_WEBCAM = true;
-    public static final int DESIRED_TAG_ID = 3;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    public static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private org.firstinspires.ftc.vision.apriltag.AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
@@ -506,6 +504,7 @@ public class Aura_AutoBlue_Long_Qualifiers extends LinearOpMode {
                 .strafeTo(blueYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(blueParkPos)
                 .afterDisp(0, getReadyForIntake)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
