@@ -56,8 +56,6 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -140,7 +138,6 @@ public class Aura_Manual extends LinearOpMode {
 
     private boolean rightDetected = false;
     private boolean leftDetected = false;
-
     private RevBlinkinLedDriver.BlinkinPattern rightPattern;
     private RevBlinkinLedDriver.BlinkinPattern leftPattern;
 
@@ -175,8 +172,8 @@ public class Aura_Manual extends LinearOpMode {
         LeftFinger = hardwareMap.get(Servo.class, "lefty");
         RightFinger = hardwareMap.get(Servo.class, "righty");
         BlinkinBoard = hardwareMap.get(RevBlinkinLedDriver.class, "Blink");
-        Left = hardwareMap.get(RevColorSensorV3.class, "Left");
-        Right = hardwareMap.get(ColorRangeSensor.class, "Right");
+//        Left = hardwareMap.get(RevColorSensorV3.class, "Left");
+//        Right = hardwareMap.get(ColorRangeSensor.class, "Right");
         PatternTimer = new ElapsedTime();
         PatternTimer.reset();
 
@@ -332,7 +329,6 @@ public class Aura_Manual extends LinearOpMode {
         }
         return RevBlinkinLedDriver.BlinkinPattern.BLACK;
     }
-
 
     public void AuraManualDrive() {
         // changing the speed
