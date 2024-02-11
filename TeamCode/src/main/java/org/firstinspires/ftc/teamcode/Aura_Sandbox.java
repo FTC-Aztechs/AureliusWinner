@@ -34,6 +34,8 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODE
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Hang;
 import static org.firstinspires.ftc.teamcode.AuraHangController.HangState.Idle;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.leftDetected;
+import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.rightDetected;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.targetSlidePos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.ALL_DRIVES;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.HANG;
@@ -61,9 +63,12 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -123,10 +128,15 @@ public class Aura_Sandbox extends LinearOpMode
     private static ElapsedTime timer_gp2_dpad_up = new ElapsedTime();
     private static ElapsedTime timer_gp2_dpad_down = new ElapsedTime();
 
+    public RevBlinkinLedDriver BlinkinBoard;
+
     private Servo LeftFinger;
     private Servo   RightFinger;
     public CRServo Roller;
 
+    public RevColorSensorV3 Left;
+
+    public ColorRangeSensor Right;
     boolean changingWheelSpeed = false;
     boolean targetFound = false;    // Set to true when an AprilTag target is detected
     boolean changingState = false;
@@ -134,7 +144,7 @@ public class Aura_Sandbox extends LinearOpMode
     public static int SANDBOX_MODE = 0;
     AuraIntakeOuttakeController myController;
 
-
+    public static int BlinkinColor = 0;
     public static double ServoPosition = 0;
 
     public static int Smd_profileTime = 5000;
@@ -145,6 +155,7 @@ public class Aura_Sandbox extends LinearOpMode
 
     ArrayList<String> htmlLog = new ArrayList<>();
 
+
     enum SandboxMode
     {
         ENCODER_TESTING,   // Default - prints encoder ticks.
@@ -153,6 +164,7 @@ public class Aura_Sandbox extends LinearOpMode
         HANG,
         APRIL,
         SERVOTESTER,
+        BLINKIN,
         PURPLE
     }
     public static SandboxMode sandboxMode = SandboxMode.SMD_INTAKE_OUTTAKE;
@@ -196,6 +208,7 @@ public class Aura_Sandbox extends LinearOpMode
         myController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
         LeftFinger = hardwareMap.get(Servo.class, "lefty");
         RightFinger = hardwareMap.get(Servo.class, "righty");
+        BlinkinBoard = hardwareMap.get(RevBlinkinLedDriver.class, "Blink");
 
         Aurelius.hanger.init();
         Aurelius.hanger.setTargetState(Idle);
@@ -247,6 +260,9 @@ public class Aura_Sandbox extends LinearOpMode
                 case PURPLE:
                     PurpleSandbox();
                     break;
+                case BLINKIN:
+//                    BlinkSandbox();
+                    break;
                 case SMD_WHEEL_MOTOR_PROFILER:
                     logFile = new File("/sdcard/FIRST/www/SandboxTelemetry.html");
                     try {
@@ -290,6 +306,8 @@ public class Aura_Sandbox extends LinearOpMode
         // Run motor at 1.0 speed for 1 second - write out encoder ticks
         // Run motor at speeds accelerating along a sine curve for 3 seconds - write out encoder ticks
         ElapsedTime timer = new ElapsedTime();
+
+
         Aurelius.setRunMode(ALL_DRIVES, RUN_WITHOUT_ENCODER);
         Aurelius.setRunMode(ALL_DRIVES, STOP_AND_RESET_ENCODER);
         timer.reset();
@@ -350,6 +368,98 @@ public class Aura_Sandbox extends LinearOpMode
         htmlLog.add(telemetry.addData("ramp speed test: # Encoder Ticks Lower_Right = ", Aurelius.getCurrentPosition(LOWER_RIGHT)).toString());
         telemetry.update();
     }
+
+//    public void BlinkSandbox() {
+//
+//        String[] colors = {"White", "Green", "Purple", "Yellow"};
+//        int[][] rightRanges = {
+//                {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
+//                {264, 364, 468, 568, 237, 337},      // Green
+//                {500, 750, 550, 720, 710, 950},      // Purple
+//                {782, 882, 584, 684, 312, 412}       // Yellow
+//        };
+//        int[][] leftRanges = {
+//                {1365, 1465, 2382, 2482, 2244, 2344},// White
+//                {348, 448, 1065, 1165, 460, 560},    // Green
+//                {800, 1100, 1200, 1650, 1600, 2300},  // Purple
+//                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
+//        };
+//
+//        telemetry.addData("Right Red: ", Right.red()); // color range
+//        telemetry.addData("Right Green: ", Right.green());
+//        telemetry.addData("Right Blue: ", Right.blue());
+//        telemetry.addData("Left Red: ", Left.red()); // rev
+//        telemetry.addData("Left Green: ", Left.green());
+//        telemetry.addData("Left Blue: ", Left.blue());
+//
+//        // Check the color for Right sensor
+//        for (int i = 0; i < colors.length; i++) {
+//            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
+//                rightDetected = true;
+//                telemetry.addData("Right", "Detected");
+//            } else {
+//                rightDetected = false;
+//                telemetry.addData("Right", "False");
+//            }
+//        }
+//
+//        // Check the color for Left sensor
+//        for (int i = 0; i < colors.length; i++) {
+//            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
+//                leftDetected = true;
+//                telemetry.addData("Left", "Detected");
+//
+//            } else {
+//                leftDetected = false;
+//                telemetry.addData("Left", "False");
+//            }
+//        }
+//
+//        RevBlinkinLedDriver.BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
+//        RevBlinkinLedDriver.BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
+//        if(leftDetected && rightDetected) {
+//            BlinkinBoard.setPattern(leftPattern);
+//            if(PatternTimer.seconds() > .3) {
+//                BlinkinBoard.setPattern(rightPattern);
+//                PatternTimer.reset();
+//            }
+//        }
+//        if (leftDetected) {
+//            if(PatternTimer.seconds() > .3) {
+//                BlinkinBoard.setPattern(leftPattern);
+//                PatternTimer.reset();
+//            }
+//        }
+//        if (rightDetected) {
+//            if(PatternTimer.seconds() > .3) {
+//                BlinkinBoard.setPattern(rightPattern);
+//                PatternTimer.reset();
+//            }
+//        }
+//
+//        telemetry.update();
+//    }
+//
+//    private RevBlinkinLedDriver.BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
+//        for (int i = 0; i < colorNames.length; i++) {
+//            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] &&
+//                    green >= colorRanges[i][2] && green <= colorRanges[i][3] &&
+//                    blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
+//                switch (colorNames[i]) {
+//                    case "White":
+//                        return WHITE_PATTERN;
+//                    case "Green":
+//                        return GREEN_PATTERN;
+//                    case "Purple":
+//                        return PURPLE_PATTERN;
+//                    case "Yellow":
+//                        return YELLOW_PATTERN;
+//                }
+//            }
+//        }
+//        return RevBlinkinLedDriver.BlinkinPattern.BLACK;
+//    }
+
 
     void SandboxIntakeOuttake() {
         // if gamepad2.a => STATE_1_RFI
