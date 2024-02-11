@@ -45,7 +45,7 @@ public class newMeepMeeper {
         Vector2d blueShortYellow2Pos = new Vector2d(51.5, 36);   //26,37,-90
         Vector2d blueShortYellow3Pos = new Vector2d(51.5,27.5);    //33,37,-90
 
-        Vector2d blueShortParkPos = new Vector2d(47.5, 54.5);  //7, 37
+        Vector2d blueShortParkPos = new Vector2d(45, 54.5);  //7, 37
 
         //Todo: RedShort
         Pose2d redShortStartPos = new Pose2d(15,-61.5,Math.toRadians(90));//0,0,0
@@ -83,7 +83,7 @@ public class newMeepMeeper {
         Pose2d blueLongYellow3Pos = new Pose2d(51.5,27.5, Math.toRadians(0));    //33,37,-90
 
 
-        Vector2d blueLongParkPos = new Vector2d(47.5, 11.5);//50, 82
+        Vector2d blueLongParkPos = new Vector2d(45, 11.5);//50, 82
 
         //Todo:RedLong
         Pose2d redLongStartPos = new Pose2d(-39,-61.25,Math.toRadians(90));//0,0,0
@@ -103,7 +103,7 @@ public class newMeepMeeper {
         Pose2d redLongYellow1Pos = new Pose2d(51.5,-27.5, Math.toRadians(0));    //33,37,-90
 
 
-        Vector2d redLongParkPos = new Vector2d(47.5, -11.5);//50, 82
+        Vector2d redLongParkPos = new Vector2d(45, -11.5);//50, 82
 
 
         //***************************************************************************************
