@@ -80,7 +80,7 @@ public class AuraRobot
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
     public AuraHangController hanger;
-//    public Aura_DepositController depositFlipper;
+    //    public Aura_DepositController depositFlipper;
     public AuraIntakeOuttakeController myIntakeController;
     public AuraHeadingEstimator myHeadingEstimator;
 
@@ -106,7 +106,7 @@ public class AuraRobot
 
 
     public RevColorSensorV3 Left = null;
-//turn off color unless being used?
+    //turn off color unless being used?
     public ColorRangeSensor Right = null;
 
     //claw variables
@@ -161,7 +161,7 @@ public class AuraRobot
 
     public static double APRILTAG_TIMEOUT = 2;
 
-   //------------------------------------------------------------
+    //------------------------------------------------------------
 
     /* local OpMode members. */
     public  HardwareMap hwMap           =  null;
@@ -404,4 +404,3 @@ public class AuraRobot
     }
 
 }
-
