@@ -33,14 +33,15 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_PS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
-import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_START;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
+
+import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -104,7 +105,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
     Pose2d redStartPos = new Pose2d(-39,-61.25,Math.toRadians(90));//0,0,0
 
     Pose2d redPurple3Pos = new Pose2d(-34, -34.5, Math.toRadians(0));  //27,0,-90
-    Pose2d redPurple2Pos = new Pose2d(-31,- 34, Math.toRadians(90));  //37,12,-90
+    Pose2d redPurple2Pos = new Pose2d(-39,- 32, Math.toRadians(90));  //37,12,-90
     Pose2d redPurple1Pos = new Pose2d(-39, -34.5 , Math.toRadians(180)); //27,19,-90
 
     Vector2d redBeforeGatePos3 = new Vector2d(-38,-11.5);//50,2
@@ -113,12 +114,12 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
     Vector2d redAfterGateTagPos = new Vector2d(15.25, -11.5);//50,51.25
     Vector2d redAfterGatePos = new Vector2d(32, -11.5);//50,68
 
-    Vector2d redYellow3Pos = new Vector2d(51.5, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(51.5, -36);   //26,37,-90
-    Pose2d redYellow1Pos = new Pose2d(51.5,-27.5, Math.toRadians(0));    //33,37,-90
+    Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(50.5, -36);   //26,37,-90
+    Pose2d redYellow1Pos = new Pose2d(50.5,-27.5, Math.toRadians(0));    //33,37,-90
 
 
-    Vector2d redParkPos = new Vector2d(47.5, -11.5);//50, 82
+    Vector2d redParkPos = new Vector2d(45, -11.5);//50, 82
     boolean bProceedToYellow = false;
 
 
@@ -212,6 +213,15 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
     }
 
     public Action updateAfterGatePos = new backwallAprilTagController();
+
+    public class initAprilTag implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            initAprilTag();
+            return false;
+        }
+    }
+
+    public Action initApril = new initAprilTag();
 
     private static final double LEFT_SPIKEMARK_BOUNDARY_X = 250;
     private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 260;
@@ -399,7 +409,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
 
             // Wait 5 seconds to let other robot finish
             runtime.reset();
-            while (runtime.seconds() < 5) {
+            while (runtime.seconds() < AUTO_WAIT_FOR_START) {
                 MyIntakeOuttakeController.update();
             }
 
@@ -412,7 +422,9 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                                             dropOffPurpleAtPos1,
                                             dropOffYellowAtPos1,
                                             endTrajectoryMarker),
-                                    updateIOController
+                                    new ParallelAction(
+                                            updateIOController,
+                                            initApril)
                             ));
                     break;
                 case 2:
@@ -423,7 +435,9 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                                             dropOffPurpleAtPos2,
                                             dropOffYellowAtPos2,
                                             endTrajectoryMarker),
-                                    updateIOController
+                                    new ParallelAction(
+                                            updateIOController,
+                                            initApril)
                             ));
                     break;
                 case 3:
@@ -435,7 +449,9 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                                             dropOffPurpleAtPos3,
                                             dropOffYellowAtPos3,
                                             endTrajectoryMarker),
-                                    updateIOController
+                                    new ParallelAction(
+                                            updateIOController,
+                                            initApril)
                             ));
                     break;
             }
@@ -482,9 +498,9 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
+//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(redParkPos)
-                .afterDisp(0, getReadyForIntake)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos2 = RedLong.actionBuilder(redPurple2Pos)
@@ -501,9 +517,9 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
+//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(redParkPos)
-                .afterDisp(0, getReadyForIntake)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos1 = RedLong.actionBuilder(redPurple1Pos)
@@ -520,9 +536,9 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
+//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(redParkPos)
-                .afterDisp(0, getReadyForIntake)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
     }
     private double getBatteryVoltage() {
@@ -612,7 +628,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
 
     boolean updatePosfromBackwallAprilTag()
     {
-        initAprilTag(); // initializing the april tag processor
+//        initAprilTag(); // initializing the april tag processor
         setManualExposure(6, 250); // accounting for motion blur
         targetFound = false;
         desiredTag  = null;
@@ -688,7 +704,9 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
 
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.
-        aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag = new AprilTagProcessor.Builder()
+                .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
+                .build();
 
         // Adjust Image Decimation to trade-off detection-range for detection-rate.
         // eg: Some typical detection data using a Logitech C920 WebCam
@@ -703,6 +721,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
         if (USE_WEBCAM) {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
+                    .setCameraResolution(new Size(640, 480))
                     .addProcessor(aprilTag)
                     .build();
         } else {

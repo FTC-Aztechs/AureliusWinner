@@ -42,6 +42,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAK
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 
+import android.util.Size;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -103,17 +105,15 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     Pose2d redPurple3Pos = new Pose2d(14, -33, Math.toRadians(0)); //27,19,-90
     Pose2d redPurple2Pos = new Pose2d(16, -32, Math.toRadians(90));  //37,12,-90
-    Pose2d redPurple1Pos = new Pose2d(8.5, -33, Math.toRadians(180));  //27,0,-90
-
+    Pose2d redPurple1Pos = new Pose2d(8, -33, Math.toRadians(180));  //27,0,-90
 
     Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
-    Vector2d redYellow3Pos = new Vector2d(51.5, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(51.5, -36);   //26,37,-90
-    Vector2d redYellow1Pos = new Vector2d(51.5,-27.5);    //33,37,-90
+    Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(50.5, -36);   //26,37,-90
+    Vector2d redYellow1Pos = new Vector2d(50.5,-27.5);    //33,37,-90
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
-    boolean bProceedToYellow = false;
 
 
 
@@ -208,6 +208,15 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     public Action updateAfterGatePos = new backwallAprilTagController();
 
+    public class initAprilTag implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            initAprilTag();
+            return false;
+        }
+    }
+
+    public Action initApril = new initAprilTag();
+
     private static final double LEFT_SPIKEMARK_BOUNDARY_X = 300;
     private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 130;
 
@@ -236,7 +245,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             telemetry.addData("Corrected heading:", Math.toDegrees(yaw));
             telemetry.update();
 
-            RedShort.pose = new Pose2d(RedShort.pose.position.x,RedShort.pose.position.y, yaw);
+           RedShort.pose = new Pose2d(RedShort.pose.position.x,RedShort.pose.position.y, yaw);
 
             return false;
         }
@@ -395,37 +404,43 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             switch (PurpleDropOffPos) {
                 case 1:
                     Actions.runBlocking(
-                            new ParallelAction(
-                                    new SequentialAction(
-                                            beginTrajectoryMarker,
-                                            dropOffPurpleAtPos1,
-                                            dropOffYellowAtPos1,
-                                            endTrajectoryMarker),
-                                    updateIOController
-                            ));
+                        new ParallelAction(
+                            new SequentialAction(
+                                beginTrajectoryMarker,
+                                dropOffPurpleAtPos1,
+                                dropOffYellowAtPos1,
+                                endTrajectoryMarker),
+                                new ParallelAction(
+                                        updateIOController,
+                                        initApril)
+                        ));
                     break;
                 case 2:
                     Actions.runBlocking(
+                    new ParallelAction(
+                        new SequentialAction(
+                            beginTrajectoryMarker,
+                            dropOffPurpleAtPos2,
+                            dropOffYellowAtPos2,
+                            endTrajectoryMarker),
                             new ParallelAction(
-                                    new SequentialAction(
-                                            beginTrajectoryMarker,
-                                            dropOffPurpleAtPos2,
-                                            dropOffYellowAtPos2,
-                                            endTrajectoryMarker),
-                                    updateIOController
-                            ));
+                                    updateIOController,
+                                    initApril)
+                    ));
                     break;
                 case 3:
                 default:
                     Actions.runBlocking(
+                    new ParallelAction(
+                        new SequentialAction(
+                            beginTrajectoryMarker,
+                            dropOffPurpleAtPos3,
+                            dropOffYellowAtPos3,
+                            endTrajectoryMarker),
                             new ParallelAction(
-                                    new SequentialAction(
-                                            beginTrajectoryMarker,
-                                            dropOffPurpleAtPos3,
-                                            dropOffYellowAtPos3,
-                                            endTrajectoryMarker),
-                                    updateIOController
-                            ));
+                                    updateIOController,
+                                    initApril)
+                    ));
                     break;
             }
         }
@@ -468,9 +483,9 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .strafeTo(redParkPos)
                 .afterDisp(0,getReadyForIntake)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .strafeTo(redParkPos)
                 .build();
 
         dropOffYellowAtPos2 = RedShort.actionBuilder(redPurple2Pos)
@@ -485,9 +500,9 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .strafeTo(redParkPos)
                 .afterDisp(0,getReadyForIntake)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .strafeTo(redParkPos)
                 .build();
 
         dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple3Pos)
@@ -502,9 +517,9 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .strafeTo(redParkPos)
                 .afterDisp(0,getReadyForIntake)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .strafeTo(redParkPos)
                 .build();
     }
 
@@ -595,7 +610,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     boolean updatePosfromBackwallAprilTag()
     {
-        initAprilTag(); // initializing the april tag processor
+//        initAprilTag(); // initializing the april tag processor
         setManualExposure(6, 250); // accounting for motion blur
         targetFound = false;
         desiredTag  = null;
@@ -670,8 +685,9 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.
-        aprilTag = new AprilTagProcessor.Builder().build();
-
+        aprilTag = new AprilTagProcessor.Builder()
+                .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
+                .build();
         // Adjust Image Decimation to trade-off detection-range for detection-rate.
         // eg: Some typical detection data using a Logitech C920 WebCam
         // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
@@ -683,10 +699,11 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
-                    .addProcessor(aprilTag)
-                    .build();
+                visionPortal = new VisionPortal.Builder()
+                        .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
+                        .setCameraResolution(new Size(640, 480))
+                        .addProcessor(aprilTag)
+                        .build();
         } else {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)

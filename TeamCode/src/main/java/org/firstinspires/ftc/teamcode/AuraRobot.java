@@ -113,7 +113,7 @@ public class AuraRobot
     public static AuraPIDController liftController = new AuraPIDController(11, 0, 0.25, 3600);
 
     public static double Launcher_Set_Pos = 1;
-    public static double Launcher_Fire_Pos = .5;
+    public static double Launcher_Fire_Pos = .85;
 
     public static double Lid_Close_Pos = 0.5;
     public  static double Lid_Open_Pos = 0.85;
@@ -135,14 +135,13 @@ public class AuraRobot
     public static int SLIDE_RAISE_LOW = 700;
     public static int SLIDE_RAISE_MED = 1700;
     public static int SLIDE_RAISE_HIGH = 3000;
-    public static double slideTicks_stepSize = 125;
+    public static double slideTicks_stepSize = 25;
     public static int FloorPosition  = 600;
     public static int HighJunction   = 15400; // 15400
     public static int HighJunction_Auto = 15250;
     public static int UpperLimit     = 3000;
     public static double PURPLE_LOCK    = 1.0;
     public static double PURPLE_UNLOCK  = 0.5;
-
     public static double HANG_EXTENDER_EXTEND = 0.36;
     public static double HANG_EXTENDER_RETRACT = 0.58; //0
     public static double HANG_FLIPPER_DOWN = 1.0;
@@ -153,13 +152,14 @@ public class AuraRobot
     public static double HANG_NUM_MOTOR_ROTATIONS = 3.5;
 
 
+    public static double AUTO_WAIT_FOR_START = 5;
     public static double AUTO_WAIT_FOR_OUTTAKE = 1.0;
     public static double AUTO_WAIT_FOR_YELLOW_DROP = 2.0;
     public static double AUTO_WAIT_RETURN_TO_INTAKE = 3.0;
 
 
 
-    public static double APRILTAG_TIMEOUT = 2;
+    public static double APRILTAG_TIMEOUT = 5;
 
     //------------------------------------------------------------
 
