@@ -468,14 +468,14 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .build();
 
         dropOffPurpleAtPos2 = RedLong.actionBuilder(redStartPos)
-                .setTangent(Math.toRadians(30))
-                .splineToLinearHeading(redPurple2Pos, Math.toRadians(180))
+                .setTangent(Math.toRadians(90))//30
+                .splineToLinearHeading(redPurple2Pos, Math.toRadians(70))//180
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
 
         dropOffPurpleAtPos1 = RedLong.actionBuilder(redStartPos)
-                .setTangent(Math.toRadians(110))
+                .setTangent(Math.toRadians(110)) //
                 .splineToLinearHeading(redPurple1Pos, Math.toRadians(90))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)

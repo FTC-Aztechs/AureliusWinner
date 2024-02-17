@@ -110,7 +110,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
     Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
     Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(50.5, -36);   //26,37,-90
+    Vector2d redYellow2Pos = new Vector2d(50.5, -32);   //26,37,-90
     Vector2d redYellow1Pos = new Vector2d(50.5,-27.5);    //33,37,-90
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
@@ -472,7 +472,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     void buildYellowTrajectories()
     {
-        dropOffYellowAtPos3 = RedShort.actionBuilder(redPurple1Pos)
+        dropOffYellowAtPos3 = RedShort.actionBuilder(redPurple3Pos)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(new Vector2d(10,-38.5))
                 .setTangent(Math.toRadians(-90))
@@ -484,8 +484,8 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(redParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos2 = RedShort.actionBuilder(redPurple2Pos)
@@ -501,11 +501,11 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(redParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
-        dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple3Pos)
+        dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple1Pos)
                 .stopAndAdd(rectifyHeadingError)
                 .lineToX(14)
                 .setTangent(Math.toRadians(-90))
@@ -518,8 +518,8 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(redParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
     }
 
@@ -653,7 +653,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             double yaw = desiredTag.ftcPose.yaw;
 
             double robotOffsetX = -7;
-            double robotOffsetY = -2.25;
+            double robotOffsetY = -3.75;
 
             double offsetX = (range * Math.cos(Math.toRadians(bearing)));
 

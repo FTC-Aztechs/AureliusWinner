@@ -46,7 +46,7 @@ public class Aura_Vision extends LinearOpMode {
                 double yaw = tag.ftcPose.yaw;
 
                 double robotOffsetX = -7;
-                double robotOffsetY = -2.25;
+                double robotOffsetY = -3.75;
 
                 double offsetX = (range * Math.cos(Math.toRadians(bearing)));
 
