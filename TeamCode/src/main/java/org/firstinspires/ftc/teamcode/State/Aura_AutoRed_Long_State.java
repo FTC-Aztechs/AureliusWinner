@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Qualifiers;
+package org.firstinspires.ftc.teamcode.State;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
@@ -35,6 +35,7 @@ import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_START;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
@@ -91,29 +92,36 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Red_Short_Qual", group="Linear OpMode")
+@Autonomous(name="Red_Long_State", group="Linear OpMode")
 
-public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
-
-    //Todo:switch to field coordinates, x and heading inverse of Red Short
-
+public class Aura_AutoRed_Long_State extends LinearOpMode {
 
     //**** Roadrunner Pose2ds ****
 
-    Pose2d redStartPos = new Pose2d(15,-61.5,Math.toRadians(90));//0,0,0
+    //Todo: switch to field coordinates:
+    //to find x: add robotcentric Y pos to field centric start pos X
+    //to find y: subtract robotcentric X pos to field centric start pos y
+    //to find heading: add -90 degrees to field centric start pos heading
 
-    Pose2d redPurple3Pos = new Pose2d(14, -33, Math.toRadians(0)); //27,19,-90
-    Pose2d redPurple2Pos = new Pose2d(16, -32, Math.toRadians(90));  //37,12,-90
-    Pose2d redPurple1Pos = new Pose2d(8, -33, Math.toRadians(180));  //27,0,-90
+    Pose2d redStartPos = new Pose2d(-39,-61.25,Math.toRadians(90));//0,0,0
 
-    Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
+    Pose2d redPurple3Pos = new Pose2d(-32.5, -34.5, Math.toRadians(0));  //27,0,-90
+    Pose2d redPurple2Pos = new Pose2d(-39,- 32, Math.toRadians(90));  //37,12,-90
+    Pose2d redPurple1Pos = new Pose2d(-39, -34.5 , Math.toRadians(180)); //27,19,-90
 
-    Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(50.5, -32);   //26,37,-90
-    Vector2d redYellow1Pos = new Vector2d(50.5,-27.5);    //33,37,-90
+    Vector2d redBeforeGatePos3 = new Vector2d(-38,-11.5);//50,2
+    Vector2d redBeforeGatePos2 = new Vector2d(-50,-11.5);//50,-14
+    Vector2d redBeforeGatePos1 = new Vector2d(-34,-11.5);//50,-19
+    Vector2d redAfterGateTagPos = new Vector2d(15.25, -11.5);//50,51.25
+    Vector2d redAfterGatePos = new Vector2d(32, -11.5);//50,68
 
-    Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
+    Vector2d redYellow3Pos = new Vector2d(51.5, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(51.5, -36);   //26,37,-90
+    Pose2d redYellow1Pos = new Pose2d(51.5,-27.5, Math.toRadians(0));    //33,37,-90
 
+
+    Vector2d redParkPos = new Vector2d(45, -11.5);//50, 82
+    boolean bProceedToYellow = false;
 
 
     //Roadrunner field-centric coordinates quick guide brought to you by Lavanya
@@ -216,8 +224,8 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     public Action initApril = new initAprilTag();
 
-    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 300;
-    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 130;
+    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 250;
+    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 260;
 
     public static int PurpleDropOffPos = 0;
     public static double SplineAngle = 0;
@@ -227,24 +235,26 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     AuraRobot Aurelius = new AuraRobot();
     AuraIntakeOuttakeController MyIntakeOuttakeController;
-    MecanumDrive RedShort;
+    MecanumDrive RedLong;
+
 
 
     private static FtcDashboard auraBoard;
+
 
     //TODO: imu
     public class IMUController implements Action {
         @Override
         public boolean run(TelemetryPacket tPkt) {
 
-            double oldHeading = RedShort.pose.heading.log();
+            double oldHeading = RedLong.pose.heading.log();
             telemetry.addData("Old heading", Math.toDegrees(oldHeading));
             double yaw = Aurelius.myHeadingEstimator.getYaw();
             telemetry.addData("IMU Heading correction: ", Math.toDegrees(yaw - oldHeading));
             telemetry.addData("Corrected heading:", Math.toDegrees(yaw));
             telemetry.update();
 
-           RedShort.pose = new Pose2d(RedShort.pose.position.x,RedShort.pose.position.y, yaw);
+            RedLong.pose = new Pose2d(RedLong.pose.position.x, RedLong.pose.position.y, yaw);
 
             return false;
         }
@@ -291,7 +301,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
     // this is used when uploading models directly to the RC using the model upload interface.
-//    private static final String TFOD_MODEL_FILE = "C:\\Sashank\\FTC CenterStage\\Aurelius\\Aurelius\\TeamCode\\src\\main\\java\\org\\firstinspires\\ftc\\teamcode\\myBloopy.tflite";
+//    private static final String TFOD_MODEL_FILE = "C:\\Sashank\\FTC CenterStage\\Aurelius\\Aurelius\\TeamCode\\src\\main\\java\\org\\firstinspires\\ftc\\teamcode\\myRedpy.tflite";
 
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
@@ -346,12 +356,11 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
         telemetry.addLine(String.format("%d. Aura Initialized!", iTeleCt++));
         telemetry.update();
 
-
         double volts = getBatteryVoltage();
         telemetry.addLine(String.format("%d. Battery voltage: %.1f volts", iTeleCt++, volts));
         telemetry.update();
 
-        RedShort = new MecanumDrive(Aurelius.hwMap, redStartPos);
+        RedLong = new MecanumDrive(Aurelius.hwMap, redStartPos);
         Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, redStartPos);
         telemetry.addLine(String.format("%d. myHeadingEstimator Initialized!", iTeleCt++));
         telemetry.update();
@@ -399,47 +408,52 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             telemetry.addData("Going to position:", "PurpleDropOffPos");
             telemetry.update();
 
-            //TODO: Run Trajectories
+            // Wait 5 seconds to let other robot finish
+            runtime.reset();
+            while (runtime.seconds() < AUTO_WAIT_FOR_START) {
+                MyIntakeOuttakeController.update();
+            }
+
             switch (PurpleDropOffPos) {
                 case 1:
                     Actions.runBlocking(
-                        new ParallelAction(
-                            new SequentialAction(
-                                beginTrajectoryMarker,
-                                dropOffPurpleAtPos1,
-                                dropOffYellowAtPos1,
-                                endTrajectoryMarker),
-                                new ParallelAction(
-                                        updateIOController,
-                                        initApril)
-                        ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos1,
+                                            dropOffYellowAtPos1,
+                                            endTrajectoryMarker),
+                                    new ParallelAction(
+                                            updateIOController,
+                                            initApril)
+                            ));
                     break;
                 case 2:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos2,
-                            dropOffYellowAtPos2,
-                            endTrajectoryMarker),
                             new ParallelAction(
-                                    updateIOController,
-                                    initApril)
-                    ));
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos2,
+                                            dropOffYellowAtPos2,
+                                            endTrajectoryMarker),
+                                    new ParallelAction(
+                                            updateIOController,
+                                            initApril)
+                            ));
                     break;
                 case 3:
                 default:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos3,
-                            dropOffYellowAtPos3,
-                            endTrajectoryMarker),
                             new ParallelAction(
-                                    updateIOController,
-                                    initApril)
-                    ));
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos3,
+                                            dropOffYellowAtPos3,
+                                            endTrajectoryMarker),
+                                    new ParallelAction(
+                                            updateIOController,
+                                            initApril)
+                            ));
                     break;
             }
         }
@@ -447,23 +461,23 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     void buildPurpleTrajectories()
     {
-        dropOffPurpleAtPos3 = RedShort.actionBuilder(redStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(redPurple3Pos, Math.toRadians(90))
+        dropOffPurpleAtPos3 = RedLong.actionBuilder(redStartPos)
+                .setTangent(Math.toRadians(135))
+                .splineToLinearHeading(redPurple3Pos, Math.toRadians(30))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
 
-        dropOffPurpleAtPos2 = RedShort.actionBuilder(redStartPos)
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(redPurple2Pos, Math.toRadians(90))
+        dropOffPurpleAtPos2 = RedLong.actionBuilder(redStartPos)
+                .setTangent(Math.toRadians(90))//30
+                .splineToLinearHeading(redPurple2Pos, Math.toRadians(70))//180
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
 
-        dropOffPurpleAtPos1 = RedShort.actionBuilder(redStartPos)
-                .setTangent(Math.toRadians(80))
-                .splineToLinearHeading(redPurple1Pos, Math.toRadians(130))
+        dropOffPurpleAtPos1 = RedLong.actionBuilder(redStartPos)
+                .setTangent(Math.toRadians(110)) //
+                .splineToLinearHeading(redPurple1Pos, Math.toRadians(90))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -471,13 +485,16 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
     void buildYellowTrajectories()
     {
-        dropOffYellowAtPos3 = RedShort.actionBuilder(redPurple3Pos)
+        dropOffYellowAtPos3 = RedLong.actionBuilder(redPurple3Pos)
+                .setReversed(false)
+                .lineToX(-38)
+                .strafeTo(redBeforeGatePos3)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(new Vector2d(10,-38.5))
-                .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(redTagPos, Math.toRadians(90))
+                .strafeTo(redAfterGateTagPos)
                 .afterDisp(0, getReadyForOutTake)
                 .stopAndAdd(updateAfterGatePos)
+                .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
+                .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redYellow3Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
@@ -487,14 +504,16 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
-        dropOffYellowAtPos2 = RedShort.actionBuilder(redPurple2Pos)
-                .stopAndAdd(rectifyHeadingError)
-                .lineToY(-44.5)
+        dropOffYellowAtPos2 = RedLong.actionBuilder(redPurple2Pos)
                 .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(redTagPos, Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-50,-45, Math.toRadians(0)),Math.toRadians(-180))
+                .strafeTo(redBeforeGatePos2)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(redAfterGateTagPos)
                 .afterDisp(0, getReadyForOutTake)
                 .stopAndAdd(updateAfterGatePos)
-                .strafeTo(redYellow3Pos)
+                .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
+                .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
@@ -504,15 +523,17 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
-        dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple1Pos)
-                .stopAndAdd(rectifyHeadingError)
-                .lineToX(14)
+        dropOffYellowAtPos1 = RedLong.actionBuilder(redPurple1Pos)
                 .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(redTagPos, Math.toRadians(90))
+                .strafeTo(new Vector2d(-37,-34.5))
+                .strafeTo(redBeforeGatePos1)
+                .turn(Math.toRadians(-180))
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(redAfterGateTagPos)
                 .afterDisp(0, getReadyForOutTake)
                 .stopAndAdd(updateAfterGatePos)
-                .strafeTo(redYellow3Pos)
-                .strafeTo(redYellow1Pos)
+                .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
+                .stopAndAdd(rectifyHeadingError)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -521,7 +542,6 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
     }
-
     private double getBatteryVoltage() {
         double result = Double.POSITIVE_INFINITY;
         for (VoltageSensor sensor : hardwareMap.voltageSensor) {
@@ -549,7 +569,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
         // Set the camera (webcam vs. built-in RC phone camera).
-        builder.setCamera(hardwareMap.get(WebcamName.class, "Eyeball"));
+        builder.setCamera(hardwareMap.get(WebcamName.class, "Kemera"));
 
 
         // Set and enable the processor.
@@ -593,11 +613,11 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             break;
         }
         if( x > 0 && x < LEFT_SPIKEMARK_BOUNDARY_X )
-            PurpleDropOffPos = 2;
-        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
-            PurpleDropOffPos = 3;
-        else
             PurpleDropOffPos = 1;
+        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
+            PurpleDropOffPos = 2;
+        else
+            PurpleDropOffPos = 3;
 
         telemetry.addData("Detected Spike Mark X = ", x);
         telemetry.addData("Detected Drop off Position = ", PurpleDropOffPos);
@@ -652,7 +672,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             double yaw = desiredTag.ftcPose.yaw;
 
             double robotOffsetX = -7;
-            double robotOffsetY = -3.75;
+            double robotOffsetY = +5.5;
 
             double offsetX = (range * Math.cos(Math.toRadians(bearing)));
 
@@ -669,11 +689,11 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             double currY = rotateY + (desiredTag.metadata.fieldPosition.getData()[1] -
                     offsetY);
 
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", RedShort.pose.position.x, RedShort.pose.position.y, Math.toDegrees(RedShort.pose.heading.log()));
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", RedLong.pose.position.x, RedLong.pose.position.y, Math.toDegrees(RedLong.pose.heading.log()));
             telemetry.update();
 
-            RedShort.pose = new Pose2d(currX, currY, currHeading);
-            telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", RedShort.pose.position.x, RedShort.pose.position.y, Math.toDegrees(RedShort.pose.heading.log()));
+            RedLong.pose = new Pose2d(currX, currY, currHeading);
+            telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", RedLong.pose.position.x, RedLong.pose.position.y, Math.toDegrees(RedLong.pose.heading.log()));
             telemetry.update();
             return true;
         }
@@ -682,11 +702,13 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
         return false;
     }
 
+
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
                 .build();
+
         // Adjust Image Decimation to trade-off detection-range for detection-rate.
         // eg: Some typical detection data using a Logitech C920 WebCam
         // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
@@ -698,11 +720,11 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
-                visionPortal = new VisionPortal.Builder()
-                        .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
-                        .setCameraResolution(new Size(640, 480))
-                        .addProcessor(aprilTag)
-                        .build();
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
+                    .setCameraResolution(new Size(640, 480))
+                    .addProcessor(aprilTag)
+                    .build();
         } else {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)

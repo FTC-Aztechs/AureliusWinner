@@ -91,9 +91,9 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Red_Short_Qual", group="Linear OpMode")
+@Autonomous(name="Red_Short_Qual_CB", group="Linear OpMode")
 
-public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
+public class Aura_AutoRed_Short_Qualifiers_CB extends LinearOpMode {
 
     //Todo:switch to field coordinates, x and heading inverse of Red Short
 
@@ -451,21 +451,21 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(redPurple3Pos, Math.toRadians(90))
                 .stopAndAdd(ejectPurple)
-                .waitSeconds(1)
+                .waitSeconds(12)
                 .build();
 
         dropOffPurpleAtPos2 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(redPurple2Pos, Math.toRadians(90))
                 .stopAndAdd(ejectPurple)
-                .waitSeconds(1)
+                .waitSeconds(12)
                 .build();
 
         dropOffPurpleAtPos1 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(80))
                 .splineToLinearHeading(redPurple1Pos, Math.toRadians(130))
                 .stopAndAdd(ejectPurple)
-                .waitSeconds(1)
+                .waitSeconds(12)
                 .build();
     }
 

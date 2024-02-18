@@ -87,6 +87,20 @@ public class Aura_Manual extends LinearOpMode {
     private int slide_currentPos = 0;
     private int slide_newPos = slide_currentPos;
 
+    public  String[] colors = {"White", "Green", "Purple", "Yellow"};
+    public  int[][] rightRanges = {
+            {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
+            {264, 364, 468, 568, 237, 337},      // Green
+            {500, 750, 550, 720, 710, 950},      // Purple
+            {782, 882, 584, 684, 312, 412}       // Yellow
+    };
+    public  int[][] leftRanges = {
+            {1365, 1465, 2382, 2482, 2244, 2344},// White
+            {348, 448, 1065, 1165, 460, 560},    // Green
+            {800, 1100, 1200, 1650, 1600, 2300},  // Purple
+            {1100, 1300, 1400, 1770, 420, 590}   // Yellow
+    };
+
 
     public static int Mode = 1;
 //    public static int BUTTON_TRIGGER_TIMER_MS = 500;
@@ -198,7 +212,7 @@ public class Aura_Manual extends LinearOpMode {
             AuraFingers();
             AuraHang();
             AuraColor();
-            //AuraHang();//            AuraColor();
+            //AuraHang();
 
         }
     }
@@ -256,22 +270,6 @@ public class Aura_Manual extends LinearOpMode {
 
     public void AuraColor() {
 
-
-
-        String[] colors = {"White", "Green", "Purple", "Yellow"};
-        int[][] rightRanges = {
-                {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
-                {264, 364, 468, 568, 237, 337},      // Green
-                {500, 750, 550, 720, 710, 950},      // Purple
-                {782, 882, 584, 684, 312, 412}       // Yellow
-        };
-        int[][] leftRanges = {
-                {1365, 1465, 2382, 2482, 2244, 2344},// White
-                {348, 448, 1065, 1165, 460, 560},    // Green
-                {800, 1100, 1200, 1650, 1600, 2300},  // Purple
-                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
-        };
-
         telemetry.addData("Right Red: ", Right.red()); // color range
         telemetry.addData("Right Green: ", Right.green());
         telemetry.addData("Right Blue: ", Right.blue());
@@ -289,7 +287,7 @@ public class Aura_Manual extends LinearOpMode {
             } else {
                 rightDetected = false;
                 telemetry.addData("Right", "False");
-                leftDetectedColor = colors[i];
+                rightDetectedColor = colors[i];
 
             }
         }
@@ -312,28 +310,42 @@ public class Aura_Manual extends LinearOpMode {
         telemetry.addData("Right Detected Color", rightDetectedColor);
         telemetry.addData("Left Detected Color", leftDetectedColor);
 
-        if(leftDetected && rightDetected) {
+        if(PatternTimer.seconds()<0.5) {
+            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        } else if (PatternTimer.seconds() < 1.0) {
             BlinkinBoard.setPattern(leftPattern);
-            if(PatternTimer.seconds() > .3) {
-                BlinkinBoard.setPattern(rightPattern);
-                PatternTimer.reset();
-            }
-        } else if (leftDetected) {
-            if(PatternTimer.seconds() > .3) {
-                BlinkinBoard.setPattern(leftPattern);
-                PatternTimer.reset();
-            }
-        } else if (rightDetected) {
-            if(PatternTimer.seconds() > .3) {
-                BlinkinBoard.setPattern(rightPattern);
-                PatternTimer.reset();
-            }
+        } else if (PatternTimer.seconds() < 1.5 ) {
+            BlinkinBoard.setPattern(rightPattern);
+        } else {
+            PatternTimer.reset();
         }
+
+//
+//        if (leftDetected) {
+//            BlinkinBoard.setPattern(leftPattern);
+//                PatternTimer.reset();
+//            if(PatternTimer.seconds() > .5) {
+//                BlinkinBoard.setPattern(rightPattern);
+//                PatternTimer.reset();
+//            }
+//        }
+//        if (rightDetected) {
+//            BlinkinBoard.setPattern(rightPattern);
+//            if(PatternTimer.seconds() > 1) {
+//                BlinkinBoard.setPattern();
+//                PatternTimer.reset();
+//            }
+//        } else {
+//            if(PatternTimer.seconds() > .5) {
+//                BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+//                PatternTimer.reset();
+//            }
+//        }
 
         telemetry.update();
     }
-
-
+//
+//
     private RevBlinkinLedDriver.BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
         for (int i = 0; i < colorNames.length; i++) {
             if (red >= colorRanges[i][0] && red <= colorRanges[i][1] &&
@@ -351,7 +363,7 @@ public class Aura_Manual extends LinearOpMode {
                 }
             }
         }
-        return RevBlinkinLedDriver.BlinkinPattern.BLACK;
+        return RevBlinkinLedDriver.BlinkinPattern.BLUE;
     }
 
 

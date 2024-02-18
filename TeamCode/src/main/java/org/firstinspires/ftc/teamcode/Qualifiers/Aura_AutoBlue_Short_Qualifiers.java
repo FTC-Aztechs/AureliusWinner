@@ -33,7 +33,6 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_PS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
-import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
@@ -68,7 +67,7 @@ import org.firstinspires.ftc.teamcode.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.AuraHeadingEstimator;
 import org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController;
 import org.firstinspires.ftc.teamcode.AuraRobot;
-import org.firstinspires.ftc.teamcode.roadrunnerbasics.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Roadrunner.roadrunnerbasics.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -114,8 +113,8 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
     Pose2d blueTagPos = new Pose2d(36,45, Math.toRadians(0));
 
     Vector2d blueYellow1Pos = new Vector2d(50.5, 42);  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(50.5, 36);   //26,37,-90
-    Vector2d blueYellow3Pos = new Vector2d(50.5,27.5);    //33,37,-90
+    Vector2d blueYellow2Pos = new Vector2d(50.5, 34);   //26,37,-90
+    Vector2d blueYellow3Pos = new Vector2d(50.5,28);    //33,37,-90
 
     Vector2d blueParkPos = new Vector2d(45, 54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -490,8 +489,8 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(blueParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos2 = BlueShort.actionBuilder(bluePurple2Pos)
@@ -507,8 +506,8 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(blueParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos3 = BlueShort.actionBuilder(bluePurple3Pos)
@@ -524,8 +523,8 @@ public class Aura_AutoBlue_Short_Qualifiers extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(blueParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
     }
 

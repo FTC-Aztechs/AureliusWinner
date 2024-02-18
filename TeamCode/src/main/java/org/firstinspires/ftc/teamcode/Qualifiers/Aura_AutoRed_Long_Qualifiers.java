@@ -38,6 +38,7 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_START;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 
@@ -67,7 +68,7 @@ import org.firstinspires.ftc.teamcode.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.AuraHeadingEstimator;
 import org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController;
 import org.firstinspires.ftc.teamcode.AuraRobot;
-import org.firstinspires.ftc.teamcode.roadrunnerbasics.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Roadrunner.roadrunnerbasics.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -104,7 +105,7 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
 
     Pose2d redStartPos = new Pose2d(-39,-61.25,Math.toRadians(90));//0,0,0
 
-    Pose2d redPurple3Pos = new Pose2d(-34, -34.5, Math.toRadians(0));  //27,0,-90
+    Pose2d redPurple3Pos = new Pose2d(-32.5, -34.5, Math.toRadians(0));  //27,0,-90
     Pose2d redPurple2Pos = new Pose2d(-39,- 32, Math.toRadians(90));  //37,12,-90
     Pose2d redPurple1Pos = new Pose2d(-39, -34.5 , Math.toRadians(180)); //27,19,-90
 
@@ -114,9 +115,9 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
     Vector2d redAfterGateTagPos = new Vector2d(15.25, -11.5);//50,51.25
     Vector2d redAfterGatePos = new Vector2d(32, -11.5);//50,68
 
-    Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(50.5, -36);   //26,37,-90
-    Pose2d redYellow1Pos = new Pose2d(50.5,-27.5, Math.toRadians(0));    //33,37,-90
+    Vector2d redYellow3Pos = new Vector2d(51.5, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(51.5, -36);   //26,37,-90
+    Pose2d redYellow1Pos = new Pose2d(51.5,-27.5, Math.toRadians(0));    //33,37,-90
 
 
     Vector2d redParkPos = new Vector2d(45, -11.5);//50, 82
@@ -499,8 +500,8 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(redParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos2 = RedLong.actionBuilder(redPurple2Pos)
@@ -518,8 +519,8 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(redParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos1 = RedLong.actionBuilder(redPurple1Pos)
@@ -537,8 +538,8 @@ public class Aura_AutoRed_Long_Qualifiers extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-//                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .strafeTo(redParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
     }
     private double getBatteryVoltage() {

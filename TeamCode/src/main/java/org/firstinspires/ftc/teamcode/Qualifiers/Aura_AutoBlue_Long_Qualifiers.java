@@ -68,7 +68,7 @@ import org.firstinspires.ftc.teamcode.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.AuraHeadingEstimator;
 import org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController;
 import org.firstinspires.ftc.teamcode.AuraRobot;
-import org.firstinspires.ftc.teamcode.roadrunnerbasics.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Roadrunner.roadrunnerbasics.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -120,8 +120,8 @@ public class Aura_AutoBlue_Long_Qualifiers extends LinearOpMode {
 
 
     Vector2d blueYellow1Pos = new Vector2d(50.5, 44);  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(50.5, 39);   //26,37,-90
-    Pose2d blueYellow3Pos = new Pose2d(50.5,31.5, Math.toRadians(0));    //33,37,-90
+    Vector2d blueYellow2Pos = new Vector2d(50.5, 37);   //26,37,-90
+    Pose2d blueYellow3Pos = new Pose2d(51.5,29, Math.toRadians(0));    //33,37,-90
 
 
     Vector2d blueParkPos = new Vector2d(45, 11.5);//50, 82

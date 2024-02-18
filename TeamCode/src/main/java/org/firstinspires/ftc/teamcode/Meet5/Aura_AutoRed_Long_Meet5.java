@@ -38,7 +38,6 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 
@@ -64,11 +63,10 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.AuraHangController;
 import org.firstinspires.ftc.teamcode.AuraHeadingEstimator;
 import org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController;
 import org.firstinspires.ftc.teamcode.AuraRobot;
-import org.firstinspires.ftc.teamcode.roadrunnerbasics.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Roadrunner.roadrunnerbasics.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
