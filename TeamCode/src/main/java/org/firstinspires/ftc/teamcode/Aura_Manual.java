@@ -76,6 +76,9 @@ public class Aura_Manual extends LinearOpMode {
     private boolean changingIntakeSpeed = false;
     private boolean changingLauncherSpeed = false;
 
+    private double intakeSpeed;
+    public static double intakeMaxSpeed = 0.6;
+
     private boolean changingState = false;
 
     public RevColorSensorV3 Left;
@@ -185,6 +188,7 @@ public class Aura_Manual extends LinearOpMode {
     FtcDashboard auraDashboard;
 
 
+
     @Override
     public void runOpMode() {
         // Initialize the drive system vriables
@@ -211,7 +215,7 @@ public class Aura_Manual extends LinearOpMode {
             AuraLauncher();
             AuraFingers();
             AuraHang();
-            AuraColor();
+            //AuraColor();
             //AuraHang();
 
         }
@@ -460,8 +464,12 @@ public class Aura_Manual extends LinearOpMode {
 
     public void AuraIntakeRoller() {
 
-        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(-gamepad2.right_stick_y));
-        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (gamepad2.right_stick_y));
+        intakeSpeed = -gamepad2.right_stick_y;
+        if (intakeSpeed >= intakeMaxSpeed) {
+            intakeSpeed = intakeMaxSpeed;
+        }
+        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(intakeSpeed));
+        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (2 * gamepad2.right_stick_y));
 
     }
 

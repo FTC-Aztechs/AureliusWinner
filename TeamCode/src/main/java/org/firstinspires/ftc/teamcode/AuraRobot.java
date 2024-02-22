@@ -128,7 +128,7 @@ public class AuraRobot
     public static double RIGHT_FINGER_UNLOCK = 0.5;
     public static double WRIST_INTAKE = 0.57;
     public static double WRIST_TUCK = 0.80;
-    public static double ELBOW_DOWN = 0.023;
+    public static double ELBOW_DOWN = 0.02; //0.023; AFter refixing Max, adjustment needed.
     public static double ELBOW_UP = 0.65;
     public static int SLIDE_INTAKE_POS = 0;
     public static int SLIDE_FLIP_HEIGHT = 1000;
