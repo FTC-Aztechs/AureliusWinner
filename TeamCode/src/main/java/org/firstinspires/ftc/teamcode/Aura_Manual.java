@@ -90,7 +90,7 @@ public class Aura_Manual extends LinearOpMode {
     private int slide_currentPos = 0;
     private int slide_newPos = slide_currentPos;
 
-    public  String[] colors = {"White", "Green", "Purple", "Yellow"};
+    public  RevBlinkinLedDriver.BlinkinPattern[] colors = {WHITE_PATTERN, GREEN_PATTERN, PURPLE_PATTERN, YELLOW_PATTERN};
     public  int[][] rightRanges = {
             {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
             {264, 364, 468, 568, 237, 337},      // Green
@@ -161,8 +161,6 @@ public class Aura_Manual extends LinearOpMode {
     private boolean rightDetected = false;
     private boolean leftDetected = false;
 
-    private RevBlinkinLedDriver.BlinkinPattern rightPattern;
-    private RevBlinkinLedDriver.BlinkinPattern leftPattern;
 
     public ElapsedTime PatternTimer;
 
@@ -171,13 +169,14 @@ public class Aura_Manual extends LinearOpMode {
     private static final RevBlinkinLedDriver.BlinkinPattern PURPLE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
     private static final RevBlinkinLedDriver.BlinkinPattern YELLOW_PATTERN = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
 
-    String rightDetectedColor = "";
-    String leftDetectedColor = "";
+
 
     // Define Fingers
     private Servo LeftFinger = null;
     private Servo RightFinger = null;
 
+    private RevBlinkinLedDriver.BlinkinPattern rightDetectedColor = colors[1];
+    private RevBlinkinLedDriver.BlinkinPattern leftDetectedColor = colors[1];
 
     //drive booleans
     private boolean changing_drive_mode = false;
@@ -273,102 +272,79 @@ public class Aura_Manual extends LinearOpMode {
     }
 
     public void AuraColor() {
-
+        rightDetectedColor =  RevBlinkinLedDriver.BlinkinPattern.BLACK;
+        leftDetectedColor = RevBlinkinLedDriver.BlinkinPattern.BLACK;
         telemetry.addData("Right Red: ", Right.red()); // color range
         telemetry.addData("Right Green: ", Right.green());
         telemetry.addData("Right Blue: ", Right.blue());
-        telemetry.addData("Left Red: ", Left.red()); // rev
+        telemetry.addData("Left Red: ", Left.red());
         telemetry.addData("Left Green: ", Left.green());
         telemetry.addData("Left Blue: ", Left.blue());
 
-        // Check the color for Right sensor
+//         Check the color for Right sensor
         for (int i = 0; i < colors.length; i++) {
-            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
-                rightDetected = true;
+            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5] ) {
                 telemetry.addData("Right", "Detected");
                 rightDetectedColor = colors[i]; // Update detected color
-
             } else {
-                rightDetected = false;
                 telemetry.addData("Right", "False");
-                rightDetectedColor = colors[i];
-
             }
         }
 
         // Check the color for Left sensor
         for (int i = 0; i < colors.length; i++) {
             if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
-                leftDetected = true;
                 telemetry.addData("Left", "Detected");
                 leftDetectedColor = colors[i];
             } else {
-                leftDetected = false;
                 telemetry.addData("Left", "False");
+
             }
         }
+//
+//        RevBlinkinLedDriver.BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
+//        RevBlinkinLedDriver.BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
+//
+//        telemetry.addData("Right Detected Color", rightDetectedColor);
+//        telemetry.addData("Left Detected Color", leftDetectedColor);
 
-        RevBlinkinLedDriver.BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
-        RevBlinkinLedDriver.BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
-
-        telemetry.addData("Right Detected Color", rightDetectedColor);
-        telemetry.addData("Left Detected Color", leftDetectedColor);
-
-        if(PatternTimer.seconds()<0.5) {
-            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
-        } else if (PatternTimer.seconds() < 1.0) {
-            BlinkinBoard.setPattern(leftPattern);
-        } else if (PatternTimer.seconds() < 1.5 ) {
-            BlinkinBoard.setPattern(rightPattern);
+        if(PatternTimer.seconds()<1) {
+            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
+        } else if (PatternTimer.seconds() < 1.2) {
+            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+        } else if (PatternTimer.seconds() < 2.2) {
+            BlinkinBoard.setPattern(leftDetectedColor);
+        } else if (PatternTimer.seconds() < 2.4) {
+            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+        } else if (PatternTimer.seconds() < 2.2) {
+            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+        } else if (PatternTimer.seconds() < 3) {
+            BlinkinBoard.setPattern(rightDetectedColor);
         } else {
             PatternTimer.reset();
         }
-
-//
-//        if (leftDetected) {
-//            BlinkinBoard.setPattern(leftPattern);
-//                PatternTimer.reset();
-//            if(PatternTimer.seconds() > .5) {
-//                BlinkinBoard.setPattern(rightPattern);
-//                PatternTimer.reset();
-//            }
-//        }
-//        if (rightDetected) {
-//            BlinkinBoard.setPattern(rightPattern);
-//            if(PatternTimer.seconds() > 1) {
-//                BlinkinBoard.setPattern();
-//                PatternTimer.reset();
-//            }
-//        } else {
-//            if(PatternTimer.seconds() > .5) {
-//                BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
-//                PatternTimer.reset();
-//            }
-//        }
 
         telemetry.update();
     }
 //
 //
-    private RevBlinkinLedDriver.BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
-        for (int i = 0; i < colorNames.length; i++) {
-            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] &&
-                    green >= colorRanges[i][2] && green <= colorRanges[i][3] &&
-                    blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
-                switch (colorNames[i]) {
-                    case "White":
-                        return WHITE_PATTERN;
-                    case "Green":
-                        return GREEN_PATTERN;
-                    case "Purple":
-                        return PURPLE_PATTERN;
-                    case "Yellow":
-                        return YELLOW_PATTERN;
-                }
-            }
-        }
-        return RevBlinkinLedDriver.BlinkinPattern.BLUE;
-    }
+//    private RevBlinkinLedDriver.BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
+//        for (int i = 0; i < colorNames.length; i++) {
+//            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] && green >= colorRanges[i][2] && green <= colorRanges[i][3] && blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
+//                switch (colorNames[i]) {
+//                    case "White":
+//                        return WHITE_PATTERN;
+//                    case "Green":
+//                        return GREEN_PATTERN;
+//                    case "Purple":
+//                        return PURPLE_PATTERN;
+//                    case "Yellow":
+//                        return YELLOW_PATTERN;
+//                }
+//            }
+//        }
+//        return RevBlinkinLedDriver.BlinkinPattern.AQUA;
+//    }
 
 
     public void AuraManualDrive() {
