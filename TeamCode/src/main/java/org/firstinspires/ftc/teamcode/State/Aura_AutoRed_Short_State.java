@@ -37,7 +37,6 @@ import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 
@@ -100,7 +99,7 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
 
     //**** Roadrunner Pose2ds ****
 
-    Pose2d redStartPos = new Pose2d(15,-61.5,Math.toRadians(90));//0,0,0
+    Pose2d redStartPos = new Pose2d(15,-59.5,Math.toRadians(90));//0,0,0
 
     Pose2d redPurple3Pos = new Pose2d(14, -33, Math.toRadians(0)); //27,19,-90
     Pose2d redPurple2Pos = new Pose2d(16, -32, Math.toRadians(90));  //37,12,-90
@@ -111,6 +110,12 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
     Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
     Vector2d redYellow2Pos = new Vector2d(50.5, -32);   //26,37,-90
     Vector2d redYellow1Pos = new Vector2d(50.5,-27.5);    //33,37,-90
+
+
+    Pose2d redBeforeGateCyclePos = new Pose2d(12,-60, Math.toRadians(0));
+    Vector2d redAfterGateCyclePos = new Vector2d(-36,-60);
+    Vector2d redBeforeCyclePos = new Vector2d(-60,-48);
+    Vector2d redAfterCyclePos = new Vector2d(-60,-36);
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
 
@@ -483,8 +488,26 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
+
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(redBeforeGateCyclePos, Math.toRadians(180))
+                .strafeTo(redAfterGateCyclePos)
+                .strafeTo(redBeforeCyclePos)
+                .strafeTo(redAfterCyclePos)
+                .strafeTo(redAfterGateCyclePos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                //intake here
+                .setTangent(0)
+                .lineToX(redBeforeGateCyclePos.position.x)
+                .strafeTo(redTagPos.position)
+                .afterDisp(0, getReadyForOutTake)
+                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow1Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
                 .strafeTo(redParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos2 = RedShort.actionBuilder(redPurple2Pos)
@@ -500,8 +523,26 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
+
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(redBeforeGateCyclePos, Math.toRadians(180))
+                .strafeTo(redAfterGateCyclePos)
+                .strafeTo(redBeforeCyclePos)
+                .strafeTo(redAfterCyclePos)
+                .strafeTo(redAfterGateCyclePos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                //intake here
+                .setTangent(0)
+                .lineToX(redBeforeGateCyclePos.position.x)
+                .strafeTo(redTagPos.position)
+                .afterDisp(0, getReadyForOutTake)
+                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow1Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
                 .strafeTo(redParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple1Pos)
@@ -517,8 +558,27 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
+
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(redBeforeGateCyclePos, Math.toRadians(180))
+                .strafeTo(redAfterGateCyclePos)
+                .strafeTo(redBeforeCyclePos)
+                .strafeTo(redAfterCyclePos)
+                .strafeTo(redAfterGateCyclePos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                //intake here
+
+                .setTangent(0)
+                .lineToX(redBeforeGateCyclePos.position.x)
+                .strafeTo(redTagPos.position)
+                .afterDisp(0, getReadyForOutTake)
+                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow1Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
                 .strafeTo(redParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
     }
 

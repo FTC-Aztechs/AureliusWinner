@@ -40,10 +40,14 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Launcher_Fire_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Launcher_Set_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.bumperSpeedAdjust;
 import static org.firstinspires.ftc.teamcode.AuraRobot.dPadSpeedAdjust;
+import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
+import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.slideTicks_stepSize;
 import static org.firstinspires.ftc.teamcode.AuraRobot.speedAdjust;
 
@@ -58,10 +62,7 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 
 @Config
@@ -123,6 +124,8 @@ public class Aura_Manual extends LinearOpMode {
     private static ElapsedTime timer_gp1_dpad_left = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp1_dpad_right = new ElapsedTime(MILLISECONDS);
 
+    private static ElapsedTime timer_gp2_rt = new ElapsedTime(MILLISECONDS);
+
 
     private static ElapsedTime timer_gp2_x = new ElapsedTime(MILLISECONDS);
 
@@ -175,6 +178,10 @@ public class Aura_Manual extends LinearOpMode {
     private Servo LeftFinger = null;
     private Servo RightFinger = null;
 
+    private Servo RightLink = null;
+    private Servo LeftLink = null;
+
+
     private RevBlinkinLedDriver.BlinkinPattern rightDetectedColor = colors[1];
     private RevBlinkinLedDriver.BlinkinPattern leftDetectedColor = colors[1];
 
@@ -197,6 +204,9 @@ public class Aura_Manual extends LinearOpMode {
         BlinkinBoard = hardwareMap.get(RevBlinkinLedDriver.class, "Blink");
         Left = hardwareMap.get(RevColorSensorV3.class, "Left");
         Right = hardwareMap.get(ColorRangeSensor.class, "Right");
+        LeftLink = hardwareMap.get(Servo.class, "LeftLink");
+        RightLink = hardwareMap.get(Servo.class, "RightLink");
+
         PatternTimer = new ElapsedTime();
         PatternTimer.reset();
 
@@ -262,10 +272,10 @@ public class Aura_Manual extends LinearOpMode {
 
         Aurelius.hanger.init();
         Aurelius.hanger.update();
-
         myIntakeOuttakeController.init();
         myIntakeOuttakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
-
+        LeftLink.setPosition(leftLinkageClose);
+        RightLink.setPosition(rightLinkageClose);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addLine("Status: Robot is ready to roll!");
         telemetry.update();
@@ -451,6 +461,19 @@ public class Aura_Manual extends LinearOpMode {
 
 //    @SuppressLint("SuspiciousIndentation")
 public void AuraIntakeOuttake() {
+    if(gamepad2.right_trigger == 1f) {
+        if(!changingState) {
+            timer_gp2_rt.reset();
+            changingState = true;
+        } else if (timer_gp2_rt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+            LeftLink.setPosition(leftLinkageOpen);
+            RightLink.setPosition(rightLinkageOpen);
+            changingState = false;
+        }
+    } else if(gamepad2.right_trigger == 0f) {
+        LeftLink.setPosition(leftLinkageClose);
+        RightLink.setPosition(rightLinkageClose);
+    }
 
 
     if (gamepad2.a) {

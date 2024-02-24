@@ -41,6 +41,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_START;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
 
 import android.util.Size;
 
@@ -56,6 +58,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -105,7 +108,7 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
 
 
     // RObot Width = 15; Length = 15.5
-    Pose2d blueStartPos = new Pose2d(-39,61.25,Math.toRadians(-90));//0,0,0
+    Pose2d blueStartPos = new Pose2d(-39,59.25,Math.toRadians(-90));//0,0,0
 
     Pose2d bluePurple1Pos = new Pose2d(-33, 34.5, Math.toRadians(0));  //27,0,-90
     Pose2d bluePurple2Pos = new Pose2d(-39, 32, Math.toRadians(-90));  //37,12,-90
@@ -338,6 +341,9 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
     private Action dropOffYellowAtPos2;
     private Action dropOffYellowAtPos3;
 
+    private Servo RightLink = null;
+    private Servo LeftLink = null;
+
     // Park Trajectories
     private Action dropOffYellowAtPark;
 
@@ -353,6 +359,8 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
         // Initialize...
         Aurelius.init(hardwareMap);
         Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
+
+
         Aurelius.boeing747.init();
         Aurelius.hanger.init();
         Aurelius.hanger.update();

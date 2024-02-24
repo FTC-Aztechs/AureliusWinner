@@ -37,9 +37,10 @@ import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
 
 import android.util.Size;
 
@@ -55,6 +56,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -104,7 +106,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
 
 
     // RObot Width = 15; Length = 15.5
-    Pose2d blueStartPos = new Pose2d(15,61.5,Math.toRadians(-90));//0,0,0
+    Pose2d blueStartPos = new Pose2d(15,59.5,Math.toRadians(-90));//0,0,0
 
     Pose2d bluePurple1Pos = new Pose2d(14, 33, Math.toRadians(0));  //27,0,-90
     Pose2d bluePurple2Pos = new Pose2d(16, 32, Math.toRadians(-90));  //37,12,-90
@@ -115,6 +117,16 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
     Vector2d blueYellow1Pos = new Vector2d(50.5, 42);  //27,37,-90
     Vector2d blueYellow2Pos = new Vector2d(50.5, 34);   //26,37,-90
     Vector2d blueYellow3Pos = new Vector2d(50.5,28);    //33,37,-90
+
+    Pose2d blueBeforeGateCyclePos = new Pose2d(12,57, Math.toRadians(0));
+
+    Vector2d blueBeforeGatePosCycle = new Vector2d(12,57);
+    Vector2d blueAfterGateCyclePos = new Vector2d(-60,57);
+    Vector2d blueBeforeCyclePos = new Vector2d(-60,48);
+    Vector2d blueAfterCyclePos = new Vector2d(-60,36);
+    private Servo RightLink = null;
+    private Servo LeftLink = null;
+
 
     Vector2d blueParkPos = new Vector2d(45, 54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -219,6 +231,8 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
     }
 
     public Action initApril = new initAprilTag();
+
+
 
 
 
@@ -348,6 +362,10 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
         Aurelius.boeing747.init();
         Aurelius.hanger.init();
+        LeftLink = hardwareMap.get(Servo.class, "LeftLink");
+        RightLink = hardwareMap.get(Servo.class, "RightLink");
+        LeftLink.setPosition(leftLinkageClose);
+        RightLink.setPosition(rightLinkageClose);
         Aurelius.hanger.update();
         telemetry.addLine(String.format("%d. Aura Initialized!", iTeleCt++));
         telemetry.update();
@@ -440,6 +458,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                                     new SequentialAction(
                                             beginTrajectoryMarker,
                                             dropOffPurpleAtPos3,
+
                                             dropOffYellowAtPos3,
                                             endTrajectoryMarker),
                                     new ParallelAction(
@@ -489,8 +508,23 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
+
+                .setTangent(Math.toRadians(180))
+                .strafeTo(blueBeforeGatePosCycle)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueAfterGateCyclePos)
+                .strafeTo(blueAfterCyclePos)
+                //intake
+                .strafeTo(blueAfterGateCyclePos)
+                .setTangent(0)
+                .strafeTo(blueBeforeGatePosCycle)
+                .strafeTo(blueYellow2Pos)
+                .afterDisp(0, getReadyForOutTake)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
                 .strafeTo(blueParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos2 = BlueShort.actionBuilder(bluePurple2Pos)
@@ -506,8 +540,27 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
+
+                .setTangent(Math.toRadians(180))
+                .strafeTo(blueBeforeGatePosCycle)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueAfterGateCyclePos)
+                .strafeTo(blueBeforeCyclePos)
+                .strafeTo(blueAfterCyclePos)
+                .strafeTo(blueAfterGateCyclePos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                //intake here
+                .setTangent(0)
+                .lineToX(blueBeforeGateCyclePos.position.x)
+                .strafeTo(blueTagPos.position)
+                .afterDisp(0, getReadyForOutTake)
+                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(blueYellow1Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
                 .strafeTo(blueParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos3 = BlueShort.actionBuilder(bluePurple3Pos)
@@ -523,8 +576,27 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
+
+                .setTangent(Math.toRadians(180))
+                .strafeTo(blueBeforeGatePosCycle)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueAfterGateCyclePos)
+                .strafeTo(blueBeforeCyclePos)
+                .strafeTo(blueAfterCyclePos)
+                .strafeTo(blueAfterGateCyclePos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                //intake here
+                .setTangent(0)
+                .lineToX(blueBeforeGateCyclePos.position.x)
+                .strafeTo(blueTagPos.position)
+                .afterDisp(0, getReadyForOutTake)
+                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(blueYellow1Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
                 .strafeTo(blueParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
     }
 
@@ -717,6 +789,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                     .build();
         }
     }
+
 
     private void setManualExposure(int exposureMS, int gain) {
         // Wait for the camera to be open, then use the controls
