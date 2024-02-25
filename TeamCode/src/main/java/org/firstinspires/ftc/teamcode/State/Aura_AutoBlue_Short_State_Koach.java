@@ -37,9 +37,10 @@ import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
 
 import android.util.Size;
 
@@ -55,6 +56,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -93,7 +95,7 @@ import java.util.concurrent.TimeUnit;
 @Config
 @Autonomous(name="Blue_Short_State", group="Linear OpMode")
 
-public class Aura_AutoBlue_Short_State_Koach extends LinearOpMode {
+public class Aura_AutoBlue_Short_State extends LinearOpMode {
 
     //**** Roadrunner Pose2ds ****
 
@@ -115,6 +117,16 @@ public class Aura_AutoBlue_Short_State_Koach extends LinearOpMode {
     Vector2d blueYellow1Pos = new Vector2d(50.5, 42);  //27,37,-90
     Vector2d blueYellow2Pos = new Vector2d(50.5, 34);   //26,37,-90
     Vector2d blueYellow3Pos = new Vector2d(50.5,28);    //33,37,-90
+
+    Pose2d blueBeforeGateCyclePos = new Pose2d(12,57, Math.toRadians(0));
+
+    Vector2d blueBeforeGatePosCycle = new Vector2d(12,57);
+    Vector2d blueAfterGateCyclePos = new Vector2d(-60,57);
+    Vector2d blueBeforeCyclePos = new Vector2d(-60,48);
+    Vector2d blueAfterCyclePos = new Vector2d(-60,36);
+    private Servo RightLink = null;
+    private Servo LeftLink = null;
+
 
     Vector2d blueParkPos = new Vector2d(45, 54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -360,6 +372,10 @@ public class Aura_AutoBlue_Short_State_Koach extends LinearOpMode {
         Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
         Aurelius.boeing747.init();
         Aurelius.hanger.init();
+        LeftLink = hardwareMap.get(Servo.class, "LeftLink");
+        RightLink = hardwareMap.get(Servo.class, "RightLink");
+        LeftLink.setPosition(leftLinkageClose);
+        RightLink.setPosition(rightLinkageClose);
         Aurelius.hanger.update();
         telemetry.addLine(String.format("%d. Aura Initialized!", iTeleCt++));
         telemetry.update();
@@ -527,7 +543,7 @@ public class Aura_AutoBlue_Short_State_Koach extends LinearOpMode {
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(blueTagPos, Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
-                .stopAndAdd(updatePosFromAprilTagEyeball)
+                .stopAndAdd(updateAfterGatePos)
                 .strafeTo(blueYellow1Pos)
                 .strafeTo(blueYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
@@ -622,7 +638,7 @@ public class Aura_AutoBlue_Short_State_Koach extends LinearOpMode {
         builder.addProcessor(tfod);
 
         // Build the Vision Portal, using the above settings.
-        visionPortalEyeball = builder.build();
+        visionPortal = builder.build();
 
     } // end method initTfod()
 

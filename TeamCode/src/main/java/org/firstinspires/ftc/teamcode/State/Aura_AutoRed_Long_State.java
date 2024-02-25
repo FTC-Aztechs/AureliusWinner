@@ -103,7 +103,7 @@ public class Aura_AutoRed_Long_State extends LinearOpMode {
     //to find y: subtract robotcentric X pos to field centric start pos y
     //to find heading: add -90 degrees to field centric start pos heading
 
-    Pose2d redStartPos = new Pose2d(-39,-61.25,Math.toRadians(90));//0,0,0
+    Pose2d redStartPos = new Pose2d(-39,-59.25,Math.toRadians(90));//0,0,0
 
     Pose2d redPurple3Pos = new Pose2d(-32.5, -34.5, Math.toRadians(0));  //27,0,-90
     Pose2d redPurple2Pos = new Pose2d(-39,- 32, Math.toRadians(90));  //37,12,-90
