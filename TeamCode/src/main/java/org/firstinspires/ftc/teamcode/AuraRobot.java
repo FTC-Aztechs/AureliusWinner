@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -76,6 +77,8 @@ public class AuraRobot
     public CRServo Roller = null;
     public DcMotor Hang = null;
     public Servo   PurpleDumper = null;
+    public Servo RightLink = null;
+    public Servo LeftLink = null;
 
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
@@ -154,16 +157,18 @@ public class AuraRobot
     public static double HANG_FLIPPER_UP = 0.68;
     public static double HANG_MOTOR_TICKS = 537.7;
 
-    public static double HANG_POWER = 0.2;
+    public static double HANG_POWER = 1;
     public static double HANG_NUM_MOTOR_ROTATIONS = 3.5;
 
 
     public static double AUTO_WAIT_FOR_START = 8;
-    public static double AUTO_WAIT_FOR_OUTTAKE = 1.0;
-    public static double AUTO_WAIT_FOR_YELLOW_DROP = 2.0;
+    public static double AUTO_WAIT_FOR_OUTTAKE = 0.1;
+    public static double AUTO_WAIT_FOR_PURPLE_DROP = 0.5;
+    public static double AUTO_WAIT_FOR_YELLOW_DROP = 0.5;
     public static double AUTO_WAIT_RETURN_TO_INTAKE = 3.0;
-
-
+    public static double AUTO_WAIT_FOR_STACK_INTAKE = 2.0;
+    public static double AUTO_ACCEL_CONSTRAINT_1 = -18;
+    public static double AUTO_ACCEL_CONSTRAINT_2 = 18;
 
     public static double APRILTAG_TIMEOUT = 5;
 
@@ -193,6 +198,8 @@ public class AuraRobot
         Roller = hwMap.get(CRServo.class, "Roller");
         Hang = hwMap.get(DcMotor.class, "hangMotor");
         PurpleDumper = hwMap.get(Servo.class, "purple");
+        LeftLink = hwMap.get(Servo.class, "LeftLink");
+        RightLink = hwMap.get(Servo.class, "RightLink");
 
         // Define and Initialize Color Sensors
         Left = hwMap.get(RevColorSensorV3.class, "Left");

@@ -35,12 +35,19 @@ import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_ACCEL_CONSTRAINT_1;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_ACCEL_CONSTRAINT_2;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_PURPLE_DROP;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_STACK_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 
 import android.util.Size;
 
@@ -51,7 +58,9 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -93,9 +102,9 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Blue_Short_State", group="Linear OpMode")
+@Autonomous(name="Blue_Short_State_Koach", group="Linear OpMode")
 
-public class Aura_AutoBlue_Short_State extends LinearOpMode {
+public class Aura_AutoBlue_Short_State_Koach extends LinearOpMode {
 
     //**** Roadrunner Pose2ds ****
 
@@ -120,13 +129,9 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
 
     Pose2d blueBeforeGateCyclePos = new Pose2d(12,57, Math.toRadians(0));
 
-    Vector2d blueBeforeGatePosCycle = new Vector2d(12,57);
-    Vector2d blueAfterGateCyclePos = new Vector2d(-60,57);
-    Vector2d blueBeforeCyclePos = new Vector2d(-60,48);
-    Vector2d blueAfterCyclePos = new Vector2d(-60,36);
-    private Servo RightLink = null;
-    private Servo LeftLink = null;
-
+    Vector2d blueEntryPos = new Vector2d(12,57);
+    Vector2d blueWingPos = new Vector2d(-61,57);
+    Vector2d blueStackPos = new Vector2d(-61,29);
 
     Vector2d blueParkPos = new Vector2d(45, 54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -236,12 +241,46 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
     public class initAprilTag implements Action {
         public boolean run(TelemetryPacket tPkt){
             initAprilTagEyeball();
+            //initAprilTagKemera();
             return false;
         }
     }
 
     public Action initApril = new initAprilTag();
 
+
+    public class lowerStackLinkage implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            lowerStackIntake();
+            return false;
+        }
+    }
+    public Action deployStackIntake = new lowerStackLinkage();
+
+
+    public class raiseStackLinkage implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            raiseStackIntake();
+            return false;
+        }
+    }
+    public Action retractStackIntake = new raiseStackLinkage();
+
+    public class stackIntake implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            stackIntakePixels();
+            return false;
+        }
+    }
+    public Action intakeFromStack = new stackIntake();
+
+    public class raiseBox implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            secureStackIntakePixels();
+            return false;
+        }
+    }
+    public Action securePixels = new raiseBox();
 
 
     private static final double LEFT_SPIKEMARK_BOUNDARY_X = 350;
@@ -335,6 +374,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
      */
     private VisionPortal visionPortalEyeball;
     private VisionPortal visionPortalKemera;
+    private VisionPortal visionPortalTfod;
 
     private static final boolean USE_WEBCAM = true;
     public static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
@@ -372,10 +412,8 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
         Aurelius.boeing747.init();
         Aurelius.hanger.init();
-        LeftLink = hardwareMap.get(Servo.class, "LeftLink");
-        RightLink = hardwareMap.get(Servo.class, "RightLink");
-        LeftLink.setPosition(leftLinkageClose);
-        RightLink.setPosition(rightLinkageClose);
+        Aurelius.LeftLink.setPosition(leftLinkageClose);
+        Aurelius.RightLink.setPosition(rightLinkageClose);
         Aurelius.hanger.update();
         telemetry.addLine(String.format("%d. Aura Initialized!", iTeleCt++));
         telemetry.update();
@@ -406,6 +444,9 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         telemetry.addData("Status: ", "Initializing Tensor Flow ......");
         telemetry.update();
         initTfod();
+        //initAprilTagEyeball();
+        //initAprilTagKemera();
+
         runtime.reset();
         while(runtime.seconds() < 3)
             idle();
@@ -483,23 +524,23 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
     {
         dropOffPurpleAtPos1 = BlueShort.actionBuilder(blueStartPos)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-90))
+                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-90),null, new ProfileAccelConstraint(AUTO_ACCEL_CONSTRAINT_1,AUTO_ACCEL_CONSTRAINT_2))
                 .stopAndAdd(ejectPurple)
-                .waitSeconds(1)
+                .waitSeconds(AUTO_WAIT_FOR_PURPLE_DROP)
                 .build();
 
         dropOffPurpleAtPos2 = BlueShort.actionBuilder(blueStartPos)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-90))
+                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-90),null, new ProfileAccelConstraint(AUTO_ACCEL_CONSTRAINT_1,AUTO_ACCEL_CONSTRAINT_2))
                 .stopAndAdd(ejectPurple)
-                .waitSeconds(1)
+                .waitSeconds(AUTO_WAIT_FOR_PURPLE_DROP)
                 .build();
 
         dropOffPurpleAtPos3 = BlueShort.actionBuilder(blueStartPos)
                 .setTangent(Math.toRadians(-80))
-                .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-130))
+                .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-130),null, new ProfileAccelConstraint(AUTO_ACCEL_CONSTRAINT_1,AUTO_ACCEL_CONSTRAINT_2))
                 .stopAndAdd(ejectPurple)
-                .waitSeconds(1)
+                .waitSeconds(AUTO_WAIT_FOR_PURPLE_DROP)
                 .build();
     }
 
@@ -517,49 +558,53 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(blueEntryPos)
-                .afterDisp(0,getReadyForIntake)
-                .stopAndAdd(updatePosFromAprilTagKemera)
-                .strafeTo(blueWingPos)
-                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
-                .strafeTo(blueStackPos)
-                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-                .waitSeconds(AUTO_WAIT_FOR_INTAKE)
-                .strafeTo(blueWingPos)
-                .strafeTo(blueEntryPos)
-                .stopAndAdd(updatePosFromAprilTagKemera)
-                .strafeTo(blueYellow2Pos)
-                .afterDisp(0,getReadyForOutTake)
-                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-                .stopAndAdd(depositYellow)
-                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .strafeTo(blueParkPos)
-                .afterDisp(0,getReadyForIntake)
+                .afterDisp(0, getReadyForIntake)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueWingPos, new TranslationalVelConstraint(65))
+                .strafeTo(blueStackPos)
+                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
+                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
+                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
+                .stopAndAdd(securePixels)
+                .strafeTo(blueWingPos)
+                .afterDisp(0, retractStackIntake)
+                .strafeTo(blueEntryPos)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueYellow2Pos)
+                //.afterDisp(0,getReadyForOutTake)
+                //.waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                //.stopAndAdd(depositYellow)
+                //.waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .strafeTo(blueParkPos)
+                //.afterDisp(0, getReadyForIntake)
+                //.waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos2 = BlueShort.actionBuilder(bluePurple2Pos)
                 .stopAndAdd(rectifyHeadingError)
-                .lineToY(44.5)
+                .strafeTo(new Vector2d(10,38.5))
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(blueTagPos, Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
-                .stopAndAdd(updateAfterGatePos)
-                .strafeTo(blueYellow1Pos)
+                .stopAndAdd(updatePosFromAprilTagEyeball)
                 .strafeTo(blueYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(blueEntryPos)
                 .afterDisp(0,getReadyForIntake)
-                .stopAndAdd(updatePosFromAprilTagKemera)
+                //.stopAndAdd(updatePosFromAprilTagKemera)
+                .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueWingPos)
-                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
                 .strafeTo(blueStackPos)
-                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-                .waitSeconds(AUTO_WAIT_FOR_INTAKE)
+                //.afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
+                //.stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
+                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .strafeTo(blueWingPos)
                 .strafeTo(blueEntryPos)
-                .stopAndAdd(updatePosFromAprilTagKemera)
+                //.stopAndAdd(updatePosFromAprilTagKemera)
+                .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueYellow1Pos)
                 .afterDisp(0,getReadyForOutTake)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
@@ -572,27 +617,28 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
 
         dropOffYellowAtPos3 = BlueShort.actionBuilder(bluePurple3Pos)
                 .stopAndAdd(rectifyHeadingError)
-                .lineToX(14)
+                .strafeTo(new Vector2d(10,38.5))
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(blueTagPos, Math.toRadians(-90))
                 .afterDisp(0, getReadyForOutTake)
                 .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow1Pos)
                 .strafeTo(blueYellow3Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .strafeTo(blueEntryPos)
                 .afterDisp(0,getReadyForIntake)
-                .stopAndAdd(updatePosFromAprilTagKemera)
+                //.stopAndAdd(updatePosFromAprilTagKemera)
+                .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueWingPos)
-                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
                 .strafeTo(blueStackPos)
-                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-                .waitSeconds(AUTO_WAIT_FOR_INTAKE)
+                //.afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
+                //.stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
+                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .strafeTo(blueWingPos)
                 .strafeTo(blueEntryPos)
-                .stopAndAdd(updatePosFromAprilTagKemera)
+                //.stopAndAdd(updatePosFromAprilTagKemera)
+                .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueYellow1Pos)
                 .afterDisp(0,getReadyForOutTake)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
@@ -638,7 +684,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         builder.addProcessor(tfod);
 
         // Build the Vision Portal, using the above settings.
-        visionPortal = builder.build();
+        visionPortalEyeball = builder.build();
 
     } // end method initTfod()
 
@@ -965,6 +1011,31 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
             gainControl.setGain(gain);
             sleep(20);
         }
+    }
+
+    public void lowerStackIntake()
+    {
+        Aurelius.LeftLink.setPosition(leftLinkageOpen);
+        Aurelius.RightLink.setPosition(rightLinkageOpen);
+        Aurelius.Roller.setPower(-0.7);
+    }
+
+    public void raiseStackIntake()
+    {
+        Aurelius.LeftLink.setPosition(leftLinkageClose);
+        Aurelius.RightLink.setPosition(rightLinkageClose);
+        Aurelius.Roller.setPower(0);
+    }
+
+    public void stackIntakePixels()
+    {
+        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0.7);
+    }
+
+    public void secureStackIntakePixels()
+    {
+        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0);
+        MyIntakeOuttakeController.setTargetState(STATE_3_PS);
     }
 
 
