@@ -121,9 +121,9 @@ public class AuraRobot
     public static double Lid_Close_Pos = 0.5;
     public  static double Lid_Open_Pos = 0.85;
 
-    public static double leftLinkageOpen = 0.41;
+    public static double leftLinkageOpen = 0.43;
     public static double leftLinkageClose = 0.75;
-    public static double rightLinkageOpen = 0.7;
+    public static double rightLinkageOpen = 0.68;
     public static double rightLinkageClose = 0.2;
 
 
