@@ -33,13 +33,9 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_3_PS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
-import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_MID;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_ACCEL_CONSTRAINT_1;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_ACCEL_CONSTRAINT_2;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
-import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_PURPLE_DROP;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_STACK_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
@@ -59,14 +55,12 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -87,7 +81,6 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 /*
@@ -104,41 +97,36 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Blue_Short_State", group="Linear OpMode")
+@Autonomous(name="Red_Short_State_Dont_Use", group="Linear OpMode")
 
-public class Aura_AutoBlue_Short_State extends LinearOpMode {
+public class Aura_AutoRed_Short_State_Dont_Use extends LinearOpMode {
+
+    //Todo:switch to field coordinates, x and heading inverse of Red Short
+
 
     //**** Roadrunner Pose2ds ****
 
-    //Todo: switch to field coordinates:
-    //to find x: add robotcentric Y pos to field centric start pos X
-    //to find y: subtract robotcentric X pos to field centric start pos y
-    //to find heading: add -90 degrees to field centric start pos heading
+    Pose2d redStartPos = new Pose2d(15,-59.5,Math.toRadians(90));//0,0,0
+
+    Pose2d redPurple3Pos = new Pose2d(14, -33, Math.toRadians(0)); //27,19,-90
+    Pose2d redPurple2Pos = new Pose2d(16, -32, Math.toRadians(90));  //37,12,-90
+    Pose2d redPurple1Pos = new Pose2d(8, -33, Math.toRadians(180));  //27,0,-90
+
+    Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
+
+    Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(50.5, -32);   //26,37,-90
+    Vector2d redYellow1Pos = new Vector2d(50.5,-27.5);    //33,37,-90
 
 
-    // RObot Width = 15; Length = 15.5
-    Pose2d blueStartPos = new Pose2d(15,61.5,Math.toRadians(-90));//0,0,0
+    Vector2d redEntryPos = new Vector2d(12,-60);
+    Vector2d redReturnPos = new Vector2d(-40,-57);
+    Vector2d redWingPos = new Vector2d(-60.75,-60);
+    Vector2d redStackPos = new Vector2d(-60.75,-31.5);
+    //Vector2d redAfterCyclePos = new Vector2d(-60,-36);
 
-    Pose2d bluePurple1Pos = new Pose2d(14, 33, Math.toRadians(0));  //27,0,-90
-    Pose2d bluePurple2Pos = new Pose2d(16, 32, Math.toRadians(-90));  //37,12,-90
-    Pose2d bluePurple3Pos = new Pose2d(8, 33 , Math.toRadians(-180)); //27,19,-90
+    Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
 
-    Pose2d blueTagPos = new Pose2d(36,45, Math.toRadians(0));
-
-    Vector2d blueYellow1Pos = new Vector2d(50.5, 42);  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(50.5, 35);   //26,37,-90
-    Vector2d blueYellow3Pos = new Vector2d(50.5,28);    //33,37,-90
-
-    Pose2d blueBeforeGateCyclePos = new Pose2d(12,57, Math.toRadians(0));
-
-    Vector2d blueEntryPos = new Vector2d(12,57);
-
-    Vector2d blueReturnPos = new Vector2d(-40,57);
-    Vector2d blueWingPos = new Vector2d(-60.75,57);
-    Vector2d blueStackPos = new Vector2d(-60.75,31.5);
-
-    Vector2d blueParkPos = new Vector2d(45, 54.5);  //7, 37
-    boolean bProceedToYellow = false;
 
     //Roadrunner field-centric coordinates quick guide brought to you by Lavanya
 
@@ -186,8 +174,10 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
             return false;
         }
     }
-    public Action getReadyForOutTake = new GotoOuttakeAction();
 
+
+
+    public Action getReadyForOutTake = new GotoOuttakeAction();
 
     public class GotoIntakeAction implements Action {
         @Override
@@ -222,14 +212,6 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
     }
     public Action endTrajectoryMarker = new endTrajectory();
 
-    public class backwallAprilTagControllerEyeball implements Action {
-        @Override
-        public boolean run(TelemetryPacket tPkt) {
-            updateposFromAprilTagEyeball();
-            return false;
-        }
-    }
-
     public class backwallAprilTagControllerKemera implements Action {
         @Override
         public boolean run(TelemetryPacket tPkt) {
@@ -238,21 +220,25 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         }
     }
 
+//    public class backwallAprilTagControllerEyeball implements Action {
+//        @Override
+//        public boolean run(TelemetryPacket tPkt) {
+//            updatePosFromAprilTagEyeball();
+//            return false;
+//        }
+//    }
 
-    public Action updatePosFromAprilTagEyeball = new backwallAprilTagControllerEyeball();
     public Action updatePosFromAprilTagKemera = new backwallAprilTagControllerKemera();
 
 
     public class initAprilTag implements Action {
         public boolean run(TelemetryPacket tPkt){
-            initAprilTagEyeball();
-//            initAprilTagKemera();
+            initAprilTag();
             return false;
         }
     }
 
     public Action initApril = new initAprilTag();
-
 
     public class lowerStackLinkage implements Action {
         public boolean run(TelemetryPacket tPkt){
@@ -260,7 +246,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
             return false;
         }
     }
-    public Action deployStackIntake = new lowerStackLinkage();
+    public Action deployStackIntake = new Aura_AutoRed_Short_State_Dont_Use.lowerStackLinkage();
 
 
     public class raiseStackLinkage implements Action {
@@ -269,7 +255,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
             return false;
         }
     }
-    public Action retractStackIntake = new raiseStackLinkage();
+    public Action retractStackIntake = new Aura_AutoRed_Short_State_Dont_Use.raiseStackLinkage();
 
     public class stackIntake implements Action {
         public boolean run(TelemetryPacket tPkt){
@@ -277,16 +263,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
             return false;
         }
     }
-    public Action intakeFromStack = new stackIntake();
-
-    public class ReverseIntake implements Action {
-        public boolean run(TelemetryPacket tPkt){
-            reverseIntake();
-            return false;
-        }
-    }
-    public Action reverseInt = new ReverseIntake();
-
+    public Action intakeFromStack = new Aura_AutoRed_Short_State_Dont_Use.stackIntake();
 
     public class raiseBox implements Action {
         public boolean run(TelemetryPacket tPkt){
@@ -294,11 +271,10 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
             return false;
         }
     }
-    public Action securePixels = new raiseBox();
+    public Action securePixels = new Aura_AutoRed_Short_State_Dont_Use.raiseBox();
 
-
-    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 350;
-    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 450;
+    private static final double LEFT_SPIKEMARK_BOUNDARY_X = 300;
+    private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 130;
 
     public static int PurpleDropOffPos = 0;
     public static double SplineAngle = 0;
@@ -308,7 +284,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
 
     AuraRobot Aurelius = new AuraRobot();
     AuraIntakeOuttakeController MyIntakeOuttakeController;
-    MecanumDrive BlueShort;
+    MecanumDrive RedShort;
 
 
     private static FtcDashboard auraBoard;
@@ -318,14 +294,14 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         @Override
         public boolean run(TelemetryPacket tPkt) {
 
-            double oldHeading = BlueShort.pose.heading.log();
+            double oldHeading = RedShort.pose.heading.log();
             telemetry.addData("Old heading", Math.toDegrees(oldHeading));
             double yaw = Aurelius.myHeadingEstimator.getYaw();
             telemetry.addData("IMU Heading correction: ", Math.toDegrees(yaw - oldHeading));
             telemetry.addData("Corrected heading:", Math.toDegrees(yaw));
             telemetry.update();
 
-            BlueShort.pose = new Pose2d(BlueShort.pose.position.x, BlueShort.pose.position.y, yaw);
+            RedShort.pose = new Pose2d(RedShort.pose.position.x,RedShort.pose.position.y, yaw);
 
             return false;
         }
@@ -333,7 +309,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
 
     public Action rectifyHeadingError = new IMUController();
 
-    //TODO: declare April Tag stuffi
+    //TODO: declare April Tag stuff
     OpenCvWebcam Sauron = null;
     AprilTagDetectionPipeline pipeline;
 
@@ -368,7 +344,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
      */
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
-    private static final String TFOD_MODEL_ASSET = "myBloopy.tflite";
+    private static final String TFOD_MODEL_ASSET = "myRedpy.tflite";
 
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
     // this is used when uploading models directly to the RC using the model upload interface.
@@ -388,12 +364,13 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
      */
     private VisionPortal visionPortalEyeball;
     private VisionPortal visionPortalKemera;
-    private VisionPortal visionPortalTfod;
+
 
     private static final boolean USE_WEBCAM = true;
     public static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
-    private AprilTagProcessor aprilTagEyeball;              // Used for managing the AprilTag detection process.
     private AprilTagProcessor aprilTagKemera;
+    private AprilTagProcessor aprilTagEyeball;
+    // Used for managing the AprilTag detection process.
     private org.firstinspires.ftc.vision.apriltag.AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
 
@@ -437,8 +414,8 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         telemetry.addLine(String.format("%d. Battery voltage: %.1f volts", iTeleCt++, volts));
         telemetry.update();
 
-        BlueShort = new MecanumDrive(Aurelius.hwMap, blueStartPos);
-        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, blueStartPos);
+        RedShort = new MecanumDrive(Aurelius.hwMap, redStartPos);
+        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, redStartPos);
         telemetry.addLine(String.format("%d. myHeadingEstimator Initialized!", iTeleCt++));
         telemetry.update();
 
@@ -458,9 +435,6 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         telemetry.addData("Status: ", "Initializing Tensor Flow ......");
         telemetry.update();
         initTfod();
-        //initAprilTagEyeball();
-        //initAprilTagKemera();
-
         runtime.reset();
         while(runtime.seconds() < 3)
             idle();
@@ -484,7 +458,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         runtime.reset();
         if (opModeIsActive()) {
             DetectPurpleDropoffPos();
-            visionPortalEyeball.close();
+            visionPortalKemera.close();
             telemetry.addData("Going to position:", "PurpleDropOffPos");
             telemetry.update();
 
@@ -536,138 +510,134 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
 
     void buildPurpleTrajectories()
     {
-        dropOffPurpleAtPos1 = BlueShort.actionBuilder(blueStartPos)
+        dropOffPurpleAtPos3 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-90),null, new ProfileAccelConstraint(AUTO_ACCEL_CONSTRAINT_1,AUTO_ACCEL_CONSTRAINT_2))
+                .splineToLinearHeading(redPurple3Pos, Math.toRadians(90))
                 .stopAndAdd(ejectPurple)
-                .waitSeconds(AUTO_WAIT_FOR_PURPLE_DROP)
+                .waitSeconds(1)
                 .build();
 
-        dropOffPurpleAtPos2 = BlueShort.actionBuilder(blueStartPos)
+        dropOffPurpleAtPos2 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-90),null, new ProfileAccelConstraint(AUTO_ACCEL_CONSTRAINT_1,AUTO_ACCEL_CONSTRAINT_2))
+                .splineToLinearHeading(redPurple2Pos, Math.toRadians(90))
                 .stopAndAdd(ejectPurple)
-                .waitSeconds(AUTO_WAIT_FOR_PURPLE_DROP)
+                .waitSeconds(1)
                 .build();
 
-        dropOffPurpleAtPos3 = BlueShort.actionBuilder(blueStartPos)
-                .setTangent(Math.toRadians(-80))
-                .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-130),null, new ProfileAccelConstraint(AUTO_ACCEL_CONSTRAINT_1,AUTO_ACCEL_CONSTRAINT_2))
+        dropOffPurpleAtPos1 = RedShort.actionBuilder(redStartPos)
+                .setTangent(Math.toRadians(80))
+                .splineToLinearHeading(redPurple1Pos, Math.toRadians(130))
                 .stopAndAdd(ejectPurple)
-                .waitSeconds(AUTO_WAIT_FOR_PURPLE_DROP)
+                .waitSeconds(1)
                 .build();
     }
 
     void buildYellowTrajectories()
     {
-        dropOffYellowAtPos1 = BlueShort.actionBuilder(bluePurple1Pos)
+        dropOffYellowAtPos3 = RedShort.actionBuilder(redPurple3Pos)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(new Vector2d(10,38.5))
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(blueTagPos, Math.toRadians(-90))
+                .strafeTo(new Vector2d(10,-38.5))
+                .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(redTagPos, Math.toRadians(90))
                 .afterDisp(0, getReadyForOutTake)
-                .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow1Pos)
+                .stopAndAdd(updatePosFromAprilTagKemera)
+                .strafeTo(redYellow3Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0, getReadyForIntake)
-                .strafeTo(blueEntryPos)
+                .strafeTo(redEntryPos)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueWingPos, new TranslationalVelConstraint(65))
-                .strafeTo(blueStackPos)
+                .strafeTo(redWingPos, new TranslationalVelConstraint(65))
+                .strafeTo(redStackPos)
                 .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .stopAndAdd(securePixels)
-                .strafeTo(blueReturnPos)
+                .strafeTo(redReturnPos)
                 .afterDisp(0, retractStackIntake)
+                .strafeTo(redEntryPos)
+                .afterDisp(0,getReadyForOutTake)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueEntryPos)
-                .afterDisp(50, getReadyForOutTake)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueTagPos.position)
-                .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow2Pos)
+                .strafeTo(redTagPos.position)
+                .stopAndAdd(updatePosFromAprilTagKemera)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-                .strafeTo(blueParkPos)
+                .strafeTo(redParkPos)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
-        dropOffYellowAtPos2 = BlueShort.actionBuilder(bluePurple2Pos)
+        dropOffYellowAtPos2 = RedShort.actionBuilder(redPurple2Pos)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(new Vector2d(10,38.5))
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(blueTagPos, Math.toRadians(-90))
+                .lineToY(-44.5)
+                .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(redTagPos, Math.toRadians(90))
                 .afterDisp(0, getReadyForOutTake)
-                .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow2Pos)
-                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-                .stopAndAdd(depositYellow)
-                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .afterDisp(0, getReadyForIntake)
-                .strafeTo(blueEntryPos)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueWingPos, new TranslationalVelConstraint(65))
-                .strafeTo(blueStackPos)
-                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
-                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-                .stopAndAdd(securePixels)
-                .strafeTo(blueReturnPos)
-                .afterDisp(0, retractStackIntake)
-                .strafeTo(blueEntryPos)
-                .afterDisp(50, getReadyForOutTake)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueTagPos.position)
-                .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow1Pos)
+             //   .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow3Pos)
+                .strafeTo(redYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-                .strafeTo(blueParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+
+                .setTangent(Math.toRadians(180))
+//                .splineToLinearHeading(redEntryPos, Math.toRadians(180))
+                .strafeTo(redWingPos)
+                .strafeTo(redStackPos)
+              //  .strafeTo(redAfterCyclePos)
+                .strafeTo(redWingPos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                //intake here
+                .setTangent(0)
+//                .lineToX(redEntryPos.position.x)
+                .strafeTo(redTagPos.position)
+                .afterDisp(0, getReadyForOutTake)
+         //       .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow1Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
+                .strafeTo(redParkPos)
                 .build();
 
-
-        dropOffYellowAtPos3 = BlueShort.actionBuilder(bluePurple3Pos)
+        dropOffYellowAtPos1 = RedShort.actionBuilder(redPurple1Pos)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(new Vector2d(10,38.5))
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(blueTagPos, Math.toRadians(-90))
+                .lineToX(14)
+                .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(redTagPos, Math.toRadians(90))
                 .afterDisp(0, getReadyForOutTake)
-                .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow3Pos)
-                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-                .stopAndAdd(depositYellow)
-                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .afterDisp(0, getReadyForIntake)
-                .strafeTo(blueEntryPos)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueWingPos, new TranslationalVelConstraint(65))
-                .strafeTo(blueStackPos)
-                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
-                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-                .stopAndAdd(securePixels)
-                .strafeTo(blueReturnPos)
-                .afterDisp(0, retractStackIntake)
-                .strafeTo(blueEntryPos)
-                .afterDisp(50, getReadyForOutTake)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueTagPos.position)
-                .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow2Pos)
+           //     .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow3Pos)
+                .strafeTo(redYellow1Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-                .strafeTo(blueParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+
+                .setTangent(Math.toRadians(180))
+//                .splineToLinearHeading(redEntryPos, Math.toRadians(180))
+                .strafeTo(redWingPos)
+                .strafeTo(redStackPos)
+             //   .strafeTo(redAfterCyclePos)
+                .strafeTo(redWingPos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                //intake here
+
+                .setTangent(0)
+//                .lineToX(redEntryPos.position.x)
+                .strafeTo(redTagPos.position)
+                .afterDisp(0, getReadyForOutTake)
+             //   .stopAndAdd(updateAfterGatePos)
+                .strafeTo(redYellow1Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
+                .strafeTo(redParkPos)
                 .build();
     }
 
@@ -705,7 +675,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         builder.addProcessor(tfod);
 
         // Build the Vision Portal, using the above settings.
-        visionPortalEyeball = builder.build();
+        visionPortalKemera = builder.build();
 
     } // end method initTfod()
 
@@ -742,11 +712,11 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
             break;
         }
         if( x > 0 && x < LEFT_SPIKEMARK_BOUNDARY_X )
-            PurpleDropOffPos = 1;
-        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 2;
-        else
+        else if (x > RIGHT_SPIKEMARK_BOUNDARY_X)
             PurpleDropOffPos = 3;
+        else
+            PurpleDropOffPos = 1;
 
         telemetry.addData("Detected Spike Mark X = ", x);
         telemetry.addData("Detected Drop off Position = ", PurpleDropOffPos);
@@ -754,145 +724,6 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         // Push telemetry to the Driver Station.
         telemetry.update();
 
-    }
-
-    boolean updateposFromAprilTagEyeball()
-    {
-//        initAprilTag(); // initializing the april tag processor
-        setManualExposureEyeball(6, 250); // accounting for motion blur
-        targetFound = false;
-        desiredTag  = null;
-
-        ElapsedTime AprilTagTimer = new ElapsedTime();
-        AprilTagTimer.reset();
-        while(!targetFound && AprilTagTimer.seconds() < APRILTAG_TIMEOUT) {
-            List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentDetections = aprilTagEyeball.getDetections();
-            for (org.firstinspires.ftc.vision.apriltag.AprilTagDetection detection : currentDetections) {
-                // Look to see if we have size info on this tag.
-                if (detection.metadata != null) {
-                    //  Check to see if we want to track towards this tag.
-                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-                        targetFound = true;
-                        desiredTag = detection;
-                        break;
-                    } else {
-                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
-                        telemetry.update();
-                    }
-                } else {
-                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
-                    telemetry.update();
-                }
-            }
-        }
-
-        if(targetFound) {
-            telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.fieldPosition);
-            telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-            telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-            telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-            telemetry.update();
-
-            // TODO: 1. Calibrate camera
-            //       2. Offset currX and currY from camera to robot center
-
-            double range = desiredTag.ftcPose.range;
-            double bearing = desiredTag.ftcPose.bearing;
-            double yaw = desiredTag.ftcPose.yaw;
-
-            double robotOffsetX = -7;
-            double robotOffsetY = +5.5;
-
-            double offsetX = (range * Math.cos(Math.toRadians(bearing)));
-
-            double offsetY = (range * Math.sin(Math.toRadians(bearing)));
-
-            double currHeading = -Math.toRadians(yaw);
-
-            double rotateX = (robotOffsetX * Math.cos(currHeading)) + (robotOffsetY * -Math.sin(currHeading));
-            double rotateY = (robotOffsetX * Math.sin(currHeading)) + (robotOffsetY * Math.cos(currHeading));
-
-            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] -
-                    offsetX);
-
-            double currY = rotateY + (desiredTag.metadata.fieldPosition.getData()[1] -
-                    offsetY);
-
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", BlueShort.pose.position.x, BlueShort.pose.position.y, Math.toDegrees(BlueShort.pose.heading.log()));
-            telemetry.update();
-
-            BlueShort.pose = new Pose2d(currX, currY, currHeading);
-            telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueShort.pose.position.x, BlueShort.pose.position.y, Math.toDegrees(BlueShort.pose.heading.log()));
-            telemetry.update();
-            return true;
-        }
-        telemetry.addLine("Not Found: Desired Tag not found");
-        telemetry.update();
-        return false;
-    }
-
-    private void initAprilTagEyeball() {
-        // Create the AprilTag processor by using a builder.
-        aprilTagEyeball = new AprilTagProcessor.Builder()
-                .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
-                .build();
-
-        // Adjust Image Decimation to trade-off detection-range for detection-rate.
-        // eg: Some typical detection data using a Logitech C920 WebCam
-        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
-        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
-        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
-        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
-        // Note: Decimation can be changed on-the-fly to adapt during a match.
-        aprilTagEyeball.setDecimation(2);
-
-        // Create the vision portal by using a builder.
-        if (USE_WEBCAM) {
-            visionPortalEyeball = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
-                    .setCameraResolution(new Size(640, 480))
-                    .addProcessor(aprilTagEyeball)
-                    .build();
-        } else {
-            visionPortalEyeball = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessor(aprilTagEyeball)
-                    .build();
-        }
-    }
-
-    private void setManualExposureEyeball(int exposureMS, int gain) {
-        // Wait for the camera to be open, then use the controls
-
-        if (visionPortalEyeball == null) {
-            return;
-        }
-
-        // Make sure camera is streaming before we try to set the exposure controls
-        if (visionPortalEyeball.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (!isStopRequested() && (visionPortalEyeball.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-
-        // Set camera controls unless we are stopping.
-        if (!isStopRequested())
-        {
-            ExposureControl exposureControl = visionPortalEyeball.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
-                sleep(50);
-            }
-            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            sleep(20);
-            GainControl gainControl = visionPortalEyeball.getCameraControl(GainControl.class);
-            gainControl.setGain(gain);
-            sleep(20);
-        }
     }
 
     boolean updateposFromAprilTagKemera()
@@ -924,6 +755,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                 }
             }
         }
+
 
         if(targetFound) {
             telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.fieldPosition);
@@ -957,11 +789,11 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
             double currY = rotateY + (desiredTag.metadata.fieldPosition.getData()[1] -
                     offsetY);
 
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", BlueShort.pose.position.x, BlueShort.pose.position.y, Math.toDegrees(BlueShort.pose.heading.log()));
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", RedShort.pose.position.x, RedShort.pose.position.y, Math.toDegrees(RedShort.pose.heading.log()));
             telemetry.update();
 
-            BlueShort.pose = new Pose2d(currX, currY, currHeading);
-            telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueShort.pose.position.x, BlueShort.pose.position.y, Math.toDegrees(BlueShort.pose.heading.log()));
+            RedShort.pose = new Pose2d(currX, currY, currHeading);
+            telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", RedShort.pose.position.x, RedShort.pose.position.y, Math.toDegrees(RedShort.pose.heading.log()));
             telemetry.update();
             return true;
         }
@@ -972,10 +804,40 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
 
     private void initAprilTagKemera() {
         // Create the AprilTag processor by using a builder.
-        aprilTagKemera = new AprilTagProcessor.Builder()
+        aprilTagEyeball = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
                 .build();
 
+        // Adjust Image Decimation to trade-off detection-range for detection-rate.
+        // eg: Some typical detection data using a Logitech C920 WebCam
+        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
+        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
+        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
+        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
+        // Note: Decimation can be changed on-the-fly to adapt during a match.
+        aprilTagEyeball.setDecimation(2);
+
+        // Create the vision portal by using a builder.
+        if (USE_WEBCAM) {
+            visionPortalKemera = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
+                    .setCameraResolution(new Size(640, 480))
+                    .addProcessor(aprilTagKemera)
+                    .build();
+        } else {
+            visionPortalKemera = new VisionPortal.Builder()
+                    .setCamera(BuiltinCameraDirection.BACK)
+                    .addProcessor(aprilTagKemera)
+                    .build();
+        }
+    }
+
+
+    private void initAprilTag() {
+        // Create the AprilTag processor by using a builder.
+        aprilTagKemera = new AprilTagProcessor.Builder()
+                .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
+                .build();
         // Adjust Image Decimation to trade-off detection-range for detection-rate.
         // eg: Some typical detection data using a Logitech C920 WebCam
         // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
@@ -1034,11 +896,6 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         }
     }
 
-    public void reverseIntake()
-    {
-        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, -.7);
-    }
-
     public void lowerStackIntake()
     {
         Aurelius.LeftLink.setPosition(leftLinkageOpen);
@@ -1063,6 +920,5 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0);
         MyIntakeOuttakeController.setTargetState(STATE_3_PS);
     }
-
 
 }
