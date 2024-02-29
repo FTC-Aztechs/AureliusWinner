@@ -36,13 +36,16 @@ import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_STACK_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_START;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 
 import android.util.Size;
 
@@ -108,26 +111,45 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
 
 
     // RObot Width = 15; Length = 15.5
-    Pose2d blueStartPos = new Pose2d(-39,59.25,Math.toRadians(-90));//0,0,0
 
-    Pose2d bluePurple1Pos = new Pose2d(-33, 34.5, Math.toRadians(0));  //27,0,-90
-    Pose2d bluePurple2Pos = new Pose2d(-39, 32, Math.toRadians(-90));  //37,12,-90
-    Pose2d bluePurple3Pos = new Pose2d(-39, 32.5 , Math.toRadians(-180)); //27,19,-90
+    Pose2d blueCycleLongStartPos = new Pose2d(-39,61.25,Math.toRadians(-90));//0,0,0
 
+    Pose2d blueCycleLongPurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
+    Pose2d blueCycleLongPurple2Pos = new Pose2d(-39, 34, Math.toRadians(-90));  //37,12,-90
+    Pose2d blueCycleLongPurple3Pos = new Pose2d(-47, 41.5, Math.toRadians(-90)); //27,19,-90
 
-    Vector2d blueBeforeGatePos1 = new Vector2d(-38,11.5);//50,2
-    Vector2d blueBeforeGatePos2 = new Vector2d(-50, 11.5);//50,-14
-    Vector2d blueBeforeGatePos3 = new Vector2d(-34, 11.5);//50,-19
-    Vector2d blueAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
-    Vector2d blueAfterGatePos = new Vector2d(32, 11.5);//50,68
+    Vector2d blueCycleLongBeforeGatePos = new Vector2d(-34, 11.5);//50,-19
+    Vector2d blueCycleLongAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
 
+    Vector2d blueCycleLongPreStackPos = new Vector2d(-55.5,6);
+    Vector2d blueCycleLongStackPos = new Vector2d(-61.5,6);
+    Vector2d blueCycleLongPostStackPos = new Vector2d(-61.5,18);
 
-    Vector2d blueYellow1Pos = new Vector2d(50.5, 44);  //27,37,-90
-    Vector2d blueYellow2Pos = new Vector2d(50.5, 37);   //26,37,-90
-    Pose2d blueYellow3Pos = new Pose2d(51.5,29, Math.toRadians(0));    //33,37,-90
+    Pose2d blueCycleLongYellow1Pos = new Pose2d(50.5, 42, Math.toRadians(0));  //27,37,-90
+    Pose2d blueCycleLongYellow2Pos = new Pose2d(50.5, 36, Math.toRadians(0));   //26,37,-90
+    Pose2d blueCycleLongYellow3Pos = new Pose2d(50.5,27.5, Math.toRadians(0));    //33,37,-90
 
-
-    Vector2d blueParkPos = new Vector2d(45, 11.5);//50, 82
+    Vector2d blueCycleLongParkPos = new Vector2d(45, 11.5);//50, 82
+//    Pose2d blueStartPos = new Pose2d(-39,59.25,Math.toRadians(-90));//0,0,0
+//
+//    Pose2d bluePurple1Pos = new Pose2d(-33, 34.5, Math.toRadians(0));  //27,0,-90
+//    Pose2d bluePurple2Pos = new Pose2d(-39, 32, Math.toRadians(-90));  //37,12,-90
+//    Pose2d bluePurple3Pos = new Pose2d(-39, 32.5 , Math.toRadians(-180)); //27,19,-90
+//
+//    Vector2d blueBeforeGatePos1 = new Vector2d(-38,11.5);//50,2
+//    Vector2d blueBeforeGatePos2 = new Vector2d(-50, 11.5);//50,-14
+//    Vector2d blueBeforeGatePos3 = new Vector2d(-34, 11.5);//50,-19
+//    Vector2d blueAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
+//    Vector2d blueAfterGatePos = new Vector2d(32, 11.5);//50,68
+//
+//
+//    Vector2d blueYellow1Pos = new Vector2d(50.5, 44);  //27,37,-90
+//    Vector2d blueYellow2Pos = new Vector2d(50.5, 37);   //26,37,-90
+//    Pose2d blueYellow3Pos = new Pose2d(51.5,29, Math.toRadians(0));    //33,37,-90
+//
+//    Vector2d blueLongStackPos = new Vector2d(-60.75,31.5);
+//
+//    Vector2d blueParkPos = new Vector2d(45, 11.5);//50, 82
     boolean bProceedToYellow = false;
 
 
@@ -230,6 +252,49 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
     }
 
     public Action initApril = new initAprilTag();
+
+    public class lowerStackLinkage implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            lowerStackIntake();
+            return false;
+        }
+    }
+    public Action deployStackIntake = new Aura_AutoBlue_Long_State.lowerStackLinkage();
+
+
+    public class raiseStackLinkage implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            raiseStackIntake();
+            return false;
+        }
+    }
+    public Action retractStackIntake = new Aura_AutoBlue_Long_State.raiseStackLinkage();
+
+    public class stackIntake implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            stackIntakePixels();
+            return false;
+        }
+    }
+    public Action intakeFromStack = new Aura_AutoBlue_Long_State.stackIntake();
+
+    public class ReverseIntake implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            reverseIntake();
+            return false;
+        }
+    }
+    public Action reverseInt = new Aura_AutoBlue_Long_State.ReverseIntake();
+
+
+    public class raiseBox implements Action {
+        public boolean run(TelemetryPacket tPkt){
+            secureStackIntakePixels();
+            return false;
+        }
+    }
+    public Action securePixels = new Aura_AutoBlue_Long_State.raiseBox();
+
 
     private static final double LEFT_SPIKEMARK_BOUNDARY_X = 250;
     private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 260;
@@ -363,6 +428,8 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
 
         Aurelius.boeing747.init();
         Aurelius.hanger.init();
+        Aurelius.LeftLink.setPosition(leftLinkageClose);
+        Aurelius.RightLink.setPosition(rightLinkageClose);
         Aurelius.hanger.update();
         telemetry.addLine(String.format("%d. Aura Initialized!", iTeleCt++));
         telemetry.update();
@@ -372,8 +439,8 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
         telemetry.addLine(String.format("%d. Battery voltage: %.1f volts", iTeleCt++, volts));
         telemetry.update();
 
-        BlueLong = new MecanumDrive(Aurelius.hwMap, blueStartPos);
-        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, blueStartPos);
+        BlueLong = new MecanumDrive(Aurelius.hwMap, blueCycleLongStartPos);
+        Aurelius.myHeadingEstimator = new AuraHeadingEstimator(Aurelius.hwMap, blueCycleLongStartPos);
         telemetry.addLine(String.format("%d. myHeadingEstimator Initialized!", iTeleCt++));
         telemetry.update();
 
@@ -473,23 +540,23 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
 
     void buildPurpleTrajectories()
     {
-        dropOffPurpleAtPos1 = BlueLong.actionBuilder(blueStartPos)
+        dropOffPurpleAtPos1 = BlueLong.actionBuilder(blueCycleLongStartPos)
                 .setTangent(Math.toRadians(-135))
-                .splineToLinearHeading(bluePurple1Pos, Math.toRadians(-30))
+                .splineToLinearHeading(blueCycleLongPurple1Pos, Math.toRadians(-30))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
 
-        dropOffPurpleAtPos2 = BlueLong.actionBuilder(blueStartPos)
+        dropOffPurpleAtPos2 = BlueLong.actionBuilder(blueCycleLongStartPos)
                 .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(bluePurple2Pos, Math.toRadians(-70))
+                .splineToLinearHeading(blueCycleLongPurple2Pos, Math.toRadians(-70))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
 
-        dropOffPurpleAtPos3 = BlueLong.actionBuilder(blueStartPos)
+        dropOffPurpleAtPos3 = BlueLong.actionBuilder(blueCycleLongStartPos)
                 .setTangent(Math.toRadians(-110))
-                .splineToLinearHeading(bluePurple3Pos, Math.toRadians(-90))
+                .splineToLinearHeading(blueCycleLongPurple3Pos, Math.toRadians(-90))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(1)
                 .build();
@@ -497,61 +564,83 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
 
     void buildYellowTrajectories()
     {
-        dropOffYellowAtPos1 = BlueLong.actionBuilder(bluePurple1Pos)
+        dropOffYellowAtPos1 = BlueLong.actionBuilder(blueCycleLongPurple1Pos)
                 .setReversed(false)
+                .setTangent(Math.toRadians(0))
                 .lineToX(-38)
-                .strafeTo(blueBeforeGatePos1)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueAfterGateTagPos)
-                .afterDisp(0, getReadyForOutTake)
+                .strafeTo(blueCycleLongPreStackPos)
+                .strafeTo(blueCycleLongStackPos)
+                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
+                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
+                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
+                .stopAndAdd(securePixels)
+                .strafeTo(blueCycleLongPostStackPos)
+                .strafeTo(blueCycleLongBeforeGatePos)
+                .afterDisp(0, retractStackIntake)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongAfterGateTagPos)
+                .afterDisp(50, getReadyForOutTake)
+                .stopAndAdd(rectifyHeadingError)
                 .stopAndAdd(updateAfterGatePos)
-                .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueYellow1Pos)
+                .splineToLinearHeading(blueCycleLongYellow1Pos,Math.toRadians(0))
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-                .strafeTo(blueParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .strafeTo(blueCycleLongParkPos)
                 .build();
 
-        dropOffYellowAtPos2 = BlueLong.actionBuilder(bluePurple2Pos)
+        dropOffYellowAtPos2 = BlueLong.actionBuilder(blueCycleLongPurple2Pos)
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-50,45, Math.toRadians(0)),Math.toRadians(180))
-                .strafeTo(blueBeforeGatePos2)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueAfterGateTagPos)
-                .afterDisp(0, getReadyForOutTake)
+                .strafeTo(blueCycleLongPreStackPos)
+                .strafeTo(blueCycleLongStackPos)
+                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
+                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
+                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
+                .stopAndAdd(securePixels)
+                .strafeTo(blueCycleLongPostStackPos)
+                .strafeTo(blueCycleLongBeforeGatePos)
+                .afterDisp(0, retractStackIntake)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongAfterGateTagPos)
+                .afterDisp(50, getReadyForOutTake)
+                .stopAndAdd(rectifyHeadingError)
                 .stopAndAdd(updateAfterGatePos)
-                .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueYellow2Pos)
+                .splineToLinearHeading(blueCycleLongYellow2Pos,Math.toRadians(0))
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-                .strafeTo(blueParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .strafeTo(blueCycleLongParkPos)
                 .build();
 
-        dropOffYellowAtPos3 = BlueLong.actionBuilder(bluePurple3Pos)
-                .setTangent(Math.toRadians(90))
-                .strafeTo(new Vector2d(-37,34.5))
-                .strafeTo(blueBeforeGatePos3)
-                .turn(Math.toRadians(180))
+        dropOffYellowAtPos3 = BlueLong.actionBuilder(blueCycleLongPurple3Pos)
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(-55.5, 48,Math.toRadians(0)), Math.toRadians(-180))
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueAfterGateTagPos)
-                .afterDisp(0, getReadyForOutTake)
+                .strafeTo(blueCycleLongPreStackPos)
+                .strafeTo(blueCycleLongStackPos)
+                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
+                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
+                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
+                .stopAndAdd(securePixels)
+                .strafeTo(blueCycleLongPostStackPos)
+                .strafeTo(blueCycleLongBeforeGatePos)
+                .afterDisp(0, retractStackIntake)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongAfterGateTagPos)
+                .afterDisp(50, getReadyForOutTake)
+                .stopAndAdd(rectifyHeadingError)
                 .stopAndAdd(updateAfterGatePos)
-                .splineToLinearHeading(blueYellow3Pos,Math.toRadians(0))
-                .stopAndAdd(rectifyHeadingError)
+                .splineToLinearHeading(blueCycleLongYellow3Pos,Math.toRadians(0))
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
-                .strafeTo(blueParkPos)
-                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .strafeTo(blueCycleLongParkPos)
                 .build();
     }
     private double getBatteryVoltage() {
@@ -776,6 +865,37 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
             sleep(20);
         }
     }
+
+    public void reverseIntake()
+    {
+        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, -.7);
+    }
+
+    public void lowerStackIntake()
+    {
+        Aurelius.LeftLink.setPosition(leftLinkageOpen);
+        Aurelius.RightLink.setPosition(rightLinkageOpen);
+        Aurelius.Roller.setPower(-0.7);
+    }
+
+    public void raiseStackIntake()
+    {
+        Aurelius.LeftLink.setPosition(leftLinkageClose);
+        Aurelius.RightLink.setPosition(rightLinkageClose);
+        Aurelius.Roller.setPower(0);
+    }
+
+    public void stackIntakePixels()
+    {
+        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0.7);
+    }
+
+    public void secureStackIntakePixels()
+    {
+        Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0);
+        MyIntakeOuttakeController.setTargetState(STATE_3_PS);
+    }
+
 
 
 }
