@@ -35,6 +35,8 @@ import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_ACCEL_CONSTRAINT_1;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_ACCEL_CONSTRAINT_2;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_PURPLE_DROP;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_STACK_INTAKE;
@@ -56,6 +58,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -120,7 +123,7 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
     Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
     Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(50.5, -34);   //26,37,-90
+    Vector2d redYellow2Pos = new Vector2d(50.5, -35);   //26,37,-90
     Vector2d redYellow1Pos = new Vector2d(51.5,-28);    //33,37,-90
 
     Pose2d redBeforeGateCyclePos = new Pose2d(12,-57, Math.toRadians(0));
@@ -532,21 +535,21 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
     {
         dropOffPurpleAtPos3 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(redPurple3Pos, Math.toRadians(90))
+                .splineToLinearHeading(redPurple3Pos, Math.toRadians(90), null, new ProfileAccelConstraint(AUTO_ACCEL_CONSTRAINT_1,AUTO_ACCEL_CONSTRAINT_2))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(AUTO_WAIT_FOR_PURPLE_DROP)
                 .build();
 
         dropOffPurpleAtPos2 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(redPurple2Pos, Math.toRadians(90))
+                .splineToLinearHeading(redPurple2Pos, Math.toRadians(90), null, new ProfileAccelConstraint(AUTO_ACCEL_CONSTRAINT_1,AUTO_ACCEL_CONSTRAINT_2))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(AUTO_WAIT_FOR_PURPLE_DROP)
                 .build();
 
         dropOffPurpleAtPos1 = RedShort.actionBuilder(redStartPos)
                 .setTangent(Math.toRadians(80))
-                .splineToLinearHeading(redPurple1Pos, Math.toRadians(130))
+                .splineToLinearHeading(redPurple1Pos, Math.toRadians(130), null, new ProfileAccelConstraint(AUTO_ACCEL_CONSTRAINT_1,AUTO_ACCEL_CONSTRAINT_2))
                 .stopAndAdd(ejectPurple)
                 .waitSeconds(AUTO_WAIT_FOR_PURPLE_DROP)
                 .build();
@@ -618,7 +621,7 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redTagPos.position)
                 .stopAndAdd(updatePosFromAprilTagKemera)
-                .strafeTo(redYellow1Pos)
+                .strafeTo(redYellow3Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -648,14 +651,14 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .stopAndAdd(securePixels)
-                .strafeTo(redReturnPos)
+                .strafeTo(redWingPos)
                 .afterDisp(0, retractStackIntake)
                 .strafeTo(redEntryPos)
                 .afterDisp(50, getReadyForOutTake)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redTagPos.position)
                 .stopAndAdd(updatePosFromAprilTagKemera)
-                .strafeTo(redYellow2Pos)
+                .strafeTo(redYellow3Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)

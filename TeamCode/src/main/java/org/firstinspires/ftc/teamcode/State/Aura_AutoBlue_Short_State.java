@@ -651,7 +651,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .stopAndAdd(securePixels)
-                .strafeTo(blueReturnPos)
+                .strafeTo(blueWingPos)
                 .afterDisp(0, retractStackIntake)
                 .strafeTo(blueEntryPos)
                 .afterDisp(50, getReadyForOutTake)

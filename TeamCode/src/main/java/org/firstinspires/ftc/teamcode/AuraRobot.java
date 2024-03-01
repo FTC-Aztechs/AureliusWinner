@@ -167,6 +167,7 @@ public class AuraRobot
     public static double AUTO_WAIT_FOR_YELLOW_DROP = 0.5;
     public static double AUTO_WAIT_RETURN_TO_INTAKE = 3.0;
     public static double AUTO_WAIT_FOR_STACK_INTAKE = 2.0;
+    public static double AUTO_WAIT_FOR_ALLIANCE = 3.0;
     public static double AUTO_ACCEL_CONSTRAINT_1 = -25;
     public static double AUTO_ACCEL_CONSTRAINT_2 = 25;
 
