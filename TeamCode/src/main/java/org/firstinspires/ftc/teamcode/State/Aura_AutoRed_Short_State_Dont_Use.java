@@ -97,9 +97,9 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Disabled
 @Config
-@Autonomous(name="Red_Short_State_Dont_Use", group="Linear OpMode")
+@Autonomous(name="Red_Short_State_Dont_Use", group="Linear OpMode" )
+@Disabled
 
 public class Aura_AutoRed_Short_State_Dont_Use extends LinearOpMode {
 

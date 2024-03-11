@@ -101,7 +101,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Red_Short_State", group="Linear OpMode")
+@Autonomous(name="Red_Short_State", group="State")
 
 public class Aura_AutoRed_Short_State extends LinearOpMode {
 
@@ -117,22 +117,22 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
     Pose2d redStartPos = new Pose2d(15,-61.5,Math.toRadians(90));//0,0,0
 
     Pose2d redPurple3Pos = new Pose2d(14, -33, Math.toRadians(0));  //27,0,-90
-    Pose2d redPurple2Pos = new Pose2d(16, -32, Math.toRadians(90));  //37,12,-90
+    Pose2d redPurple2Pos = new Pose2d(16, -32.5, Math.toRadians(90));  //37,12,-90
     Pose2d redPurple1Pos = new Pose2d(8, -33 , Math.toRadians(180)); //27,19,-90
 
     Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
-    Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
+    Vector2d redYellow3Pos = new Vector2d(50.5, -41.5);  //27,37,-90
     Vector2d redYellow2Pos = new Vector2d(50.5, -35);   //26,37,-90
     Vector2d redYellow1Pos = new Vector2d(51.5,-28);    //33,37,-90
 
     Pose2d redBeforeGateCyclePos = new Pose2d(12,-57, Math.toRadians(0));
 
-    Vector2d redEntryPos = new Vector2d(12,-57);
+    Vector2d redEntryPos = new Vector2d(12,-58);
 
-    Vector2d redReturnPos = new Vector2d(-40,-57);
-    Vector2d redWingPos = new Vector2d(-60.75,-57);
-    Vector2d redStackPos = new Vector2d(-60.75,-32.5);
+    Vector2d redReturnPos = new Vector2d(-40,-58);
+    Vector2d redWingPos = new Vector2d(-60.5,-58);
+    Vector2d redStackPos = new Vector2d(-60.5,-33);
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -588,6 +588,7 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .strafeTo(redYellow2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
+
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
                 .strafeTo(redParkPos)

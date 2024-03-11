@@ -35,6 +35,8 @@ import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_5_RFO_LOW;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_6_PR_BOTH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_ACCEL_CONSTRAINT_1;
+import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_ACCEL_CONSTRAINT_2;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_ALLIANCE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_OUTTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_STACK_INTAKE;
@@ -59,6 +61,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -101,7 +104,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Blue_Long_State", group="Linear OpMode")
+@Autonomous(name="Blue_Long_State", group="State")
 
 public class Aura_AutoBlue_Long_State extends LinearOpMode {
 
@@ -117,24 +120,24 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
 
     Pose2d blueCycleLongStartPos = new Pose2d(-39,61.25,Math.toRadians(-90));//0,0,0
 
-    Pose2d blueCycleLongPurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
+    Pose2d blueCycleLongPurple1Pos = new Pose2d(-32.5, 34.5, Math.toRadians(0));  //27,0,-90
     Pose2d blueCycleLongPurple2Pos = new Pose2d(-39, 34, Math.toRadians(-90));  //37,12,-90
     Pose2d blueCycleLongPurple3Pos = new Pose2d(-47, 41.5, Math.toRadians(-90)); //27,19,-90
 
-    Vector2d blueCycleLongBeforeGatePos = new Vector2d(-34, 11.5);//50,-19
-    Vector2d blueCycleLongAfterGateTagPos = new Vector2d(15.25, 11.5);//50,51.25
+    Vector2d blueCycleLongBeforeGatePos = new Vector2d(-38, 10);//50,-19
+    Vector2d blueCycleLongAfterGateTagPos = new Vector2d(36, 10);//50,51.25
 
-    Vector2d blueCycleLongPreStackPos = new Vector2d(-55.5,6);
-    Vector2d blueCycleLongStackPos = new Vector2d(-60,5);
-    Vector2d blueCycleLongPostStackPos = new Vector2d(-60,12);
+    Vector2d blueCycleLongPreStackPos = new Vector2d(-55.5,17);
+    Vector2d blueCycleLongStackPos = new Vector2d(-59,17);
+    Vector2d blueCycleLongPostStackPos = new Vector2d(-59,21.5);
 
-    Pose2d blueCycleLongYellow1Pos = new Pose2d(50.5, 42, Math.toRadians(0));  //27,37,-90
-    Pose2d blueCycleLongYellow2Pos = new Pose2d(50.5, 36, Math.toRadians(0));   //26,37,-90
-    Pose2d blueCycleLongYellow3Pos = new Pose2d(50.5,27.5, Math.toRadians(0));    //33,37,-90
+    Pose2d blueCycleLongYellow1Pos = new Pose2d(51.5, 41.75, Math.toRadians(0));  //27,37,-90
+    Pose2d blueCycleLongYellow2Pos = new Pose2d(51, 37.25, Math.toRadians(0));   //26,37,-90
+    Pose2d blueCycleLongYellow3Pos = new Pose2d(51,28.5, Math.toRadians(0));    //33,37,-90
 
-    Vector2d blueCycleLongWhite1Pos = new Vector2d(50.5, 39);  //27,37,-90
-    Vector2d blueCycleLongWhite2Pos = new Vector2d(50.5, 39);   //26,37,-90
-    Vector2d blueCycleLongWhite3Pos = new Vector2d(50.5,30.5);
+    Vector2d blueCycleLongWhite1Pos = new Vector2d(51, 35);  //27,37,-90
+    Vector2d blueCycleLongWhite2Pos = new Vector2d(51, 34);   //26,37,-90
+    Vector2d blueCycleLongWhite3Pos = new Vector2d(51,28);
 
     Vector2d blueCycleLongParkPos = new Vector2d(45, 11.5);//50, 82
 //    Pose2d blueStartPos = new Pose2d(-39,59.25,Math.toRadians(-90));//0,0,0
@@ -253,19 +256,28 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
     }
     public Action endTrajectoryMarker = new endTrajectory();
 
-    public class backwallAprilTagController implements Action {
+    public class backwallAprilTagControllerEyeball implements Action {
         @Override
         public boolean run(TelemetryPacket tPkt) {
-            updatePosfromBackwallAprilTag();
+            updateposFromAprilTagEyeball();
             return false;
         }
     }
 
-    public Action updateAfterGatePos = new backwallAprilTagController();
+    public class backwallAprilTagControllerKemera implements Action {
+        @Override
+        public boolean run(TelemetryPacket tPkt) {
+            updateposFromAprilTagKemera();
+            return false;
+        }
+    }
 
+    public Action updatePosFromAprilTagEyeball = new backwallAprilTagControllerEyeball();
+    public Action updatePosFromAprilTagKemera = new backwallAprilTagControllerKemera();
     public class initAprilTag implements Action {
         public boolean run(TelemetryPacket tPkt){
-            initAprilTag();
+            initAprilTagEyeball();
+//            initAprilTagKemera();
             return false;
         }
     }
@@ -405,11 +417,12 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
     /**
      * The variable to store our instance of the vision portal.
      */
-    private VisionPortal visionPortal;
-
+    private VisionPortal visionPortalEyeball;
+    private VisionPortal visionPortalKemera;
     private static final boolean USE_WEBCAM = true;
     public static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
-    private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
+    private AprilTagProcessor aprilTagEyeball;              // Used for managing the AprilTag detection process.
+    private AprilTagProcessor aprilTagKemera;
     private org.firstinspires.ftc.vision.apriltag.AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
 
@@ -440,6 +453,8 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
 
         // Initialize...
         Aurelius.init(hardwareMap);
+        LeftFinger = hardwareMap.get(Servo.class, "lefty");
+        RightFinger = hardwareMap.get(Servo.class, "righty");
         Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
 
 
@@ -500,7 +515,7 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
         runtime.reset();
         if (opModeIsActive()) {
             DetectPurpleDropoffPos();
-            visionPortal.close();
+            visionPortalEyeball.close();
             telemetry.addData("Going to position:", "PurpleDropOffPos");
             telemetry.update();
 
@@ -575,6 +590,7 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
     void buildYellowTrajectories()
     {
         dropOffYellowAtPos1 = BlueLong.actionBuilder(blueCycleLongPurple1Pos)
+                .waitSeconds(5)
                 .setReversed(false)
                 .setTangent(Math.toRadians(0))
                 .lineToX(-38)
@@ -594,8 +610,9 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
                 .strafeTo(blueCycleLongAfterGateTagPos)
                 .afterDisp(50, getReadyForOutTake)
                 .stopAndAdd(rectifyHeadingError)
-                .waitSeconds(AUTO_WAIT_FOR_ALLIANCE)
-                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(new Vector2d(36,36))
+                .waitSeconds(1)
+                .stopAndAdd(updatePosFromAprilTagEyeball)
                 .splineToLinearHeading(blueCycleLongYellow1Pos,Math.toRadians(0))
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
@@ -606,9 +623,11 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
                 .strafeTo(blueCycleLongParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos2 = BlueLong.actionBuilder(blueCycleLongPurple2Pos)
+                .waitSeconds(5)
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-50,45, Math.toRadians(0)),Math.toRadians(180))
                 .stopAndAdd(rectifyHeadingError)
@@ -626,8 +645,9 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
                 .strafeTo(blueCycleLongAfterGateTagPos)
                 .afterDisp(50, getReadyForOutTake)
                 .stopAndAdd(rectifyHeadingError)
-                .waitSeconds(AUTO_WAIT_FOR_ALLIANCE)
-                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(new Vector2d(36,36))
+                .waitSeconds(1)
+                .stopAndAdd(updatePosFromAprilTagEyeball)
                 .splineToLinearHeading(blueCycleLongYellow2Pos,Math.toRadians(0))
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
@@ -638,11 +658,13 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
                 .strafeTo(blueCycleLongParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
 
         dropOffYellowAtPos3 = BlueLong.actionBuilder(blueCycleLongPurple3Pos)
+                .waitSeconds(5)
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(-55.5, 48,Math.toRadians(0)), Math.toRadians(-180))
+                .splineToLinearHeading(new Pose2d(-57.5, 48,Math.toRadians(0)), Math.toRadians(-180))
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueCycleLongPreStackPos)
                 .stopAndAdd(getReadyForIntake)
@@ -658,18 +680,20 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
                 .strafeTo(blueCycleLongAfterGateTagPos)
                 .afterDisp(50, getReadyForOutTake)
                 .stopAndAdd(rectifyHeadingError)
-                .waitSeconds(AUTO_WAIT_FOR_ALLIANCE)
-                .stopAndAdd(updateAfterGatePos)
+                .strafeTo(new Vector2d(36,36))
+                .waitSeconds(1)
+                .stopAndAdd(updatePosFromAprilTagEyeball)
                 .splineToLinearHeading(blueCycleLongYellow3Pos,Math.toRadians(0))
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .strafeTo(blueCycleLongWhite3Pos)
+                .strafeTo(blueCycleLongWhite2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositWhite)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0,getReadyForIntake)
                 .strafeTo(blueCycleLongParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
     }
     private double getBatteryVoltage() {
@@ -706,7 +730,7 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
         builder.addProcessor(tfod);
 
         // Build the Vision Portal, using the above settings.
-        visionPortal = builder.build();
+        visionPortalEyeball = builder.build();
 
     } // end method initTfod()
 
@@ -757,17 +781,156 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
 
     }
 
-    boolean updatePosfromBackwallAprilTag()
+    boolean updateposFromAprilTagEyeball()
     {
 //        initAprilTag(); // initializing the april tag processor
-        setManualExposure(6, 250); // accounting for motion blur
+        setManualExposureEyeball(6, 250); // accounting for motion blur
         targetFound = false;
         desiredTag  = null;
 
         ElapsedTime AprilTagTimer = new ElapsedTime();
         AprilTagTimer.reset();
         while(!targetFound && AprilTagTimer.seconds() < APRILTAG_TIMEOUT) {
-            List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentDetections = aprilTag.getDetections();
+            List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentDetections = aprilTagEyeball.getDetections();
+            for (org.firstinspires.ftc.vision.apriltag.AprilTagDetection detection : currentDetections) {
+                // Look to see if we have size info on this tag.
+                if (detection.metadata != null) {
+                    //  Check to see if we want to track towards this tag.
+                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                        targetFound = true;
+                        desiredTag = detection;
+                        break;
+                    } else {
+                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+                        telemetry.update();
+                    }
+                } else {
+                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+                    telemetry.update();
+                }
+            }
+        }
+
+        if(targetFound) {
+            telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.fieldPosition);
+            telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
+            telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
+            telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+            telemetry.update();
+
+            // TODO: 1. Calibrate camera
+            //       2. Offset currX and currY from camera to robot center
+
+            double range = desiredTag.ftcPose.range;
+            double bearing = desiredTag.ftcPose.bearing;
+            double yaw = desiredTag.ftcPose.yaw;
+
+            double robotOffsetX = -7;
+            double robotOffsetY = +5.5;
+
+            double offsetX = (range * Math.cos(Math.toRadians(bearing)));
+
+            double offsetY = (range * Math.sin(Math.toRadians(bearing)));
+
+            double currHeading = -Math.toRadians(yaw);
+
+            double rotateX = (robotOffsetX * Math.cos(currHeading)) + (robotOffsetY * -Math.sin(currHeading));
+            double rotateY = (robotOffsetX * Math.sin(currHeading)) + (robotOffsetY * Math.cos(currHeading));
+
+            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] -
+                    offsetX);
+
+            double currY = rotateY + (desiredTag.metadata.fieldPosition.getData()[1] -
+                    offsetY);
+
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
+            telemetry.update();
+
+            BlueLong.pose = new Pose2d(currX, currY, currHeading);
+            telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
+            telemetry.update();
+            return true;
+        }
+        telemetry.addLine("Not Found: Desired Tag not found");
+        telemetry.update();
+        return false;
+    }
+
+    private void initAprilTagEyeball() {
+        // Create the AprilTag processor by using a builder.
+        aprilTagEyeball = new AprilTagProcessor.Builder()
+                .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
+                .build();
+
+        // Adjust Image Decimation to trade-off detection-range for detection-rate.
+        // eg: Some typical detection data using a Logitech C920 WebCam
+        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
+        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
+        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
+        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
+        // Note: Decimation can be changed on-the-fly to adapt during a match.
+        aprilTagEyeball.setDecimation(2);
+
+        // Create the vision portal by using a builder.
+        if (USE_WEBCAM) {
+            visionPortalEyeball = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
+                    .setCameraResolution(new Size(640, 480))
+                    .addProcessor(aprilTagEyeball)
+                    .build();
+        } else {
+            visionPortalEyeball = new VisionPortal.Builder()
+                    .setCamera(BuiltinCameraDirection.BACK)
+                    .addProcessor(aprilTagEyeball)
+                    .build();
+        }
+    }
+
+    private void setManualExposureEyeball(int exposureMS, int gain) {
+        // Wait for the camera to be open, then use the controls
+
+        if (visionPortalEyeball == null) {
+            return;
+        }
+
+        // Make sure camera is streaming before we try to set the exposure controls
+        if (visionPortalEyeball.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortalEyeball.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        // Set camera controls unless we are stopping.
+        if (!isStopRequested())
+        {
+            ExposureControl exposureControl = visionPortalEyeball.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                sleep(50);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            sleep(20);
+            GainControl gainControl = visionPortalEyeball.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            sleep(20);
+        }
+    }
+
+    boolean updateposFromAprilTagKemera()
+    {
+//        initAprilTag(); // initializing the april tag processor
+        setManualExposureKemera(6, 250); // accounting for motion blur
+        targetFound = false;
+        desiredTag  = null;
+
+        ElapsedTime AprilTagTimer = new ElapsedTime();
+        AprilTagTimer.reset();
+        while(!targetFound && AprilTagTimer.seconds() < APRILTAG_TIMEOUT) {
+            List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentDetections = aprilTagKemera.getDetections();
             for (org.firstinspires.ftc.vision.apriltag.AprilTagDetection detection : currentDetections) {
                 // Look to see if we have size info on this tag.
                 if (detection.metadata != null) {
@@ -832,11 +995,12 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
         return false;
     }
 
-    private void initAprilTag() {
+    private void initAprilTagKemera() {
         // Create the AprilTag processor by using a builder.
-        aprilTag = new AprilTagProcessor.Builder()
+        aprilTagKemera = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
                 .build();
+
         // Adjust Image Decimation to trade-off detection-range for detection-rate.
         // eg: Some typical detection data using a Logitech C920 WebCam
         // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
@@ -844,35 +1008,35 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
         // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
         // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
         // Note: Decimation can be changed on-the-fly to adapt during a match.
-        aprilTag.setDecimation(2);
+        aprilTagKemera.setDecimation(2);
 
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
-            visionPortal = new VisionPortal.Builder()
+            visionPortalKemera = new VisionPortal.Builder()
                     .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
                     .setCameraResolution(new Size(640, 480))
-                    .addProcessor(aprilTag)
+                    .addProcessor(aprilTagKemera)
                     .build();
         } else {
-            visionPortal = new VisionPortal.Builder()
+            visionPortalKemera = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessor(aprilTag)
+                    .addProcessor(aprilTagKemera)
                     .build();
         }
     }
 
-    private void setManualExposure(int exposureMS, int gain) {
+    private void setManualExposureKemera(int exposureMS, int gain) {
         // Wait for the camera to be open, then use the controls
 
-        if (visionPortal == null) {
+        if (visionPortalKemera == null) {
             return;
         }
 
         // Make sure camera is streaming before we try to set the exposure controls
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+        if (visionPortalKemera.getCameraState() != VisionPortal.CameraState.STREAMING) {
             telemetry.addData("Camera", "Waiting");
             telemetry.update();
-            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+            while (!isStopRequested() && (visionPortalKemera.getCameraState() != VisionPortal.CameraState.STREAMING)) {
                 sleep(20);
             }
             telemetry.addData("Camera", "Ready");
@@ -882,14 +1046,14 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
         // Set camera controls unless we are stopping.
         if (!isStopRequested())
         {
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            ExposureControl exposureControl = visionPortalKemera.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
                 sleep(50);
             }
             exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
             sleep(20);
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            GainControl gainControl = visionPortalKemera.getCameraControl(GainControl.class);
             gainControl.setGain(gain);
             sleep(20);
         }

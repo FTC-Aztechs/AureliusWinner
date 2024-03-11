@@ -101,7 +101,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Blue_Short_State", group="Linear OpMode")
+@Autonomous(name="Blue_Short_State", group="State")
 
 public class Aura_AutoBlue_Short_State extends LinearOpMode {
 
@@ -117,7 +117,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
     Pose2d blueStartPos = new Pose2d(15,61.5,Math.toRadians(-90));//0,0,0
 
     Pose2d bluePurple1Pos = new Pose2d(14, 33, Math.toRadians(0));  //27,0,-90
-    Pose2d bluePurple2Pos = new Pose2d(16, 32, Math.toRadians(-90));  //37,12,-90
+    Pose2d bluePurple2Pos = new Pose2d(16, 32.5, Math.toRadians(-90));  //37,12,-90
     Pose2d bluePurple3Pos = new Pose2d(8, 33 , Math.toRadians(-180)); //27,19,-90
 
     Pose2d blueTagPos = new Pose2d(36,45, Math.toRadians(0));
@@ -126,13 +126,16 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
     Vector2d blueYellow2Pos = new Vector2d(50.5, 35);   //26,37,-90
     Vector2d blueYellow3Pos = new Vector2d(50.5,28);    //33,37,-90
 
+    Vector2d blueWhite1Pos = new Vector2d(50.5, 42);  //27,37,-90
+    Vector2d blueWhite2Pos = new Vector2d(50.5, 34.5);   //26,37,-90
+
     Pose2d blueBeforeGateCyclePos = new Pose2d(12,57, Math.toRadians(0));
 
-    Vector2d blueEntryPos = new Vector2d(12,57);
+    Vector2d blueEntryPos = new Vector2d(12,58);
 
-    Vector2d blueReturnPos = new Vector2d(-40,57);
-    Vector2d blueWingPos = new Vector2d(-60.75,57);
-    Vector2d blueShortStackPos = new Vector2d(-60.75,31.5);
+    Vector2d blueReturnPos = new Vector2d(-40,58);
+    Vector2d blueWingPos = new Vector2d(-60.75,58);
+    Vector2d blueShortStackPos = new Vector2d(-60.75,32.5);
 
     Vector2d blueParkPos = new Vector2d(45, 54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -585,7 +588,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueTagPos.position)
                 .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow2Pos)
+                .strafeTo(blueWhite2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -621,7 +624,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueTagPos.position)
                 .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow1Pos)
+                .strafeTo(blueWhite1Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -658,7 +661,7 @@ public class Aura_AutoBlue_Short_State extends LinearOpMode {
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueTagPos.position)
                 .stopAndAdd(updatePosFromAprilTagEyeball)
-                .strafeTo(blueYellow2Pos)
+                .strafeTo(blueWhite2Pos)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)

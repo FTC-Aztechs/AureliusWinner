@@ -103,7 +103,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
     Pose2d redStartPos = new Pose2d(15,-61.5,Math.toRadians(90));//0,0,0
 
     Pose2d redPurple3Pos = new Pose2d(14, -33, Math.toRadians(0)); //27,19,-90
-    Pose2d redPurple2Pos = new Pose2d(16, -32, Math.toRadians(90));  //37,12,-90
+    Pose2d redPurple2Pos = new Pose2d(16, -31, Math.toRadians(90));  //37,12,-90
     Pose2d redPurple1Pos = new Pose2d(8, -33, Math.toRadians(180));  //27,0,-90
 
     Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
@@ -244,7 +244,7 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             telemetry.addData("Corrected heading:", Math.toDegrees(yaw));
             telemetry.update();
 
-           RedShort.pose = new Pose2d(RedShort.pose.position.x,RedShort.pose.position.y, yaw);
+            RedShort.pose = new Pose2d(RedShort.pose.position.x,RedShort.pose.position.y, yaw);
 
             return false;
         }
@@ -403,43 +403,43 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
             switch (PurpleDropOffPos) {
                 case 1:
                     Actions.runBlocking(
-                        new ParallelAction(
-                            new SequentialAction(
-                                beginTrajectoryMarker,
-                                dropOffPurpleAtPos1,
-                                dropOffYellowAtPos1,
-                                endTrajectoryMarker),
-                                new ParallelAction(
-                                        updateIOController,
-                                        initApril)
-                        ));
+                            new ParallelAction(
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos1,
+                                            dropOffYellowAtPos1,
+                                            endTrajectoryMarker),
+                                    new ParallelAction(
+                                            updateIOController,
+                                            initApril)
+                            ));
                     break;
                 case 2:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos2,
-                            dropOffYellowAtPos2,
-                            endTrajectoryMarker),
                             new ParallelAction(
-                                    updateIOController,
-                                    initApril)
-                    ));
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos2,
+                                            dropOffYellowAtPos2,
+                                            endTrajectoryMarker),
+                                    new ParallelAction(
+                                            updateIOController,
+                                            initApril)
+                            ));
                     break;
                 case 3:
                 default:
                     Actions.runBlocking(
-                    new ParallelAction(
-                        new SequentialAction(
-                            beginTrajectoryMarker,
-                            dropOffPurpleAtPos3,
-                            dropOffYellowAtPos3,
-                            endTrajectoryMarker),
                             new ParallelAction(
-                                    updateIOController,
-                                    initApril)
-                    ));
+                                    new SequentialAction(
+                                            beginTrajectoryMarker,
+                                            dropOffPurpleAtPos3,
+                                            dropOffYellowAtPos3,
+                                            endTrajectoryMarker),
+                                    new ParallelAction(
+                                            updateIOController,
+                                            initApril)
+                            ));
                     break;
             }
         }
@@ -698,11 +698,11 @@ public class Aura_AutoRed_Short_Qualifiers extends LinearOpMode {
 
         // Create the vision portal by using a builder.
         if (USE_WEBCAM) {
-                visionPortal = new VisionPortal.Builder()
-                        .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
-                        .setCameraResolution(new Size(640, 480))
-                        .addProcessor(aprilTag)
-                        .build();
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
+                    .setCameraResolution(new Size(640, 480))
+                    .addProcessor(aprilTag)
+                    .build();
         } else {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)
