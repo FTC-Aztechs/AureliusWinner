@@ -40,6 +40,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Launcher_Fire_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Launcher_Set_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
@@ -78,7 +80,7 @@ public class Aura_Manual extends LinearOpMode {
     private boolean changingLauncherSpeed = false;
 
     private double intakeSpeed;
-    public static double intakeMaxSpeed = 0.6;
+    public static double intakeMaxSpeed = 1;
 
     private boolean changingState = false;
 
@@ -224,7 +226,7 @@ public class Aura_Manual extends LinearOpMode {
             AuraLauncher();
             AuraFingers();
             AuraHang();
-            //AuraColor();
+//            AuraColor();
             //AuraHang();
 
         }
@@ -293,41 +295,27 @@ public class Aura_Manual extends LinearOpMode {
 
 //         Check the color for Right sensor
         for (int i = 0; i < colors.length; i++) {
-            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5] ) {
-                telemetry.addData("Right", "Detected");
-                rightDetectedColor = colors[i]; // Update detected color
-            } else {
-                telemetry.addData("Right", "False");
+            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] &&
+                    Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] &&
+                    Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
+                rightDetectedColor = colors[i];
             }
-        }
 
-        // Check the color for Left sensor
-        for (int i = 0; i < colors.length; i++) {
-            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
-                telemetry.addData("Left", "Detected");
+            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] &&
+                    Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] &&
+                    Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
                 leftDetectedColor = colors[i];
-            } else {
-                telemetry.addData("Left", "False");
+            }
 
+            if (rightDetectedColor != RevBlinkinLedDriver.BlinkinPattern.BLACK && leftDetectedColor != RevBlinkinLedDriver.BlinkinPattern.BLACK) {
+                break;
             }
         }
-//
-//        RevBlinkinLedDriver.BlinkinPattern rightPattern = getBlinkinPatternForColor(Right.red(), Right.green(), Right.blue(), rightRanges, colors);
-//        RevBlinkinLedDriver.BlinkinPattern leftPattern = getBlinkinPatternForColor(Left.red(), Left.green(), Left.blue(), leftRanges, colors);
-//
-//        telemetry.addData("Right Detected Color", rightDetectedColor);
-//        telemetry.addData("Left Detected Color", leftDetectedColor);
 
         if(PatternTimer.seconds()<1) {
-            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
-        } else if (PatternTimer.seconds() < 1.2) {
             BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
-        } else if (PatternTimer.seconds() < 2.2) {
+        } else if (PatternTimer.seconds() < 2) {
             BlinkinBoard.setPattern(leftDetectedColor);
-        } else if (PatternTimer.seconds() < 2.4) {
-            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
-        } else if (PatternTimer.seconds() < 2.2) {
-            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
         } else if (PatternTimer.seconds() < 3) {
             BlinkinBoard.setPattern(rightDetectedColor);
         } else {
@@ -455,11 +443,14 @@ public class Aura_Manual extends LinearOpMode {
             intakeSpeed = intakeMaxSpeed;
         }
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE,(intakeSpeed));
-        Aurelius.setPower(AuraRobot.AuraMotors.ROLLER, (2 * gamepad2.right_stick_y));
+        if(gamepad2.right_stick_y != 0f) {
+            Aurelius.Ramp.setPosition(Ramp_Down_Pos);
+        } else if (gamepad2.right_stick_y == 0f){
+            Aurelius.Ramp.setPosition(Ramp_Up_Pos);
+        }
 
     }
 
-//    @SuppressLint("SuspiciousIndentation")
 public void AuraIntakeOuttake() {
     if(gamepad2.right_trigger == 1f) {
         if(!changingState) {

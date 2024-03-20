@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -80,6 +79,7 @@ public class AuraRobot
     public Servo RightLink = null;
     public Servo LeftLink = null;
 
+    public Servo Ramp = null;
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
     public AuraHangController hanger;
@@ -121,10 +121,15 @@ public class AuraRobot
     public static double Lid_Close_Pos = 0.5;
     public  static double Lid_Open_Pos = 0.85;
 
-    public static double leftLinkageOpen = 0.43;
-    public static double leftLinkageClose = 0.75;
-    public static double rightLinkageOpen = 0.68;
-    public static double rightLinkageClose = 0.2;
+    public static double Ramp_Up_Pos = 0.55;
+    public static double Ramp_Down_Pos = 0.505;
+
+
+
+    public static double leftLinkageOpen = 0.55;
+    public static double leftLinkageClose = 0.8;
+    public static double rightLinkageOpen = 0.72;
+    public static double rightLinkageClose = 0.5;
 
 
     public static double Deposit_Down_Pos =  0.04;
@@ -196,10 +201,10 @@ public class AuraRobot
         Lower_Right = hwMap.get(DcMotor.class, "Lower_Right");
         intakeMotor = hwMap.get(DcMotor.class, "intakeMotor");
         Slide = hwMap.get(DcMotor.class, "Slide");
-        Roller = hwMap.get(CRServo.class, "Roller");
         Hang = hwMap.get(DcMotor.class, "hangMotor");
         PurpleDumper = hwMap.get(Servo.class, "purple");
         LeftLink = hwMap.get(Servo.class, "LeftLink");
+        Ramp = hwMap.get(Servo.class, "Ramp");
         RightLink = hwMap.get(Servo.class, "RightLink");
 
         // Define and Initialize Color Sensors
