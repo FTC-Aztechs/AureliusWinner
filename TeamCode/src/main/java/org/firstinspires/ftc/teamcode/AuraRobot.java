@@ -121,8 +121,8 @@ public class AuraRobot
     public static double Lid_Close_Pos = 0.5;
     public  static double Lid_Open_Pos = 0.85;
 
-    public static double Ramp_Up_Pos = 0.55;
-    public static double Ramp_Down_Pos = 0.505;
+    public static double Ramp_Up_Pos = 0.75;
+    public static double Ramp_Down_Pos = 0.65;
 
 
 
