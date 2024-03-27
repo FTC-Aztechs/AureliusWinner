@@ -32,9 +32,6 @@ package org.firstinspires.ftc.teamcode.Meet4;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.APRILTAG_TIMEOUT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.AuraMotors.INTAKE;
-import static org.firstinspires.ftc.teamcode.Aura_DepositController.DepositState.Down;
-import static org.firstinspires.ftc.teamcode.Aura_DepositController.DepositState.Open;
-import static org.firstinspires.ftc.teamcode.Aura_DepositController.DepositState.Up;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -59,7 +56,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.AuraHeadingEstimator;
 import org.firstinspires.ftc.teamcode.AuraRobot;
-import org.firstinspires.ftc.teamcode.roadrunnerbasics.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Roadrunner.roadrunnerbasics.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;

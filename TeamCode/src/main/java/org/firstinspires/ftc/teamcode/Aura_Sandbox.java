@@ -69,6 +69,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -114,7 +115,6 @@ public class Aura_Sandbox extends LinearOpMode
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
-
     public static boolean CAMERA_SIDE = false;
     private ElapsedTime runtime = new ElapsedTime();
     AuraRobot Aurelius = new AuraRobot();
@@ -130,11 +130,6 @@ public class Aura_Sandbox extends LinearOpMode
     private static ElapsedTime timer_gp2_dpad_down = new ElapsedTime();
 
     public ElapsedTime PatternTimer;
-    public RevColorSensorV3 Left;
-
-    public ColorRangeSensor Right;
-
-    public RevBlinkinLedDriver BlinkinBoard;
 
     private static final RevBlinkinLedDriver.BlinkinPattern WHITE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.WHITE;
     private static final RevBlinkinLedDriver.BlinkinPattern GREEN_PATTERN = RevBlinkinLedDriver.BlinkinPattern.GREEN;
@@ -143,6 +138,11 @@ public class Aura_Sandbox extends LinearOpMode
 
     String rightDetectedColor = "";
     String leftDetectedColor = "";
+
+    public RevColorSensorV3 Left;
+
+    public ColorRangeSensor Right;
+    public RevBlinkinLedDriver BlinkinBoard;
 
     private Servo LeftFinger;
     private Servo   RightFinger;
@@ -317,6 +317,8 @@ public class Aura_Sandbox extends LinearOpMode
         // Run motor at 1.0 speed for 1 second - write out encoder ticks
         // Run motor at speeds accelerating along a sine curve for 3 seconds - write out encoder ticks
         ElapsedTime timer = new ElapsedTime();
+
+
         Aurelius.setRunMode(ALL_DRIVES, RUN_WITHOUT_ENCODER);
         Aurelius.setRunMode(ALL_DRIVES, STOP_AND_RESET_ENCODER);
         timer.reset();
@@ -631,7 +633,6 @@ public class Aura_Sandbox extends LinearOpMode
 
 
 
-
         String[] colors = {"White", "Green", "Purple", "Yellow"};
         int[][] rightRanges = {
                 {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
@@ -710,7 +711,9 @@ public class Aura_Sandbox extends LinearOpMode
 
     private RevBlinkinLedDriver.BlinkinPattern getBlinkinPatternForColor(int red, int green, int blue, int[][] colorRanges, String[] colorNames) {
         for (int i = 0; i < colorNames.length; i++) {
-            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] && green >= colorRanges[i][2] && green <= colorRanges[i][3] && blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
+            if (red >= colorRanges[i][0] && red <= colorRanges[i][1] &&
+                    green >= colorRanges[i][2] && green <= colorRanges[i][3] &&
+                    blue >= colorRanges[i][4] && blue <= colorRanges[i][5]) {
                 switch (colorNames[i]) {
                     case "White":
                         return WHITE_PATTERN;
@@ -725,7 +728,6 @@ public class Aura_Sandbox extends LinearOpMode
         }
         return RevBlinkinLedDriver.BlinkinPattern.BLACK;
     }
-
 
 
     public void SandboxManualDrive () {

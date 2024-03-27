@@ -76,7 +76,10 @@ public class AuraRobot
     public CRServo Roller = null;
     public DcMotor Hang = null;
     public Servo   PurpleDumper = null;
+    public Servo RightLink = null;
+    public Servo LeftLink = null;
 
+    public Servo Ramp = null;
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
     public AuraHangController hanger;
@@ -113,10 +116,21 @@ public class AuraRobot
     public static AuraPIDController liftController = new AuraPIDController(11, 0, 0.25, 3600);
 
     public static double Launcher_Set_Pos = 1;
-    public static double Launcher_Fire_Pos = .5;
+    public static double Launcher_Fire_Pos = .85;
 
     public static double Lid_Close_Pos = 0.5;
     public  static double Lid_Open_Pos = 0.85;
+
+    public static double Ramp_Up_Pos = 0.75;
+    public static double Ramp_Down_Pos = 0.65;
+
+
+
+    public static double leftLinkageOpen = 0.55;
+    public static double leftLinkageClose = 0.8;
+    public static double rightLinkageOpen = 0.72;
+    public static double rightLinkageClose = 0.5;
+
 
     public static double Deposit_Down_Pos =  0.04;
     public static double Deposit_Up_Pos = 0.5;
@@ -128,38 +142,41 @@ public class AuraRobot
     public static double RIGHT_FINGER_UNLOCK = 0.5;
     public static double WRIST_INTAKE = 0.57;
     public static double WRIST_TUCK = 0.80;
-    public static double ELBOW_DOWN = 0.023;
+    public static double ELBOW_DOWN = 0.02; //0.023; AFter refixing Max, adjustment needed.
     public static double ELBOW_UP = 0.65;
     public static int SLIDE_INTAKE_POS = 0;
     public static int SLIDE_FLIP_HEIGHT = 1000;
     public static int SLIDE_RAISE_LOW = 800;
     public static int SLIDE_RAISE_MED = 1700;
     public static int SLIDE_RAISE_HIGH = 3000;
-    public static double slideTicks_stepSize = 125;
+    public static double slideTicks_stepSize = 25;
     public static int FloorPosition  = 600;
     public static int HighJunction   = 15400; // 15400
     public static int HighJunction_Auto = 15250;
     public static int UpperLimit     = 3000;
     public static double PURPLE_LOCK    = 1.0;
     public static double PURPLE_UNLOCK  = 0.5;
-
     public static double HANG_EXTENDER_EXTEND = 0.36;
     public static double HANG_EXTENDER_RETRACT = 0.58; //0
     public static double HANG_FLIPPER_DOWN = 1.0;
     public static double HANG_FLIPPER_UP = 0.68;
     public static double HANG_MOTOR_TICKS = 537.7;
 
-    public static double HANG_POWER = 0.2;
+    public static double HANG_POWER = .7;
     public static double HANG_NUM_MOTOR_ROTATIONS = 3.5;
 
 
-    public static double AUTO_WAIT_FOR_OUTTAKE = 1.0;
-    public static double AUTO_WAIT_FOR_YELLOW_DROP = 2.0;
+    public static double AUTO_WAIT_FOR_START = 8;
+    public static double AUTO_WAIT_FOR_OUTTAKE = 0.1;
+    public static double AUTO_WAIT_FOR_PURPLE_DROP = 0.5;
+    public static double AUTO_WAIT_FOR_YELLOW_DROP = 0.5;
     public static double AUTO_WAIT_RETURN_TO_INTAKE = 3.0;
+    public static double AUTO_WAIT_FOR_STACK_INTAKE = 2.0;
+    public static double AUTO_WAIT_FOR_ALLIANCE = 3.0;
+    public static double AUTO_ACCEL_CONSTRAINT_1 = -25;
+    public static double AUTO_ACCEL_CONSTRAINT_2 = 25;
 
-
-
-    public static double APRILTAG_TIMEOUT = 2;
+    public static double APRILTAG_TIMEOUT = 5;
 
    //------------------------------------------------------------
 
@@ -184,9 +201,11 @@ public class AuraRobot
         Lower_Right = hwMap.get(DcMotor.class, "Lower_Right");
         intakeMotor = hwMap.get(DcMotor.class, "intakeMotor");
         Slide = hwMap.get(DcMotor.class, "Slide");
-        Roller = hwMap.get(CRServo.class, "Roller");
         Hang = hwMap.get(DcMotor.class, "hangMotor");
         PurpleDumper = hwMap.get(Servo.class, "purple");
+        LeftLink = hwMap.get(Servo.class, "LeftLink");
+        Ramp = hwMap.get(Servo.class, "Ramp");
+        RightLink = hwMap.get(Servo.class, "RightLink");
 
         // Define and Initialize Color Sensors
         Left = hwMap.get(RevColorSensorV3.class, "Left");

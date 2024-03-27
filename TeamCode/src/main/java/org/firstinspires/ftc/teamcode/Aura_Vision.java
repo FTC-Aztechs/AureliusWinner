@@ -30,7 +30,7 @@ public class Aura_Vision extends LinearOpMode {
                 .build();
         VisionPortal visionPortal = new VisionPortal.Builder()
                 .addProcessors(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
+                .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
                 .setCameraResolution(new Size(640, 480))
                 .build();
         waitForStart();
@@ -46,7 +46,7 @@ public class Aura_Vision extends LinearOpMode {
                 double yaw = tag.ftcPose.yaw;
 
                 double robotOffsetX = -7;
-                double robotOffsetY = +5.5;
+                double robotOffsetY = -3.75;
 
                 double offsetX = (range * Math.cos(Math.toRadians(bearing)));
 

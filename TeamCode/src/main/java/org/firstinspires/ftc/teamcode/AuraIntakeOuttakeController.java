@@ -125,10 +125,10 @@ public class AuraIntakeOuttakeController {
         isManual = Manual;
     }
     public void init() {
-        Left.initialize();
-        Left.enableLed(true);
-        Right.enableLed(true);
-        Left.getLightDetected();
+//        Left.initialize();
+//        Left.enableLed(true);
+//        Right.enableLed(true);
+//        Left.getLightDetected();
 
         Slide.setMode(STOP_AND_RESET_ENCODER);
         Slide.setMode(RUN_WITHOUT_ENCODER);
@@ -189,7 +189,7 @@ public class AuraIntakeOuttakeController {
                 break;
             case STATE_4_BF:
                 if (goingUp) {
-                    if (isManual) { // TODO: UNless we need to adjust slide pos to something else in Auto...
+                    if (isManual) { // TODO: Unless we need to adjust slide pos to something else in Auto...
                         nextState = ioState.STATE_5_RFO_MANUAL;
                     } else {
                         nextState = ioState.STATE_5_RFO_LOW;
@@ -441,6 +441,14 @@ public class AuraIntakeOuttakeController {
             }
             return false;
         }
+
+//        if( currState == ioState.STATE_2_ITA ) {
+//            if(targetState == ioState.STATE_1_RFI || targetState == ioState.STATE_5_RFO_MANUAL) {
+//                return true;
+//            }
+//            return false;
+//        }
+
 
         if( currState == ioState.STATE_3_PS) {
             if(targetState == ioState.STATE_1_RFI || targetState == ioState.STATE_5_RFO_MANUAL ){

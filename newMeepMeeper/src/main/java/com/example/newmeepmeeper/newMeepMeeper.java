@@ -21,12 +21,12 @@ import jdk.internal.org.jline.utils.ColorPalette;
 
 public class newMeepMeeper {
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(500);
+        MeepMeep meepMeep = new MeepMeep(800);
 
 
         //***************************************************************************************
         //TODO: CHOOSE RANDOMIZATION HERE
-        int Randomization = 3;
+        int Randomization = 2;
 
         //***************************************************************************************
         //TODO: Declare Poses here
@@ -36,14 +36,14 @@ public class newMeepMeeper {
 
         Pose2d blueShortPurple1Pos = new Pose2d(14, 33, Math.toRadians(0));  //27,0,-90
         Pose2d blueShortPurple2Pos = new Pose2d(16, 32, Math.toRadians(-90));  //37,12,-90
-        Pose2d blueShortPurple3Pos = new Pose2d(8.5, 33 , Math.toRadians(-180)); //27,19,-90
+        Pose2d blueShortPurple3Pos = new Pose2d(8, 33 , Math.toRadians(-180)); //27,19,-90
 
 
         Pose2d blueShortTagPos = new Pose2d(36,45, Math.toRadians(0));
 
-        Vector2d blueShortYellow1Pos = new Vector2d(51.5, 42);  //27,37,-90
-        Vector2d blueShortYellow2Pos = new Vector2d(51.5, 36);   //26,37,-90
-        Vector2d blueShortYellow3Pos = new Vector2d(51.5,27.5);    //33,37,-90
+        Vector2d blueShortYellow1Pos = new Vector2d(50.5, 42);  //27,37,-90
+        Vector2d blueShortYellow2Pos = new Vector2d(50.5, 36);   //26,37,-90
+        Vector2d blueShortYellow3Pos = new Vector2d(50.5,27.5);    //33,37,-90
 
         Vector2d blueShortParkPos = new Vector2d(45, 54.5);  //7, 37
 
@@ -52,14 +52,14 @@ public class newMeepMeeper {
 
         Pose2d redShortPurple3Pos = new Pose2d(14, -33, Math.toRadians(0)); //27,19,-90
         Pose2d redShortPurple2Pos = new Pose2d(16, -32, Math.toRadians(90));  //37,12,-90
-        Pose2d redShortPurple1Pos = new Pose2d(8.5, -33, Math.toRadians(180));  //27,0,-90
+        Pose2d redShortPurple1Pos = new Pose2d(8, -33, Math.toRadians(180));  //27,0,-90
 
 
         Pose2d redShortTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
-        Vector2d redShortYellow3Pos = new Vector2d(51.5, -42);  //27,37,-90
-        Vector2d redShortYellow2Pos = new Vector2d(51.5, -36);   //26,37,-90
-        Vector2d redShortYellow1Pos = new Vector2d(51.5,-27.5);    //33,37,-90
+        Vector2d redShortYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
+        Vector2d redShortYellow2Pos = new Vector2d(50.5, -36);   //26,37,-90
+        Vector2d redShortYellow1Pos = new Vector2d(50.5,-27.5);    //33,37,-90
 
         Vector2d redShortParkPos = new Vector2d(45, -54.5);  //7, 37
 
@@ -67,7 +67,7 @@ public class newMeepMeeper {
         Pose2d blueLongStartPos = new Pose2d(-39,61.25,Math.toRadians(-90));//0,0,0
 
         Pose2d blueLongPurple1Pos = new Pose2d(-34, 34.5, Math.toRadians(0));  //27,0,-90
-        Pose2d blueLongPurple2Pos = new Pose2d(-31, 34, Math.toRadians(-90));  //37,12,-90
+        Pose2d blueLongPurple2Pos = new Pose2d(-39, 34, Math.toRadians(-90));  //37,12,-90
         Pose2d blueLongPurple3Pos = new Pose2d(-39, 34.5 , Math.toRadians(-180)); //27,19,-90
 
 
@@ -78,9 +78,9 @@ public class newMeepMeeper {
         Vector2d blueLongAfterGatePos = new Vector2d(32, 11.5);//50,68
 
 
-        Vector2d blueLongYellow1Pos = new Vector2d(51.5, 42);  //27,37,-90
-        Vector2d blueLongYellow2Pos = new Vector2d(51.5, 36);   //26,37,-90
-        Pose2d blueLongYellow3Pos = new Pose2d(51.5,27.5, Math.toRadians(0));    //33,37,-90
+        Vector2d blueLongYellow1Pos = new Vector2d(50.5, 42);  //27,37,-90
+        Vector2d blueLongYellow2Pos = new Vector2d(50.5, 36);   //26,37,-90
+        Pose2d blueLongYellow3Pos = new Pose2d(50.5,27.5, Math.toRadians(0));    //33,37,-90
 
 
         Vector2d blueLongParkPos = new Vector2d(45, 11.5);//50, 82
@@ -89,7 +89,7 @@ public class newMeepMeeper {
         Pose2d redLongStartPos = new Pose2d(-39,-61.25,Math.toRadians(90));//0,0,0
 
         Pose2d redLongPurple3Pos = new Pose2d(-34, -34.5, Math.toRadians(0));  //27,0,-90
-        Pose2d redLongPurple2Pos = new Pose2d(-31,- 34, Math.toRadians(90));  //37,12,-90
+        Pose2d redLongPurple2Pos = new Pose2d(-39,- 34, Math.toRadians(90));  //37,12,-90
         Pose2d redLongPurple1Pos = new Pose2d(-39, -34.5 , Math.toRadians(180)); //27,19,-90
 
         Vector2d redLongBeforeGatePos3 = new Vector2d(-38,-11.5);//50,2
@@ -98,9 +98,9 @@ public class newMeepMeeper {
         Vector2d redLongAfterGateTagPos = new Vector2d(15.25, -11.5);//50,51.25
         Vector2d redLongAfterGatePos = new Vector2d(32, -11.5);//50,68
 
-        Vector2d redLongYellow3Pos = new Vector2d(51.5, -42);  //27,37,-90
-        Vector2d redLongYellow2Pos = new Vector2d(51.5, -36);   //26,37,-90
-        Pose2d redLongYellow1Pos = new Pose2d(51.5,-27.5, Math.toRadians(0));    //33,37,-90
+        Vector2d redLongYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
+        Vector2d redLongYellow2Pos = new Vector2d(50.5, -36);   //26,37,-90
+        Pose2d redLongYellow1Pos = new Pose2d(50.5,-27.5, Math.toRadians(0));    //33,37,-90
 
 
         Vector2d redLongParkPos = new Vector2d(45, -11.5);//50, 82
@@ -586,8 +586,8 @@ public class newMeepMeeper {
 
             case 2:
                 RedLong.runAction(RedLong.getDrive().actionBuilder(redLongStartPos)
-                        .setTangent(Math.toRadians(30))
-                        .splineToLinearHeading(redLongPurple2Pos, Math.toRadians(180))
+                        .setTangent(Math.toRadians(90))
+                        .splineToLinearHeading(redLongPurple2Pos, Math.toRadians(70))
                         .setTangent(Math.toRadians(-90))
                         .splineToLinearHeading(new Pose2d(-50,-45, Math.toRadians(0)),Math.toRadians(-180))
                         .strafeTo(redLongBeforeGatePos2)
