@@ -243,8 +243,9 @@ public class Aura_Sandbox extends LinearOpMode
         telemetry.addData("Right Tracking wheel: ", Aurelius.getCurrentPosition(UPPER_RIGHT));
         telemetry.addData("Strafe Tracking wheel: ", Aurelius.getCurrentPosition(LOWER_RIGHT));
 
-        initAprilTag(); // initializing the april tag processor
+        backTag(); // initializing the april tag processo
         setManualExposure(6, 250); // accounting for motion blur
+
 
         waitForStart();
         //getUserInput();
@@ -269,7 +270,7 @@ public class Aura_Sandbox extends LinearOpMode
                     ColorSandbox();
                     break;
                 case APRIL:
-                    AprilSandbox();
+                    BackSandbox();
                     break;
                 case PURPLE:
                     PurpleSandbox();
@@ -901,6 +902,73 @@ public class Aura_Sandbox extends LinearOpMode
                     .build();
         }
     }
+
+
+    public void BackSandbox () {
+
+        targetFound = false;
+        desiredTag = null;
+
+        int desiredTagID = CAMERA_SIDE ? 7 : 8;
+        telemetry.addData("Looking for tag: %d",desiredTagID );
+        telemetry.update();
+
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        for (AprilTagDetection detection : currentDetections) {
+            // Look to see if we have size info on this tag.
+            if (detection.metadata != null) {
+                //  Check to see if we want to track towards this tag.
+                if ((DESIRED_TAG_ID < 0) || (detection.id == desiredTagID)) {
+                    // Yes, we want to use this tag.
+                    targetFound = true;
+                    desiredTag = detection;
+                    break;  // don't look any further.
+                } else {
+                    // This tag is in the library, but we do not want to track it right now.
+                    telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+                }
+            } else {
+                // This tag is NOT in the library, so we don't have enough information to track to it.
+                telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+            }
+        }
+
+        if (targetFound) {
+            telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.fieldPosition);
+            telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+            telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
+            telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
+            bKeepGoing = false;
+
+            double currX = desiredTag.metadata.fieldPosition.getData()[0] -
+                    (desiredTag.ftcPose.range * Math.cos(Math.toRadians(desiredTag.ftcPose.bearing)));
+
+            double currY = desiredTag.metadata.fieldPosition.getData()[1] -
+                    (desiredTag.ftcPose.range * Math.sin(Math.toRadians(desiredTag.ftcPose.bearing)));
+
+            double currHeading = -desiredTag.ftcPose.yaw;
+
+            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", currX, currY, Math.toDegrees(currHeading));
+            telemetry.update();
+
+        } else {
+            telemetry.addData("Target:", "Not Found!");
+        }
+        telemetry.update();
+
+
+    }
+
+    private void backTag() {
+        aprilTag = new AprilTagProcessor.Builder().build();
+
+        aprilTag.setDecimation(2);
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
+                .addProcessor(aprilTag)
+                .build();
+
+}
 
     private void setManualExposure ( int exposureMS, int gain){
         // Wait for the camera to be open, then use the controls
