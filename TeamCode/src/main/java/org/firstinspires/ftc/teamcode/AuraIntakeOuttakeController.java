@@ -38,11 +38,11 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 public class AuraIntakeOuttakeController {
-    private DcMotor Slide;
-    private Servo Wrist;
-    private Servo Elbow;
-    private Servo LeftFinger;
-    private Servo RightFinger;
+    public DcMotor Slide;
+    public Servo Wrist;
+    public Servo Elbow;
+    public Servo LeftFinger;
+    public Servo RightFinger;
 
     private RevBlinkinLedDriver BlinkBoard;
 

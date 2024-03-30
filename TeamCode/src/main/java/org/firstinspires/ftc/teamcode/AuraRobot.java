@@ -84,7 +84,7 @@ public class AuraRobot
     public AuraLaunchController boeing747;
     public AuraHangController hanger;
 //    public Aura_DepositController depositFlipper;
-    public AuraIntakeOuttakeController myIntakeController;
+//    public AuraIntakeOuttakeController myIntakeOuttakeController;
     public AuraHeadingEstimator myHeadingEstimator;
 
     public WebcamName Khimera = null;
