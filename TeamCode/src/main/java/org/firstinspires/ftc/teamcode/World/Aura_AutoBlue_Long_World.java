@@ -98,7 +98,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Blue_Long_State", group="State")
+@Autonomous(name="Blue_Long_World", group="State")
 
 public class Aura_AutoBlue_Long_World extends LinearOpMode {
 

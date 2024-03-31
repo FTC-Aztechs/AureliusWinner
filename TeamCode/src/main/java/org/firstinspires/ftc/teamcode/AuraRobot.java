@@ -126,9 +126,9 @@ public class AuraRobot
 
 
 
-    public static double leftLinkageOpen = 0.55;
+    public static double leftLinkageOpen = 0.53;
     public static double leftLinkageClose = 0.8;
-    public static double rightLinkageOpen = 0.72;
+    public static double rightLinkageOpen = 0.70;
     public static double rightLinkageClose = 0.5;
 
 
@@ -168,10 +168,10 @@ public class AuraRobot
 
     public static double AUTO_WAIT_FOR_START = 8;
     public static double AUTO_WAIT_FOR_OUTTAKE = 0.1;
-    public static double AUTO_WAIT_FOR_PURPLE_DROP = 0.5;
+    public static double AUTO_WAIT_FOR_PURPLE_DROP = 0.0;
     public static double AUTO_WAIT_FOR_YELLOW_DROP = 0.5;
     public static double AUTO_WAIT_RETURN_TO_INTAKE = 3.0;
-    public static double AUTO_WAIT_FOR_STACK_INTAKE = 2.0;
+    public static double AUTO_WAIT_FOR_STACK_INTAKE = 1.2;
     public static double AUTO_WAIT_FOR_ALLIANCE = 3.0;
     public static double AUTO_ACCEL_CONSTRAINT_1 = -25;
     public static double AUTO_ACCEL_CONSTRAINT_2 = 25;

@@ -47,6 +47,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
@@ -63,6 +65,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -600,7 +603,7 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
                 .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
                 .strafeTo(blueCycleLongStackPos)
                 .stopAndAdd(rectifyHeadingError)
-                .strafeTo(blueCycleLongPostStackPos)
+                .strafeTo(blueCycleLongPostStackPos, new TranslationalVelConstraint(25))
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .stopAndAdd(securePixels)
@@ -635,7 +638,7 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
                 .stopAndAdd(getReadyForIntake)
                 .afterDisp(0, deployStackIntake)
                 .strafeTo(blueCycleLongStackPos)
-                .strafeTo(blueCycleLongPostStackPos)
+                .strafeTo(blueCycleLongPostStackPos, new TranslationalVelConstraint(25))
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .stopAndAdd(securePixels)
@@ -670,7 +673,7 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
                 .stopAndAdd(getReadyForIntake)
                 .afterDisp(0, deployStackIntake)
                 .strafeTo(blueCycleLongStackPos)
-                .strafeTo(blueCycleLongPostStackPos)
+                .strafeTo(blueCycleLongPostStackPos, new TranslationalVelConstraint(25))
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .stopAndAdd(securePixels)
@@ -1068,24 +1071,24 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
     {
         Aurelius.LeftLink.setPosition(leftLinkageOpen);
         Aurelius.RightLink.setPosition(rightLinkageOpen);
-        Aurelius.Roller.setPower(-0.7);
     }
 
     public void raiseStackIntake()
     {
         Aurelius.LeftLink.setPosition(leftLinkageClose);
         Aurelius.RightLink.setPosition(rightLinkageClose);
-        Aurelius.Roller.setPower(0);
     }
 
     public void stackIntakePixels()
     {
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0.7);
+        Aurelius.Ramp.setPosition(Ramp_Down_Pos);
     }
 
     public void secureStackIntakePixels()
     {
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0);
+        Aurelius.Ramp.setPosition(Ramp_Up_Pos);
         MyIntakeOuttakeController.setTargetState(STATE_3_PS);
     }
 
