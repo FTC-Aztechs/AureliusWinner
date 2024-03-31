@@ -9,6 +9,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.LEFT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.LowerLimit;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_FLIP_HEIGHT;
@@ -42,6 +44,7 @@ public class AuraIntakeOuttakeController {
     public Servo Wrist;
     public Servo Elbow;
     public Servo LeftFinger;
+    public Servo Ramp;
     public Servo RightFinger;
 
     private RevBlinkinLedDriver BlinkBoard;
@@ -102,6 +105,7 @@ public class AuraIntakeOuttakeController {
         Slide = hardwareMap.get(DcMotor.class, "Slide");
         Left = hardwareMap.get(RevColorSensorV3.class, "Left");
         Right = hardwareMap.get(ColorRangeSensor.class, "Right");
+        Ramp = hardwareMap.get(Servo.class, "Ramp");
 
         currState = ioState.STATE_0_UNINITIALIZED;
         targetState = ioState.STATE_1_RFI;
@@ -223,50 +227,7 @@ public class AuraIntakeOuttakeController {
         }
     }
 
-    public void AuraColor() {
 
-        String[] colors = {"White", "Green", "Purple", "Yellow"};
-        int[][] rightRanges = {
-                {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
-                {264, 364, 468, 568, 237, 337},      // Green
-                {500, 750, 550, 720, 710, 950},      // Purple
-                {782, 882, 584, 684, 312, 412}       // Yellow
-        };
-        int[][] leftRanges = {
-                {1365, 1465, 2382, 2482, 2244, 2344},// White
-                {348, 448, 1065, 1165, 460, 560},    // Green
-                {800, 1100, 1200, 1650, 1600, 2300},  // Purple
-                {1100, 1300, 1400, 1770, 420, 590}   // Yellow
-        };
-
-        // Check the color for Right sensor
-        for (int i = 0; i < colors.length; i++) {
-            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] && Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] && Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
-                rightDetected = true;
-            } else {
-                rightDetected = false;
-            }
-        }
-
-        // Check the color for Left sensor
-        for (int i = 0; i < colors.length; i++) {
-            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] && Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] && Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
-                leftDetected = true;
-            } else {
-                leftDetected = false;
-            }
-        }
-
-
-        if(rightDetected && leftDetected) {
-            if(colorTimer.seconds() > .4) {
-                setTargetState(ioState.STATE_3_PS);
-                colorTimer.reset();
-            }
-        } else {
-            colorTimer.reset();
-        }
-    }
 
 
     public void updateSlide() {
@@ -300,7 +261,6 @@ public class AuraIntakeOuttakeController {
         if(currState == targetState)
         {
             updateSlide();
-            AuraColor();
             return;
         }
 
@@ -315,7 +275,6 @@ public class AuraIntakeOuttakeController {
                 Wrist.setPosition(WRIST_INTAKE);
                 LeftFinger.setPosition(LEFT_FINGER_UNLOCK); //unlock
                 RightFinger.setPosition(RIGHT_FINGER_UNLOCK); //unlock
-
                 currState = nextState;
                 break;
 
@@ -333,7 +292,6 @@ public class AuraIntakeOuttakeController {
 
                 LeftFinger.setPosition(LEFT_FINGER_LOCK); //lock
                 RightFinger.setPosition(RIGHT_FINGER_LOCK); //lock
-
                 // If Returning to intake - this is where elbow is flipped
                 // Give it some time to complete the Elbow Flip down before
                 // letting the slides down (later)
@@ -370,7 +328,6 @@ public class AuraIntakeOuttakeController {
                     Elbow.setPosition(ELBOW_UP);
                     if (flipTimer.seconds() > FLIP_WAIT_TIME_LIMIT) {
                         currState = nextState;
-
                         // Reset Slide Timer such that state 4 has a fresh timer to count
                         slideTimer.reset();
                     }

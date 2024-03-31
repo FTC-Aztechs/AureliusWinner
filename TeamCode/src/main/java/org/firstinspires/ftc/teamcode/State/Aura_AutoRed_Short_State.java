@@ -44,6 +44,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_FOR_YELLOW_DROP
 import static org.firstinspires.ftc.teamcode.AuraRobot.AUTO_WAIT_RETURN_TO_INTAKE;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
+import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
@@ -132,7 +134,7 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
 
     Vector2d redReturnPos = new Vector2d(-40,-58);
     Vector2d redWingPos = new Vector2d(-60.5,-58);
-    Vector2d redStackPos = new Vector2d(-60.5,-33);
+    Vector2d redStackPos = new Vector2d(-60.5,-34);
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -572,7 +574,7 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .strafeTo(redEntryPos)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redWingPos, new TranslationalVelConstraint(65))
-                .strafeTo(redStackPos)
+                .strafeTo(redStackPos, new TranslationalVelConstraint(25))
                 .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
@@ -610,7 +612,7 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .strafeTo(redEntryPos)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redWingPos, new TranslationalVelConstraint(65))
-                .strafeTo(redStackPos)
+                .strafeTo(redStackPos, new TranslationalVelConstraint(25))
                 .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
@@ -647,7 +649,7 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .strafeTo(redEntryPos)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(redWingPos, new TranslationalVelConstraint(65))
-                .strafeTo(redStackPos)
+                .strafeTo(redStackPos, new TranslationalVelConstraint(25))
                 .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
@@ -1041,24 +1043,24 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
     {
         Aurelius.LeftLink.setPosition(leftLinkageOpen);
         Aurelius.RightLink.setPosition(rightLinkageOpen);
-        Aurelius.Roller.setPower(-0.7);
     }
 
     public void raiseStackIntake()
     {
         Aurelius.LeftLink.setPosition(leftLinkageClose);
         Aurelius.RightLink.setPosition(rightLinkageClose);
-        Aurelius.Roller.setPower(0);
     }
 
     public void stackIntakePixels()
     {
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0.7);
+        Aurelius.Ramp.setPosition(Ramp_Down_Pos);
     }
 
     public void secureStackIntakePixels()
     {
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0);
+        Aurelius.Ramp.setPosition(Ramp_Up_Pos);
         MyIntakeOuttakeController.setTargetState(STATE_3_PS);
     }
 

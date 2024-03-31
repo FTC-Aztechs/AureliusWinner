@@ -80,7 +80,8 @@ public class Aura_Manual extends LinearOpMode {
     private boolean changingLauncherSpeed = false;
 
     private double intakeSpeed;
-    public static double intakeMaxSpeed = 1;
+    public static double previous_slide_pos = 0;
+    public static double intakeMaxSpeed = 0.8;
 
     private boolean changingState = false;
 
@@ -412,26 +413,32 @@ public class Aura_Manual extends LinearOpMode {
                 Aurelius.hanger.setTargetState(AuraHangController.HangState.Idle);
                 Aurelius.hanger.update();
                 telemetry.addData("State ", " Idle");
-                changingState = false;
+                if (previous_slide_pos != 0) {
+                    myIntakeOuttakeController.setTargetPosition(previous_slide_pos);
+                }
+                myIntakeOuttakeController.update();
+                {
+                    changingState = false;
+                }
             }
-        }
-        if (gamepad2.y) {
-            if (!changingState) {
-                timer_gp2_y.reset();
-                changingState = true;
-            } else if (timer_gp2_y.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                Aurelius.hanger.setTargetState(AuraHangController.HangState.Up);
-                Aurelius.hanger.update();
-                telemetry.addData("State ", " Up");
-                changingState = false;
+            if (gamepad2.y) {
+                if (!changingState) {
+                    timer_gp2_y.reset();
+                    changingState = true;
+                } else if (timer_gp2_y.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                    Aurelius.hanger.setTargetState(AuraHangController.HangState.Up);
+                    Aurelius.hanger.update();
+                    telemetry.addData("State ", " Up");
+                    changingState = false;
+                }
             }
-        }
-        if (gamepad2.dpad_down == true) {
-            Aurelius.Hang.setPower(HANG_POWER);
-        } else if (gamepad2.dpad_up == true) {
-            Aurelius.Hang.setPower(-HANG_POWER);
-        } else {
-            Aurelius.Hang.setPower(0);
+            if (gamepad2.dpad_down == true) {
+                Aurelius.Hang.setPower(HANG_POWER);
+            } else if (gamepad2.dpad_up == true) {
+                Aurelius.Hang.setPower(-HANG_POWER);
+            } else {
+                Aurelius.Hang.setPower(0);
+            }
         }
 
     }
@@ -474,6 +481,8 @@ public void AuraIntakeOuttake() {
         } else if (timer_gp2_a.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
             myIntakeOuttakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL);
             telemetry.addData("State", "going to outtake");
+            telemetry.addData("Previous Slide Position", previous_slide_pos);
+            previous_slide_pos = Aurelius.Slide.getCurrentPosition();
             telemetry.update();
             changingState = false;
         }
@@ -514,7 +523,6 @@ public void AuraIntakeOuttake() {
         }
         myIntakeOuttakeController.setTargetPosition(target);
     }
-
     myIntakeOuttakeController.update();
 }
 
