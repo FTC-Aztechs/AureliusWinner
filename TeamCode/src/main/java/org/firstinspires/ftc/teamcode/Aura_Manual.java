@@ -42,6 +42,7 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.Launcher_Set_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_FLIP_HEIGHT;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
@@ -80,7 +81,7 @@ public class Aura_Manual extends LinearOpMode {
     private boolean changingLauncherSpeed = false;
 
     private double intakeSpeed;
-    public static double previous_slide_pos = 0;
+    public static double previous_slide_pos = SLIDE_FLIP_HEIGHT;
     public static double intakeMaxSpeed = 0.8;
 
     private boolean changingState = false;
@@ -91,7 +92,7 @@ public class Aura_Manual extends LinearOpMode {
 
     public RevBlinkinLedDriver BlinkinBoard;
 
-    private int slide_currentPos = 0;
+    private int slide_currentPos = SLIDE_INTAKE_POS;
     private int slide_newPos = slide_currentPos;
 
     public  RevBlinkinLedDriver.BlinkinPattern[] colors = {WHITE_PATTERN, GREEN_PATTERN, PURPLE_PATTERN, YELLOW_PATTERN};
@@ -413,6 +414,7 @@ public class Aura_Manual extends LinearOpMode {
                 Aurelius.hanger.setTargetState(AuraHangController.HangState.Idle);
                 Aurelius.hanger.update();
                 telemetry.addData("State ", " Idle");
+                telemetry.update();
                 if (previous_slide_pos != 0) {
                     myIntakeOuttakeController.setTargetPosition(previous_slide_pos);
                 }
@@ -421,24 +423,25 @@ public class Aura_Manual extends LinearOpMode {
                     changingState = false;
                 }
             }
-            if (gamepad2.y) {
-                if (!changingState) {
-                    timer_gp2_y.reset();
-                    changingState = true;
-                } else if (timer_gp2_y.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                    Aurelius.hanger.setTargetState(AuraHangController.HangState.Up);
-                    Aurelius.hanger.update();
-                    telemetry.addData("State ", " Up");
-                    changingState = false;
-                }
+        }
+        if (gamepad2.y) {
+            if (!changingState) {
+                timer_gp2_y.reset();
+                changingState = true;
+            } else if (timer_gp2_y.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
+                Aurelius.hanger.setTargetState(AuraHangController.HangState.Up);
+                Aurelius.hanger.update();
+                telemetry.addData("State ", " Up");
+                telemetry.update();
+                changingState = false;
             }
-            if (gamepad2.dpad_down == true) {
-                Aurelius.Hang.setPower(HANG_POWER);
-            } else if (gamepad2.dpad_up == true) {
-                Aurelius.Hang.setPower(-HANG_POWER);
-            } else {
-                Aurelius.Hang.setPower(0);
-            }
+        }
+        if (gamepad2.dpad_down == true) {
+            Aurelius.Hang.setPower(HANG_POWER);
+        } else if (gamepad2.dpad_up == true) {
+            Aurelius.Hang.setPower(-HANG_POWER);
+        } else {
+            Aurelius.Hang.setPower(0);
         }
 
     }
@@ -479,10 +482,9 @@ public void AuraIntakeOuttake() {
             timer_gp2_a.reset();
             changingState = true;
         } else if (timer_gp2_a.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-            myIntakeOuttakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL);
             telemetry.addData("State", "going to outtake");
             telemetry.addData("Previous Slide Position", previous_slide_pos);
-            previous_slide_pos = Aurelius.Slide.getCurrentPosition();
+            myIntakeOuttakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL);
             telemetry.update();
             changingState = false;
         }
@@ -513,15 +515,19 @@ public void AuraIntakeOuttake() {
     }
 
     if(myIntakeOuttakeController.currState == AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL){
-        double target = targetSlidePos + (int) (-gamepad2.left_stick_y * slideTicks_stepSize);
+        double target = previous_slide_pos + (int) (-gamepad2.left_stick_y * slideTicks_stepSize);
         if (target >= SLIDE_RAISE_HIGH) {
             target = SLIDE_RAISE_HIGH;
         } else if (target < SLIDE_INTAKE_POS) {
             target = SLIDE_INTAKE_POS;
-            telemetry.addData("TargetSlidePos: ", targetSlidePos);
-            telemetry.update();
         }
+        telemetry.addData("TargetSlidePos: ", targetSlidePos);
         myIntakeOuttakeController.setTargetPosition(target);
+        if(myIntakeOuttakeController.targetState == AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL) {
+            previous_slide_pos = myIntakeOuttakeController.currSlidePos;
+            telemetry.addData("Saved Slide Pos: ", previous_slide_pos);
+        }
+        telemetry.update();
     }
     myIntakeOuttakeController.update();
 }
