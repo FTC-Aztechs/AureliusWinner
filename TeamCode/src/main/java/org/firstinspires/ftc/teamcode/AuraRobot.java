@@ -131,6 +131,10 @@ public class AuraRobot
     public static double rightLinkageOpen = 0.70;
     public static double rightLinkageClose = 0.5;
 
+    public static double left2LinkageOpen = 0.57;
+    public static double right2LinkageOpen = 0.73;
+
+
 
     public static double Deposit_Down_Pos =  0.04;
     public static double Deposit_Up_Pos = 0.5;
