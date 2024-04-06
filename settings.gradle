@@ -1,4 +1,5 @@
 include ':FtcRobotController'
 include ':TeamCode'
-include ':newMeepMeeper'
+include ':MeepMeepTesting'
 include ':MyMeepMeep'
+include ':NewMeeper'

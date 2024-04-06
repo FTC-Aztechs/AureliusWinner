@@ -207,6 +207,8 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
         }
     }
 
+
+
     public class WhiteDropper implements Action {
         @Override
         public boolean run (TelemetryPacket tPkt) {
@@ -215,6 +217,7 @@ public class Aura_AutoBlue_Long_State extends LinearOpMode {
         }
     }
     public Action depositYellow = new YellowDropper();
+
     public Action depositWhite = new WhiteDropper();
 
     public class GotoOuttakeAction implements Action {
