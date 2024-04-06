@@ -128,7 +128,7 @@ public class AuraRobot
 
     public static double leftLinkageOpen = 0.53;
     public static double leftLinkageClose = 0.8;
-    public static double rightLinkageOpen = 0.70;
+    public static double rightLinkageOpen = 0.72;
     public static double rightLinkageClose = 0.5;
 
     public static double left2LinkageOpen = 0.57;
@@ -160,10 +160,10 @@ public class AuraRobot
     public static int UpperLimit     = 3000;
     public static double PURPLE_LOCK    = 1.0;
     public static double PURPLE_UNLOCK  = 0.5;
-    public static double HANG_EXTENDER_EXTEND = 0.36;
-    public static double HANG_EXTENDER_RETRACT = 0.58; //0
-    public static double HANG_FLIPPER_DOWN = 1.0;
-    public static double HANG_FLIPPER_UP = 0.68;
+    public static double HANG_EXTENDER_EXTEND = 1.00;
+    public static double HANG_EXTENDER_RETRACT = 0.85; //0
+    public static double HANG_FLIPPER_DOWN = 0.98;
+    public static double HANG_FLIPPER_UP = 0.6;
     public static double HANG_MOTOR_TICKS = 537.7;
 
     public static double HANG_POWER = .7;
