@@ -133,6 +133,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
     Vector2d blueCycleLongBeforeGatePos = new Vector2d(-38, 10);//50,-19
     Vector2d blueCycleLongAfterGateTagPos = new Vector2d(36, 10);//50,51.25
 
+
     Vector2d blueCycleLongPreStackPos = new Vector2d(-55.5,17);
     Vector2d blueCycleLongStackPos = new Vector2d(-59,17);
 

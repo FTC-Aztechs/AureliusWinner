@@ -13,6 +13,38 @@ public class MyMeepMeep {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
+        Pose2d blueCycleLongStartPos = new Pose2d(-39,61.25,Math.toRadians(-90));//0,0,0
+
+        Pose2d blueCycleLongPurple1Pos = new Pose2d(-32.5, 34.5, Math.toRadians(0));  //27,0,-90
+        Pose2d blueCycleLongPurple2Pos = new Pose2d(-39, 34, Math.toRadians(-90));  //37,12,-90
+        Pose2d blueCycleLongPurple3Pos = new Pose2d(-47, 41.5, Math.toRadians(-90)); //27,19,-90
+
+        Vector2d blueCycleLongBeforeGatePos = new Vector2d(-38, 10);//50,-19
+        Vector2d blueCycleLongAfterGateTagPos = new Vector2d(36, 10);//50,51.25
+
+
+        Vector2d blueCycleLongPreStackPos = new Vector2d(-55.5,17);
+        Vector2d blueCycleLongStackPos = new Vector2d(-59,17);
+
+        Vector2d blueCycleLongStackPos2 = new Vector2d(-61,20);
+
+        Vector2d blueCycleLongPostStackPos = new Vector2d(-59,21.5);
+
+        Vector2d blueCycleLongPostStackPos2 = new Vector2d(-61,29.5);
+
+
+        Pose2d blueCycleLongYellow1Pos = new Pose2d(51.5, 41.75, Math.toRadians(0));  //27,37,-90
+        Pose2d blueCycleLongYellow2Pos = new Pose2d(51, 37.25, Math.toRadians(0));   //26,37,-90
+        Pose2d blueCycleLongYellow3Pos = new Pose2d(51,28.5, Math.toRadians(0));    //33,37,-90
+
+        Vector2d blueCycleLongWhite1Pos = new Vector2d(51, 35);  //27,37,-90
+        Vector2d blueCycleLongWhite2Pos = new Vector2d(51, 34);   //26,37,-90
+        Vector2d blueCycleLongWhite3Pos = new Vector2d(51,28);
+
+        Vector2d blueCycleLongParkPos = new Vector2d(45, 11.5);//50, 82
+
+        Vector2d blueCycleLongCycleBoardPos = new Vector2d(45,13);
+
         //red long
         Pose2d redStartPos = new Pose2d(-36,-61.5,Math.toRadians(90));//0,0,0
 
@@ -71,21 +103,28 @@ public class MyMeepMeep {
                 .setColorScheme(new ColorSchemeRedDark())
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(redStartPos)
-                                .setTangent(Math.toRadians(110))
-                                .splineToLinearHeading(redPurple1Pos, Math.toRadians(90))
-                                .setTangent(Math.toRadians(-90))
-                                .lineToLinearHeading(new Pose2d(-34,-34.5, Math.toRadians(-180)))
-                                .strafeTo(redBeforeGatePos1)
-                                .turn(Math.toRadians(-180))
-//                                        .stopAndAdd(rectifyHeadingError)
-                                .strafeTo(redAfterGateTagPos)
-//                                        .stopAndAdd(updateAfterGatePos)
-                                .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
-//                                        .stopAndAdd(rectifyHeadingError)
-
-                                .strafeTo(redParkPos)
+                        drive.trajectorySequenceBuilder(bluePurple1Pos)
+                                .setTangent(60)
+                                .splineToConstantHeading(blueCycleLongPreStackPos, 60)
+                                .splineToConstantHeading(blueCycleLongStackPos, 0)
+                                .setTangent(-120)
+                                .splineToConstantHeading(blueCycleLongPostStackPos, 0)
                                 .build()
+//                        drive.trajectorySequenceBuilder(redStartPos)
+//                                .setTangent(Math.toRadians(110))
+//                                .splineToLinearHeading(redPurple1Pos, Math.toRadians(90))
+//                                .setTangent(Math.toRadians(-90))
+//                                .lineToLinearHeading(new Pose2d(-34,-34.5, Math.toRadians(-180)))
+//                                .strafeTo(redBeforeGatePos1)
+//                                .turn(Math.toRadians(-180))
+////                                        .stopAndAdd(rectifyHeadingError)
+//                                .strafeTo(redAfterGateTagPos)
+////                                        .stopAndAdd(updateAfterGatePos)
+//                                .splineToLinearHeading(redYellow1Pos,Math.toRadians(0))
+////                                        .stopAndAdd(rectifyHeadingError)
+//
+//                                .strafeTo(redParkPos)
+//                                .build()
 //                        //Blue Long Pos 3
 //                        drive.trajectorySequenceBuilder(new Pose2d(0 + StartPos.getX(), 0 + StartPos.getY(), Math.toRadians(0) + StartPos.getHeading()))
 //                                //purple
