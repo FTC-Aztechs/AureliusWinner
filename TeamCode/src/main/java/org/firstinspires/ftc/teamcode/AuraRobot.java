@@ -122,14 +122,20 @@ public class AuraRobot
     public  static double Lid_Open_Pos = 0.85;
 
     public static double Ramp_Up_Pos = 0.75;
-    public static double Ramp_Down_Pos = 0.69;
+    public static double Ramp_Down_Pos = 0.67;
 
 
 
     public static double leftLinkageOpen = 0.53;
     public static double leftLinkageClose = 0.8;
-    public static double rightLinkageOpen = 0.70;
+    public static double rightLinkageOpen = 0.72;
     public static double rightLinkageClose = 0.5;
+
+    //TODO: Use these for Manual as it appears these values mess up Auto.
+    public static double leftLinkageOpenManual = 0.53;
+    public static double leftLinkageCloseManual = 0.8;
+    public static double rightLinkageOpenManual = 0.72;
+    public static double rightLinkageCloseManual = 0.5;
 
     public static double left2LinkageOpen = 0.57;
     public static double right2LinkageOpen = 0.73;
