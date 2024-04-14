@@ -44,10 +44,8 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
-import static org.firstinspires.ftc.teamcode.AuraRobot.left2LinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
-import static org.firstinspires.ftc.teamcode.AuraRobot.right2LinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 
@@ -103,9 +101,9 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Blue_Long_World", group="State")
+@Autonomous(name="BlueLong_2+1", group="World")
 
-public class Aura_AutoBlue_Long_World extends LinearOpMode {
+public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
 
     //**** Roadrunner Pose2ds ****
 
@@ -124,39 +122,21 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
     Pose2d blueCycleLongPurple3Pos = new Pose2d(-47, 41.5, Math.toRadians(-90)); //27,19,-90
 
     Vector2d blueCycleLongBeforeGatePos = new Vector2d(-38, 10);//50,-19
-    Vector2d blueCycleLongAfterGatePos = new Vector2d(36, 10);//50,51.25
-    Vector2d blueCycleLongTagPos = new Vector2d(36, 36);//50,51.25
-    Vector2d blueCycleLongTagPos2 = new Vector2d(36, 28.5);
-
-
+    Vector2d blueCycleLongAfterGateTagPos = new Vector2d(36, 10);//50,51.25
 
     Vector2d blueCycleLongPreStackPos = new Vector2d(-55.5,17);
-    Vector2d blueCycleLongPreStackPos2 = new Vector2d(-63,17);
-    Vector2d blueCycleLongPostStackPos = new Vector2d(-59,21.5);
-    Vector2d blueCycleLongPostStackPos2 = new Vector2d(-63,12.5);
-
     Vector2d blueCycleLongStackPos = new Vector2d(-59,17);
+    Vector2d blueCycleLongPostStackPos = new Vector2d(-59,21.5);
 
-    Vector2d blueCycleLongStackPos2 = new Vector2d(-61,20);
-
-
-
-
-//    Pose2d blueCycleLongYellow1Pos = new Pose2d(51.5, 41.75, Math.toRadians(0));  //27,37,-90
-    Vector2d blueCycleLongYellow1Pos = new Vector2d(51.5, 41.75);
-    Vector2d blueCycleLongYellow2Pos = new Vector2d(51, 37.25);   //26,37,-90
-    Vector2d blueCycleLongYellow3Pos = new Vector2d(51,28.5);    //33,37,-90
-    Vector2d blueCycleLongYellow3PosVec = new Vector2d(51,28.5);    //33,37,-90
+    Pose2d blueCycleLongYellow1Pos = new Pose2d(51.5, 41.75, Math.toRadians(0));  //27,37,-90
+    Pose2d blueCycleLongYellow2Pos = new Pose2d(51, 37.25, Math.toRadians(0));   //26,37,-90
+    Pose2d blueCycleLongYellow3Pos = new Pose2d(51,28.5, Math.toRadians(0));    //33,37,-90
 
     Vector2d blueCycleLongWhite1Pos = new Vector2d(51, 35);  //27,37,-90
     Vector2d blueCycleLongWhite2Pos = new Vector2d(51, 34);   //26,37,-90
     Vector2d blueCycleLongWhite3Pos = new Vector2d(51,28);
 
     Vector2d blueCycleLongParkPos = new Vector2d(45, 11.5);//50, 82
-
-    Vector2d blueCycleLongCycleBoardPos = new Vector2d(40,10);
-
-
 //    Pose2d blueStartPos = new Pose2d(-39,59.25,Math.toRadians(-90));//0,0,0
 //
 //    Pose2d bluePurple1Pos = new Pose2d(-33, 34.5, Math.toRadians(0));  //27,0,-90
@@ -221,14 +201,8 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
         }
     }
 
-    public class WhiteDumper implements Action {
-        @Override
-        public boolean run (TelemetryPacket tPkt) {
-            LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
-            RightFinger.setPosition(RIGHT_FINGER_UNLOCK);
-            return false;
-        }
-    }
+
+
     public class WhiteDropper implements Action {
         @Override
         public boolean run (TelemetryPacket tPkt) {
@@ -237,10 +211,8 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
         }
     }
     public Action depositYellow = new YellowDropper();
+
     public Action depositWhite = new WhiteDropper();
-
-    public Action dumpWhite = new WhiteDumper();
-
 
     public class GotoOuttakeAction implements Action {
         @Override
@@ -300,22 +272,11 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
         }
     }
 
-    public class stackAprilTagControllerSauron implements Action {
-        @Override
-        public boolean run(TelemetryPacket tPkt) {
-            updateposFromAprilTagSauron();
-            return false;
-        }
-    }
-
     public Action updatePosFromAprilTagEyeball = new backwallAprilTagControllerEyeball();
     public Action updatePosFromAprilTagKemera = new backwallAprilTagControllerKemera();
-    public Action updatePosFromAprilTagSauron = new stackAprilTagControllerSauron();
-
     public class initAprilTag implements Action {
         public boolean run(TelemetryPacket tPkt){
-            initAprilTags();
-//            initAprilTagEyeball();
+            initAprilTagEyeball();
 //            initAprilTagKemera();
             return false;
         }
@@ -329,22 +290,16 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
             return false;
         }
     }
-    public Action deployStackIntake = new Aura_AutoBlue_Long_World.lowerStackLinkage();
+    public Action deployStackIntake = new Aura_AutoBlue_Long_2Plus1.lowerStackLinkage();
 
-    public class lower2StackLinkage implements Action {
-        public boolean run(TelemetryPacket tPkt){
-            lowerStackIntake2();
-            return false;
-        }
-    }
-    public Action deploy2StackIntake = new lower2StackLinkage();
+
     public class raiseStackLinkage implements Action {
         public boolean run(TelemetryPacket tPkt){
             raiseStackIntake();
             return false;
         }
     }
-    public Action retractStackIntake = new Aura_AutoBlue_Long_World.raiseStackLinkage();
+    public Action retractStackIntake = new Aura_AutoBlue_Long_2Plus1.raiseStackLinkage();
 
     public class stackIntake implements Action {
         public boolean run(TelemetryPacket tPkt){
@@ -352,7 +307,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
             return false;
         }
     }
-    public Action intakeFromStack = new Aura_AutoBlue_Long_World.stackIntake();
+    public Action intakeFromStack = new Aura_AutoBlue_Long_2Plus1.stackIntake();
 
     public class ReverseIntake implements Action {
         public boolean run(TelemetryPacket tPkt){
@@ -360,7 +315,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
             return false;
         }
     }
-    public Action reverseInt = new Aura_AutoBlue_Long_World.ReverseIntake();
+    public Action reverseInt = new Aura_AutoBlue_Long_2Plus1.ReverseIntake();
 
 
     public class raiseBox implements Action {
@@ -369,17 +324,15 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
             return false;
         }
     }
-    public Action securePixels = new Aura_AutoBlue_Long_World.raiseBox();
+    public Action securePixels = new Aura_AutoBlue_Long_2Plus1.raiseBox();
 
 
     private static final double LEFT_SPIKEMARK_BOUNDARY_X = 250;
     private static final double RIGHT_SPIKEMARK_BOUNDARY_X = 260;
 
     public static int PurpleDropOffPos = 0;
-    public static double SplineAngle = -90;
-    public static double SplineAngle2 = 0;
-    public static double TangentAngle = 90;
-    public static double TangentAngle2 = 0;
+    public static double SplineAngle = 0;
+    public static double TangentAngle = -70;
 
     boolean bRunningTrajectory = false;
 
@@ -466,12 +419,10 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
      */
     private VisionPortal visionPortalEyeball;
     private VisionPortal visionPortalKemera;
-    private VisionPortal visionPortalSauron;
     private static final boolean USE_WEBCAM = true;
     public static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private AprilTagProcessor aprilTagEyeball;              // Used for managing the AprilTag detection process.
     private AprilTagProcessor aprilTagKemera;
-    private AprilTagProcessor aprilTagSauron;
     private org.firstinspires.ftc.vision.apriltag.AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
 
@@ -486,16 +437,6 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
     private Action dropOffYellowAtPos1;
     private Action dropOffYellowAtPos2;
     private Action dropOffYellowAtPos3;
-
-    //Yellow and Cycle
-    private Action dropOffYellowAndCycleAtPos1;
-    private Action dropOffYellowAndCycleAtPos2;
-    private Action dropOffYellowAndCycleAtPos3;
-
-    //Cycle and Park
-    private Action cycleAndParkAtPos1;
-    private Action cycleAndParkAtPos2;
-    private Action cycleAndParkAtPos3;
 
 
     // Park Trajectories
@@ -515,7 +456,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
         LeftFinger = hardwareMap.get(Servo.class, "lefty");
         RightFinger = hardwareMap.get(Servo.class, "righty");
         Aurelius.PurpleDumper.setPosition(PURPLE_LOCK);
-//        Aurelius.BlinkinBoard.setPattern(Aurelius.alliance[1]);
+
 
         Aurelius.boeing747.init();
         Aurelius.hanger.init();
@@ -543,9 +484,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
         telemetry.addData("Status: ", "Building Trajectories......");
         telemetry.update();
         buildPurpleTrajectories();
-//        buildYellowTrajectories();
-        buildYellowandCycleTrajectories();
-        buildCycleandParkTrajectories();
+        buildYellowTrajectories();
         telemetry.addData("Status: ", "Building Trajectories......done");
         telemetry.update();
 
@@ -589,8 +528,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
                                     new SequentialAction(
                                             beginTrajectoryMarker,
                                             dropOffPurpleAtPos1,
-                                            dropOffYellowAndCycleAtPos1,
-//                                            cycleAndParkAtPos1,
+                                            dropOffYellowAtPos1,
                                             endTrajectoryMarker),
                                     new ParallelAction(
                                             updateIOController,
@@ -603,8 +541,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
                                     new SequentialAction(
                                             beginTrajectoryMarker,
                                             dropOffPurpleAtPos2,
-                                            dropOffYellowAndCycleAtPos2,
-//                                            cycleAndParkAtPos2,
+                                            dropOffYellowAtPos2,
                                             endTrajectoryMarker),
                                     new ParallelAction(
                                             updateIOController,
@@ -618,8 +555,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
                                     new SequentialAction(
                                             beginTrajectoryMarker,
                                             dropOffPurpleAtPos3,
-                                            dropOffYellowAndCycleAtPos3,
-//                                            cycleAndParkAtPos3,
+                                            dropOffYellowAtPos3,
                                             endTrajectoryMarker),
                                     new ParallelAction(
                                             updateIOController,
@@ -651,467 +587,115 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
                 .build();
     }
 
-//    void buildYellowTrajectories()
-//    {
-//        dropOffYellowAtPos1 = BlueLong.actionBuilder(blueCycleLongPurple1Pos)
-//            .setReversed(false)
-//            .setTangent(Math.toRadians(0))
-//            .stopAndAdd(rectifyHeadingError)
-//            .setTangent(Math.toRadians(180))
-//            .splineToConstantHeading(blueCycleLongPreStackPos, Math.toRadians(180))
-//            .stopAndAdd(getReadyForIntake)
-//            .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
-//            .lineToXConstantHeading(-59)
-//            .stopAndAdd(rectifyHeadingError)
-//            .setTangent(Math.toRadians(90))
-//            .splineToConstantHeading(blueCycleLongPostStackPos, Math.toRadians(-90), new TranslationalVelConstraint(25))
-//            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-//            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-//            .stopAndAdd(securePixels)
-//            .setTangent(Math.toRadians(0))
-//            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-//            .afterDisp(0, retractStackIntake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToXConstantHeading(36)
-//            .afterDisp(50, getReadyForOutTake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .strafeTo(blueCycleLongTagPos)
-//            .waitSeconds(0.5)
-//            .stopAndAdd(updatePosFromAprilTagEyeball)
-////            .splineToLinearHeading(blueCycleLongYellow1Pos,Math.toRadians(0))
-//                .strafeTo(blueCycleLongYellow1Pos)
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(depositYellow)
-//            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-//            .setTangent(Math.toRadians(-90))
-//            .splineToConstantHeading(blueCycleLongWhite1Pos, Math.toRadians(90))
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(depositWhite)
-//            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-//            .afterDisp(0,getReadyForIntake)
-//            .setTangent(Math.toRadians(TangentAngle))
-//            .splineToConstantHeading(blueCycleLongCycleBoardPos, Math.toRadians(180))
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToX(-55.5)
-//            .stopAndAdd(getReadyForIntake)
-//            .afterDisp(0, deploy2StackIntake)
-//            .setTangent(Math.toRadians(180))
-//            .splineToConstantHeading(blueCycleLongStackPos2, Math.toRadians(180))
-//            .stopAndAdd(rectifyHeadingError)
-//            .setTangent(Math.toRadians(90))
-//            .splineToConstantHeading(blueCycleLongPostStackPos2, Math.toRadians(-90), new TranslationalVelConstraint(25))
-//            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-//            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-//            .stopAndAdd(securePixels)
-//            .setTangent(Math.toRadians(0))
-//            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-//            .afterDisp(0, retractStackIntake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongAfterGatePos, Math.toRadians(0))
-//            .afterDisp(50, getReadyForOutTake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongTagPos, Math.toRadians(0))
-//            .waitSeconds(0.5)
-//            .stopAndAdd(updatePosFromAprilTagEyeball)
-//            .splineToLinearHeading(blueCycleLongYellow3Pos,Math.toRadians(0))
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(dumpWhite)
-//            .afterDisp(0,getReadyForIntake)
-//            .strafeTo(blueCycleLongParkPos)
-//            .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-//            .build();
-//
-//        dropOffYellowAtPos2 = BlueLong.actionBuilder(blueCycleLongPurple2Pos)
-//            .setTangent(Math.toRadians(90))
-//            .splineToLinearHeading(new Pose2d(-50,45, Math.toRadians(0)),Math.toRadians(180))
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongPreStackPos, Math.toRadians(180))
-//            .stopAndAdd(getReadyForIntake)
-//            .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
-//            .lineToXConstantHeading(-59)
-//            .stopAndAdd(rectifyHeadingError)
-//            .setTangent(Math.toRadians(90))
-//            .splineToConstantHeading(blueCycleLongPostStackPos, Math.toRadians(-90), new TranslationalVelConstraint(25))
-//            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-//            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-//            .stopAndAdd(securePixels)
-//            .setTangent(Math.toRadians(0))
-//            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-//            .afterDisp(0, retractStackIntake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToXConstantHeading(36)
-//            .afterDisp(50, getReadyForOutTake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongTagPos,Math.toRadians(0))
-//            .waitSeconds(0.5)
-//            .stopAndAdd(updatePosFromAprilTagEyeball)
-//            .splineToLinearHeading(blueCycleLongYellow2Pos,Math.toRadians(0))
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(depositYellow)
-//            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-//            .setTangent(Math.toRadians(-90))
-//            .splineToConstantHeading(blueCycleLongWhite1Pos, Math.toRadians(90) )
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(depositWhite)
-//            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-//            .afterDisp(0,getReadyForIntake)
-//            .setTangent(Math.toRadians(TangentAngle))
-//            .splineToConstantHeading(blueCycleLongCycleBoardPos, Math.toRadians(180))
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToX(-55.5)
-//            .stopAndAdd(getReadyForIntake)
-//            .afterDisp(0, deploy2StackIntake)
-//            .setTangent(Math.toRadians(180))
-//            .splineToConstantHeading(blueCycleLongStackPos2, Math.toRadians(180))
-//            .stopAndAdd(rectifyHeadingError)
-//            .setTangent(Math.toRadians(90))
-//            .splineToConstantHeading(blueCycleLongPostStackPos2, Math.toRadians(-90), new TranslationalVelConstraint(25))
-//            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-//            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-//            .stopAndAdd(securePixels)
-//            .setTangent(Math.toRadians(0))
-//            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-//            .afterDisp(0, retractStackIntake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongAfterGatePos, Math.toRadians(0))
-//            .afterDisp(50, getReadyForOutTake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongTagPos, Math.toRadians(0))
-//            .waitSeconds(0.5)
-//            .stopAndAdd(updatePosFromAprilTagEyeball)
-//            .splineToLinearHeading(blueCycleLongYellow3Pos,Math.toRadians(0))
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(dumpWhite)
-//            .afterDisp(0,getReadyForIntake)
-//            .strafeTo(blueCycleLongParkPos)
-//            .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-//            .build();
-//
-//        dropOffYellowAtPos3 = BlueLong.actionBuilder(blueCycleLongPurple3Pos)
-//            .setReversed(true)
-//            .splineToLinearHeading(new Pose2d(-57.5, 48,Math.toRadians(0)), Math.toRadians(-180))
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongPreStackPos, Math.toRadians(180))
-//            .stopAndAdd(getReadyForIntake)
-//            .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
-//            .lineToXConstantHeading(-59)
-//            .stopAndAdd(rectifyHeadingError)
-//            .setTangent(Math.toRadians(90))
-//            .splineToConstantHeading(blueCycleLongPostStackPos, Math.toRadians(-90), new TranslationalVelConstraint(25))
-//            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-//            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-//            .stopAndAdd(securePixels)
-//            .setTangent(Math.toRadians(0))
-//            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-//            .afterDisp(0, retractStackIntake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToXConstantHeading(36)
-//            .afterDisp(50, getReadyForOutTake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongTagPos,Math.toRadians(0))
-//            .waitSeconds(0.5)
-//            .stopAndAdd(updatePosFromAprilTagEyeball)
-////            .splineToLinearHeading(blueCycleLongYellow1Pos,Math.toRadians(0))
-//                .strafeTo(blueCycleLongYellow1Pos)
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(depositYellow)
-//            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-//            .setTangent(Math.toRadians(90))
-//            .splineToConstantHeading(blueCycleLongWhite3Pos, Math.toRadians(-90) )
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(depositWhite)
-//            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-//            .afterDisp(0,getReadyForIntake)
-//            .setTangent(Math.toRadians(TangentAngle))
-//            .splineToConstantHeading(blueCycleLongCycleBoardPos, Math.toRadians(180))
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToX(-55.5)
-//            .stopAndAdd(getReadyForIntake)
-//            .afterDisp(0, deploy2StackIntake)
-//            .setTangent(Math.toRadians(180))
-//            .splineToConstantHeading(blueCycleLongStackPos2, Math.toRadians(180))
-//            .stopAndAdd(rectifyHeadingError)
-//            .setTangent(Math.toRadians(-90))
-//            .splineToConstantHeading(blueCycleLongPostStackPos2, Math.toRadians(90), new TranslationalVelConstraint(25))
-//            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-//            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-//            .stopAndAdd(securePixels)
-//            .setTangent(Math.toRadians(0))
-//            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-//            .afterDisp(0, retractStackIntake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongAfterGatePos, Math.toRadians(0))
-//            .afterDisp(50, getReadyForOutTake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .splineToConstantHeading(blueCycleLongTagPos, Math.toRadians(0))
-//            .waitSeconds(0.5)
-//            .stopAndAdd(updatePosFromAprilTagEyeball)
-//            .splineToLinearHeading(blueCycleLongYellow2Pos,Math.toRadians(0))
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(dumpWhite)
-//            .afterDisp(0,getReadyForIntake)
-//            .strafeTo(blueCycleLongParkPos)
-//            .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-//            .build();
-//    }
-    void buildYellowandCycleTrajectories() {
-        dropOffYellowAndCycleAtPos1 = BlueLong.actionBuilder(blueCycleLongPurple1Pos)
-        //yellow and first cycle
-            .setReversed(true)
-            .stopAndAdd(rectifyHeadingError)
-            .splineToConstantHeading(blueCycleLongPreStackPos, Math.toRadians(180))
-            .stopAndAdd(getReadyForIntake)
-            .afterDisp(0, deployStackIntake) // Make sure to turn on bottom roller
-            .lineToXConstantHeading(-59)
-            .strafeTo(blueCycleLongPostStackPos)
-            .waitSeconds(0.2) // give time for intake to lower correctly
-            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-            .stopAndAdd(securePixels)
-            .setReversed(false)
-            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-            .afterDisp(0, retractStackIntake)
-            .stopAndAdd(rectifyHeadingError)
-            .lineToXConstantHeading(36)
-            .afterDisp(50, getReadyForOutTake)
-            .strafeTo(blueCycleLongTagPos)
-            .waitSeconds(0.3)
-            .stopAndAdd(updatePosFromAprilTagEyeball)
-            .strafeTo(blueCycleLongYellow1Pos)
-            .stopAndAdd(depositYellow)
-            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-            .strafeTo(blueCycleLongWhite1Pos)
-            .stopAndAdd(depositWhite)
-            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-        //2nd cycle and park
-            .afterDisp(0,getReadyForIntake)
-//            .splineToConstantHeading(blueCycleLongAfterGatePos, Math.toRadians(180))
-            .strafeTo(blueCycleLongAfterGatePos)
-            .stopAndAdd(rectifyHeadingError)
-            .lineToXConstantHeading(-55.5)
-            .strafeTo(blueCycleLongPreStackPos2)
-            .afterDisp(0, deployStackIntake)
-            .strafeTo(blueCycleLongPostStackPos2) //, Math.toRadians(-90), new TranslationalVelConstraint(25))
-            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-            .stopAndAdd(securePixels)
-            .setReversed(false)
-            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-            .afterDisp(0, retractStackIntake)
-            .stopAndAdd(rectifyHeadingError)
-            .lineToXConstantHeading(36)
-            .afterDisp(50, getReadyForOutTake)
-            .strafeTo(blueCycleLongTagPos)
-            .waitSeconds(0.3)
-            .stopAndAdd(updatePosFromAprilTagEyeball)
-            .strafeTo(blueCycleLongYellow3Pos)
-            .stopAndAdd(dumpWhite)
-            .stopAndAdd(getReadyForIntake)
-            .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-            .build();
+    void buildYellowTrajectories()
+    {
+        dropOffYellowAtPos1 = BlueLong.actionBuilder(blueCycleLongPurple1Pos)
+                .waitSeconds(5)
+                .setReversed(false)
+                .setTangent(Math.toRadians(0))
+                .lineToX(-38)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongPreStackPos)
+                .stopAndAdd(getReadyForIntake)
+                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
+                .strafeTo(blueCycleLongStackPos)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongPostStackPos, new TranslationalVelConstraint(25))
+                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
+                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
+                .stopAndAdd(securePixels)
+                .strafeTo(blueCycleLongBeforeGatePos)
+                .afterDisp(0, retractStackIntake)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongAfterGateTagPos)
+                .afterDisp(50, getReadyForOutTake)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(new Vector2d(36,36))
+                .waitSeconds(1)
+                .stopAndAdd(updatePosFromAprilTagEyeball)
+                .splineToLinearHeading(blueCycleLongYellow1Pos,Math.toRadians(0))
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .strafeTo(blueCycleLongWhite1Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositWhite)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
+                .strafeTo(blueCycleLongParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .build();
 
-        dropOffYellowAndCycleAtPos2 = BlueLong.actionBuilder(blueCycleLongPurple2Pos)
-                //find tangent angle
-            .setTangent(Math.toRadians(90))
-            .splineToLinearHeading(new Pose2d(-50,45, Math.toRadians(0)),Math.toRadians(180))
-            .stopAndAdd(rectifyHeadingError)
-            .strafeTo(blueCycleLongPreStackPos)
-            .stopAndAdd(getReadyForIntake)
-            .afterDisp(0, deployStackIntake) // Make sure to turn on bottom roller
-            .lineToXConstantHeading(-59)
-            .strafeTo(blueCycleLongPostStackPos)
-            .waitSeconds(0.2) // give time for intake to lower correctly
-            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-            .stopAndAdd(securePixels)
-            .setReversed(false)
-            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-            .afterDisp(0, retractStackIntake)
-            .stopAndAdd(rectifyHeadingError)
-            .lineToXConstantHeading(36)
-            .afterDisp(50, getReadyForOutTake)
-            .strafeTo(blueCycleLongTagPos)
-            .waitSeconds(0.3)
-            .stopAndAdd(updatePosFromAprilTagEyeball)
-            .strafeTo(blueCycleLongYellow2Pos)
-            .stopAndAdd(depositYellow)
-            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-            .strafeTo(blueCycleLongWhite2Pos)
-            .stopAndAdd(depositWhite)
-            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-        //2nd cycle and park
-            .afterDisp(0,getReadyForIntake)
-//            .splineToConstantHeading(blueCycleLongAfterGatePos, Math.toRadians(180))
-            .strafeTo(blueCycleLongAfterGatePos)
-            .stopAndAdd(rectifyHeadingError)
-            .lineToXConstantHeading(-55.5)
-            .strafeTo(blueCycleLongPreStackPos2)
-            .afterDisp(0, deployStackIntake)
-            .strafeTo(blueCycleLongPostStackPos2) //, Math.toRadians(-90), new TranslationalVelConstraint(25))
-            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-            .stopAndAdd(securePixels)
-            .setReversed(false)
-            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-            .afterDisp(0, retractStackIntake)
-            .stopAndAdd(rectifyHeadingError)
-            .lineToXConstantHeading(36)
-            .afterDisp(50, getReadyForOutTake)
-            .strafeTo(blueCycleLongTagPos)
-            .waitSeconds(0.3)
-            .stopAndAdd(updatePosFromAprilTagEyeball)
-            .strafeTo(blueCycleLongYellow3Pos)
-            .stopAndAdd(dumpWhite)
-            .stopAndAdd(getReadyForIntake)
-            .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-            .build();
+        dropOffYellowAtPos2 = BlueLong.actionBuilder(blueCycleLongPurple2Pos)
+                .waitSeconds(5)
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-50,45, Math.toRadians(0)),Math.toRadians(180))
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongPreStackPos)
+                .stopAndAdd(getReadyForIntake)
+                .afterDisp(0, deployStackIntake)
+                .strafeTo(blueCycleLongStackPos)
+                .strafeTo(blueCycleLongPostStackPos, new TranslationalVelConstraint(25))
+                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
+                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
+                .stopAndAdd(securePixels)
+                .strafeTo(blueCycleLongBeforeGatePos)
+                .afterDisp(0, retractStackIntake)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongAfterGateTagPos)
+                .afterDisp(50, getReadyForOutTake)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(new Vector2d(36,36))
+                .waitSeconds(1)
+                .stopAndAdd(updatePosFromAprilTagEyeball)
+                .splineToLinearHeading(blueCycleLongYellow2Pos,Math.toRadians(0))
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .strafeTo(blueCycleLongWhite2Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositWhite)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
+                .strafeTo(blueCycleLongParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .build();
 
-        dropOffYellowAndCycleAtPos3 = BlueLong.actionBuilder(blueCycleLongPurple3Pos)
-            .setReversed(true)
-            .splineToLinearHeading(new Pose2d(-57.5, 48,Math.toRadians(0)), Math.toRadians(-180))
-            .stopAndAdd(rectifyHeadingError)
-            .strafeTo(blueCycleLongPreStackPos)
-            .stopAndAdd(getReadyForIntake)
-            .afterDisp(0, deployStackIntake) // Make sure to turn on bottom roller
-            .lineToXConstantHeading(-59)
-            .strafeTo(blueCycleLongPostStackPos)
-            .waitSeconds(0.2) // give time for intake to lower correctly
-            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-            .stopAndAdd(securePixels)
-            .setReversed(false)
-            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-            .afterDisp(0, retractStackIntake)
-            .stopAndAdd(rectifyHeadingError)
-            .lineToXConstantHeading(36)
-            .afterDisp(50, getReadyForOutTake)
-            .strafeTo(blueCycleLongTagPos)
-            .waitSeconds(0.3)
-            .stopAndAdd(updatePosFromAprilTagEyeball)
-            .strafeTo(blueCycleLongYellow3Pos)
-            .stopAndAdd(depositYellow)
-            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-            .strafeTo(blueCycleLongWhite2Pos)
-            .stopAndAdd(depositWhite)
-            .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-        //2nd cycle and park
-            .afterDisp(0,getReadyForIntake)
-//            .splineToConstantHeading(blueCycleLongAfterGatePos, Math.toRadians(180))
-            .strafeTo(blueCycleLongAfterGatePos)
-            .stopAndAdd(rectifyHeadingError)
-            .lineToXConstantHeading(-55.5)
-            .strafeTo(blueCycleLongPreStackPos2)
-            .afterDisp(0, deployStackIntake)
-            .strafeTo(blueCycleLongPostStackPos2) //, Math.toRadians(-90), new TranslationalVelConstraint(25))
-            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-            .stopAndAdd(securePixels)
-            .setReversed(false)
-            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-            .afterDisp(0, retractStackIntake)
-            .stopAndAdd(rectifyHeadingError)
-            .lineToXConstantHeading(36)
-            .afterDisp(50, getReadyForOutTake)
-            .strafeTo(blueCycleLongTagPos)
-            .waitSeconds(0.3)
-            .stopAndAdd(updatePosFromAprilTagEyeball)
-            .strafeTo(blueCycleLongYellow3Pos)
-            .stopAndAdd(dumpWhite)
-            .stopAndAdd(getReadyForIntake)
-            .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-            .build();
+        dropOffYellowAtPos3 = BlueLong.actionBuilder(blueCycleLongPurple3Pos)
+                .waitSeconds(5)
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(-57.5, 48,Math.toRadians(0)), Math.toRadians(-180))
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongPreStackPos)
+                .stopAndAdd(getReadyForIntake)
+                .afterDisp(0, deployStackIntake)
+                .strafeTo(blueCycleLongStackPos)
+                .strafeTo(blueCycleLongPostStackPos, new TranslationalVelConstraint(25))
+                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
+                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
+                .stopAndAdd(securePixels)
+                .strafeTo(blueCycleLongBeforeGatePos)
+                .afterDisp(0, retractStackIntake)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(blueCycleLongAfterGateTagPos)
+                .afterDisp(50, getReadyForOutTake)
+                .stopAndAdd(rectifyHeadingError)
+                .strafeTo(new Vector2d(36,36))
+                .waitSeconds(1)
+                .stopAndAdd(updatePosFromAprilTagEyeball)
+                .splineToLinearHeading(blueCycleLongYellow3Pos,Math.toRadians(0))
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositYellow)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .strafeTo(blueCycleLongWhite2Pos)
+                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
+                .stopAndAdd(depositWhite)
+                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
+                .afterDisp(0,getReadyForIntake)
+                .strafeTo(blueCycleLongParkPos)
+                .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
+                .build();
     }
-
-    void buildCycleandParkTrajectories() {
-        cycleAndParkAtPos1 = BlueLong.actionBuilder(new Pose2d(blueCycleLongWhite1Pos.x, blueCycleLongWhite1Pos.y, Math.toRadians(0)))
-//            .setReversed(false)
-//            .afterDisp(0,getReadyForIntake)
-////            .splineToConstantHeading(blueCycleLongAfterGatePos, Math.toRadians(180))
-//            .strafeTo(blueCycleLongAfterGatePos)
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToXConstantHeading(-55.5)
-//            .strafeTo(blueCycleLongPreStackPos2)
-//            .afterDisp(0, deployStackIntake)
-//            .strafeTo(blueCycleLongPostStackPos2) //, Math.toRadians(-90), new TranslationalVelConstraint(25))
-//            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-//            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-//            .stopAndAdd(securePixels)
-//            .setReversed(false)
-//            .splineToConstantHeading(blueCycleLongBeforeGatePos, Math.toRadians(0))
-//            .afterDisp(0, retractStackIntake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToXConstantHeading(36)
-//            .afterDisp(50, getReadyForOutTake)
-//            .strafeTo(blueCycleLongTagPos)
-//            .waitSeconds(0.3)
-//            .stopAndAdd(updatePosFromAprilTagEyeball)
-//            .strafeTo(blueCycleLongYellow3PosVec)
-//            .stopAndAdd(dumpWhite)
-//            .stopAndAdd(getReadyForIntake)
-//            .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-            .build();
-
-        cycleAndParkAtPos2 = BlueLong.actionBuilder(new Pose2d(blueCycleLongWhite2Pos.x, blueCycleLongWhite2Pos.y, Math.toRadians(0)))
-//            .strafeTo(blueCycleLongCycleBoardPos)
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToX(-55.5)
-//            .stopAndAdd(getReadyForIntake)
-//            .afterDisp(0, deploy2StackIntake)
-//            .strafeTo(blueCycleLongStackPos2)
-//            .stopAndAdd(rectifyHeadingError)
-//            .strafeTo(blueCycleLongPostStackPos2, new TranslationalVelConstraint(25))
-//            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-//            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-//            .stopAndAdd(securePixels)
-//            .strafeTo(blueCycleLongBeforeGatePos)
-//            .afterDisp(0, retractStackIntake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .strafeTo(blueCycleLongAfterGatePos)
-//            .afterDisp(50, getReadyForOutTake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .strafeTo(new Vector2d(36,36))
-//            .waitSeconds(1)
-//            .stopAndAdd(updatePosFromAprilTagEyeball)
-//            .splineToLinearHeading(blueCycleLongYellow3Pos,Math.toRadians(0))
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(dumpWhite)
-//            .afterDisp(0,getReadyForIntake)
-//            .strafeTo(blueCycleLongParkPos)
-//            .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-            .build();
-
-        cycleAndParkAtPos3 = BlueLong.actionBuilder(new Pose2d(blueCycleLongWhite3Pos.x, blueCycleLongWhite3Pos.y, Math.toRadians(0)))
-//            .strafeTo(blueCycleLongCycleBoardPos)
-//            .stopAndAdd(rectifyHeadingError)
-//            .lineToX(-55.5)
-//            .stopAndAdd(getReadyForIntake)
-//            .afterDisp(0, deploy2StackIntake)
-//            .strafeTo(blueCycleLongStackPos2)
-//            .stopAndAdd(rectifyHeadingError)
-//            .strafeTo(blueCycleLongPostStackPos2, new TranslationalVelConstraint(25))
-//            .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-//            .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-//            .stopAndAdd(securePixels)
-//            .strafeTo(blueCycleLongBeforeGatePos)
-//            .afterDisp(0, retractStackIntake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .strafeTo(blueCycleLongAfterGatePos)
-//            .afterDisp(50, getReadyForOutTake)
-//            .stopAndAdd(rectifyHeadingError)
-//            .strafeTo(new Vector2d(36,36))
-//            .waitSeconds(1)
-//            .stopAndAdd(updatePosFromAprilTagEyeball)
-//            .splineToLinearHeading(blueCycleLongYellow3Pos,Math.toRadians(0))
-//            .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-//            .stopAndAdd(dumpWhite)
-//            .afterDisp(0,getReadyForIntake)
-//            .strafeTo(blueCycleLongParkPos)
-//            .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
-            .build();
-    }
-
-
-
     private double getBatteryVoltage() {
         double result = Double.POSITIVE_INFINITY;
         for (VoltageSensor sensor : hardwareMap.voltageSensor) {
@@ -1272,7 +856,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
         return false;
     }
 
-    private void initAprilTagEyeball(int viewId) {
+    private void initAprilTagEyeball() {
         // Create the AprilTag processor by using a builder.
         aprilTagEyeball = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
@@ -1293,13 +877,11 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
                     .setCamera(hardwareMap.get(WebcamName.class, "Eyeball"))
                     .setCameraResolution(new Size(640, 480))
                     .addProcessor(aprilTagEyeball)
-                    .setLiveViewContainerId(viewId)
                     .build();
         } else {
             visionPortalEyeball = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)
                     .addProcessor(aprilTagEyeball)
-                    .setLiveViewContainerId(viewId)
                     .build();
         }
     }
@@ -1413,7 +995,7 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
         return false;
     }
 
-    private void initAprilTagKemera(int viewId) {
+    private void initAprilTagKemera() {
         // Create the AprilTag processor by using a builder.
         aprilTagKemera = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(822.317f, 822.317f, 319.495f, 242.502f)
@@ -1434,13 +1016,11 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
                     .setCamera(hardwareMap.get(WebcamName.class, "Kemera"))
                     .setCameraResolution(new Size(640, 480))
                     .addProcessor(aprilTagKemera)
-                    .setLiveViewContainerId(viewId)
                     .build();
         } else {
             visionPortalKemera = new VisionPortal.Builder()
                     .setCamera(BuiltinCameraDirection.BACK)
                     .addProcessor(aprilTagKemera)
-                    .setLiveViewContainerId(viewId)
                     .build();
         }
     }
@@ -1479,154 +1059,6 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
         }
     }
 
-    boolean updateposFromAprilTagSauron()
-    {
-//        initAprilTag(); // initializing the april tag processor
-        setManualExposureSauron(6, 250); // accounting for motion blur
-        targetFound = false;
-        desiredTag  = null;
-
-        ElapsedTime AprilTagTimer = new ElapsedTime();
-        AprilTagTimer.reset();
-        while(!targetFound && AprilTagTimer.seconds() < APRILTAG_TIMEOUT) {
-            List<org.firstinspires.ftc.vision.apriltag.AprilTagDetection> currentDetections = aprilTagSauron.getDetections();
-            for (org.firstinspires.ftc.vision.apriltag.AprilTagDetection detection : currentDetections) {
-                // Look to see if we have size info on this tag.
-                if (detection.metadata != null) {
-                    //  Check to see if we want to track towards this tag.
-                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-                        targetFound = true;
-                        desiredTag = detection;
-                        break;
-                    } else {
-                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
-                        telemetry.update();
-                    }
-                } else {
-                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
-                    telemetry.update();
-                }
-            }
-        }
-
-        if(targetFound) {
-            telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.fieldPosition);
-            telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-            telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-            telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-            telemetry.update();
-
-            // TODO: 1. Calibrate camera
-            //       2. Offset currX and currY from camera to robot center
-
-            double range = desiredTag.ftcPose.range;
-            double bearing = desiredTag.ftcPose.bearing;
-            double yaw = desiredTag.ftcPose.yaw;
-
-            double robotOffsetX = 8.5;
-            double robotOffsetY = 0;
-
-            double offsetX = (range * Math.cos(Math.toRadians(bearing)));
-
-            double offsetY = (range * Math.sin(Math.toRadians(bearing)));
-
-            double currHeading = Math.toRadians(180) - Math.toRadians(yaw);
-
-            double rotateX = (robotOffsetX * Math.cos(currHeading)) + (robotOffsetY * -Math.sin(currHeading));
-            double rotateY = (robotOffsetX * Math.sin(currHeading)) + (robotOffsetY * Math.cos(currHeading));
-
-            double currX = rotateX + (desiredTag.metadata.fieldPosition.getData()[0] -
-                    offsetX);
-
-            double currY = rotateY + (desiredTag.metadata.fieldPosition.getData()[1] -
-                    offsetY);
-
-            telemetry.addData("Current pos:", "X: %5.1f Y: %5.1f Heading: %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
-            telemetry.update();
-
-            BlueLong.pose = new Pose2d(currX, currY, currHeading);
-            telemetry.addData("Updated pos:", "X: %5.1f Y: %5.1f Heading %5.1f degrees", BlueLong.pose.position.x, BlueLong.pose.position.y, Math.toDegrees(BlueLong.pose.heading.log()));
-            telemetry.update();
-            return true;
-        }
-        telemetry.addLine("Not Found: Desired Tag not found");
-        telemetry.update();
-        return false;
-    }
-
-    private void initAprilTagSauron(int viewId) {
-        // Create the AprilTag processor by using a builder.
-        aprilTagSauron = new AprilTagProcessor.Builder()
-                .setLensIntrinsics(1385.92f , 1385.92f, 951.982f , 534.084f)
-                .build();
-
-        // Adjust Image Decimation to trade-off detection-range for detection-rate.
-        // eg: Some typical detection data using a Logitech C920 WebCam
-        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
-        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
-        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
-        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
-        // Note: Decimation can be changed on-the-fly to adapt during a match.
-        aprilTagSauron.setDecimation(2);
-
-        // Create the vision portal by using a builder.
-        if (USE_WEBCAM) {
-            visionPortalSauron = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Sauron"))
-                    .setCameraResolution(new Size(1920, 1080))
-                    .addProcessor(aprilTagSauron)
-                    .setLiveViewContainerId(viewId)
-                    .build();
-        } else {
-            visionPortalSauron = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessor(aprilTagSauron)
-                    .setLiveViewContainerId(viewId)
-                    .build();
-        }
-    }
-
-    private void setManualExposureSauron(int exposureMS, int gain) {
-        // Wait for the camera to be open, then use the controls
-
-        if (visionPortalSauron == null) {
-            return;
-        }
-
-        // Make sure camera is streaming before we try to set the exposure controls
-        if (visionPortalSauron.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (!isStopRequested() && (visionPortalSauron.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-
-        // Set camera controls unless we are stopping.
-        if (!isStopRequested())
-        {
-            ExposureControl exposureControl = visionPortalSauron.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
-                sleep(50);
-            }
-            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            sleep(20);
-            GainControl gainControl = visionPortalSauron.getCameraControl(GainControl.class);
-            gainControl.setGain(gain);
-            sleep(20);
-        }
-    }
-
-    private void initAprilTags(){
-        int[] portalsList = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.HORIZONTAL);
-        initAprilTagEyeball(portalsList[0]);
-        initAprilTagSauron(portalsList[1]);
-
-    }
-
     public void reverseIntake()
     {
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, -.7);
@@ -1638,12 +1070,6 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
         Aurelius.RightLink.setPosition(rightLinkageOpen);
     }
 
-    public void lowerStackIntake2()
-    {
-        Aurelius.LeftLink.setPosition(left2LinkageOpen);
-        Aurelius.RightLink.setPosition(right2LinkageOpen);
-    }
-
     public void raiseStackIntake()
     {
         Aurelius.LeftLink.setPosition(leftLinkageClose);
@@ -1652,8 +1078,8 @@ public class Aura_AutoBlue_Long_World extends LinearOpMode {
 
     public void stackIntakePixels()
     {
-        Aurelius.Ramp.setPosition(Ramp_Down_Pos);
         Aurelius.setPower(AuraRobot.AuraMotors.INTAKE, 0.7);
+        Aurelius.Ramp.setPosition(Ramp_Down_Pos);
     }
 
     public void secureStackIntakePixels()

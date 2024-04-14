@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -73,21 +74,51 @@ public class AuraRobot
 
     public DcMotor Slide = null;
     public DcMotor intakeMotor = null;
-    public CRServo Roller = null;
     public DcMotor Hang = null;
-    public Servo   PurpleDumper = null;
+
+    public CRServo Roller = null;
+    public Servo PurpleDumper = null;
     public Servo RightLink = null;
     public Servo LeftLink = null;
-
     public Servo Ramp = null;
+
+    public RevBlinkinLedDriver BlinkinBoard;
+
     public AuraIntakeController noodleWash;
     public AuraLaunchController boeing747;
     public AuraHangController hanger;
 //    public Aura_DepositController depositFlipper;
 //    public AuraIntakeOuttakeController myIntakeOuttakeController;
     public AuraHeadingEstimator myHeadingEstimator;
-
+    public static AuraPIDController liftController = new AuraPIDController(11, 0, 0.25, 3600);;
     public WebcamName Khimera = null;
+
+    //Blinkin values
+    public  RevBlinkinLedDriver.BlinkinPattern[] colors = {WHITE_PATTERN, GREEN_PATTERN, PURPLE_PATTERN, YELLOW_PATTERN};
+    public  RevBlinkinLedDriver.BlinkinPattern[] alliance = {DEFAULT_PATTERN, BLUE_PATTERN, RED_PATTERN};
+
+    public  int[][] rightRanges = {
+            {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
+            {264, 364, 468, 568, 237, 337},      // Green
+            {500, 750, 550, 720, 710, 950},      // Purple
+            {782, 882, 584, 684, 312, 412}       // Yellow
+    };
+    public  int[][] leftRanges = {
+            {1365, 1465, 2382, 2482, 2244, 2344},// White
+            {348, 448, 1065, 1165, 460, 560},    // Green
+            {800, 1100, 1200, 1650, 1600, 2300},  // Purple
+            {1100, 1300, 1400, 1770, 420, 590}   // Yellow
+    };
+
+
+    private static final RevBlinkinLedDriver.BlinkinPattern WHITE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.WHITE;
+    private static final RevBlinkinLedDriver.BlinkinPattern GREEN_PATTERN = RevBlinkinLedDriver.BlinkinPattern.GREEN;
+    private static final RevBlinkinLedDriver.BlinkinPattern PURPLE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+    private static final RevBlinkinLedDriver.BlinkinPattern YELLOW_PATTERN = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+
+    private static final RevBlinkinLedDriver.BlinkinPattern RED_PATTERN = RevBlinkinLedDriver.BlinkinPattern.RED;
+    private static final RevBlinkinLedDriver.BlinkinPattern BLUE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+    private static final RevBlinkinLedDriver.BlinkinPattern DEFAULT_PATTERN = RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_PARTY_PALETTE;
 
     // speeds/times
     public static double UpAdjust = 10;
@@ -113,7 +144,6 @@ public class AuraRobot
     public ColorRangeSensor Right = null;
 
     //claw variables
-    public static AuraPIDController liftController = new AuraPIDController(11, 0, 0.25, 3600);
 
     public static double Launcher_Set_Pos = 1;
     public static double Launcher_Fire_Pos = .85;
@@ -122,7 +152,7 @@ public class AuraRobot
     public  static double Lid_Open_Pos = 0.85;
 
     public static double Ramp_Up_Pos = 0.75;
-    public static double Ramp_Down_Pos = 0.67;
+    public static double Ramp_Down_Pos = 0.65;
 
 
 
@@ -152,6 +182,7 @@ public class AuraRobot
     public static double RIGHT_FINGER_UNLOCK = 0.5;
     public static double WRIST_INTAKE = 0.57;
     public static double WRIST_TUCK = 0.80;
+    public static double WRIST_PIXEL_MOVE = 0.45;
     public static double ELBOW_DOWN = 0.02; //0.023; AFter refixing Max, adjustment needed.
     public static double ELBOW_UP = 0.65;
     public static int SLIDE_INTAKE_POS = 0;
@@ -181,14 +212,14 @@ public class AuraRobot
     public static double AUTO_WAIT_FOR_PURPLE_DROP = 0.0;
     public static double AUTO_WAIT_FOR_YELLOW_DROP = 0.5;
     public static double AUTO_WAIT_RETURN_TO_INTAKE = 3.0;
-    public static double AUTO_WAIT_FOR_STACK_INTAKE = 1.2;
+    public static double AUTO_WAIT_FOR_STACK_INTAKE = 1;
     public static double AUTO_WAIT_FOR_ALLIANCE = 3.0;
     public static double AUTO_ACCEL_CONSTRAINT_1 = -25;
     public static double AUTO_ACCEL_CONSTRAINT_2 = 25;
 
     public static double APRILTAG_TIMEOUT = 5;
 
-   //------------------------------------------------------------
+    //------------------------------------------------------------
 
     /* local OpMode members. */
     public  HardwareMap hwMap           =  null;
@@ -209,13 +240,18 @@ public class AuraRobot
         Upper_Left = hwMap.get(DcMotor.class, "Upper_Left");
         Lower_Left = hwMap.get(DcMotor.class, "Lower_Left");
         Lower_Right = hwMap.get(DcMotor.class, "Lower_Right");
+
         intakeMotor = hwMap.get(DcMotor.class, "intakeMotor");
         Slide = hwMap.get(DcMotor.class, "Slide");
         Hang = hwMap.get(DcMotor.class, "hangMotor");
+
         PurpleDumper = hwMap.get(Servo.class, "purple");
-        LeftLink = hwMap.get(Servo.class, "LeftLink");
         Ramp = hwMap.get(Servo.class, "Ramp");
+        LeftLink = hwMap.get(Servo.class, "LeftLink");
         RightLink = hwMap.get(Servo.class, "RightLink");
+
+        BlinkinBoard = hwMap.get(RevBlinkinLedDriver.class, "Blink");
+
 
         // Define and Initialize Color Sensors
         Left = hwMap.get(RevColorSensorV3.class, "Left");

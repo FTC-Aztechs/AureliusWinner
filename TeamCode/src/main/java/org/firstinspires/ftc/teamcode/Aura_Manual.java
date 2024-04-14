@@ -42,6 +42,9 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.Launcher_Set_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_FLIP_HEIGHT;
+import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_PIXEL_MOVE;
+import static org.firstinspires.ftc.teamcode.AuraRobot.WRIST_TUCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_INTAKE_POS;
 import static org.firstinspires.ftc.teamcode.AuraRobot.SLIDE_RAISE_HIGH;
@@ -68,7 +71,7 @@ import java.util.concurrent.TimeUnit;
 
 
 @Config
-@TeleOp(name="Aura_Manual", group="Manual mode")
+@TeleOp(name="Aura_Manual", group="1. Manual mode")
 
 public class Aura_Manual extends LinearOpMode {
 
@@ -80,21 +83,14 @@ public class Aura_Manual extends LinearOpMode {
     private boolean changingLauncherSpeed = false;
 
     private double intakeSpeed;
-    public static double previous_slide_pos = 0;
+    public static double previous_slide_pos = SLIDE_FLIP_HEIGHT;
     public static double intakeMaxSpeed = 0.8;
 
     private boolean changingState = false;
 
-    public RevColorSensorV3 Left;
-
-    public ColorRangeSensor Right;
-
-    public RevBlinkinLedDriver BlinkinBoard;
-
     private int slide_currentPos = 0;
     private int slide_newPos = slide_currentPos;
 
-    public  RevBlinkinLedDriver.BlinkinPattern[] colors = {WHITE_PATTERN, GREEN_PATTERN, PURPLE_PATTERN, YELLOW_PATTERN};
     public  int[][] rightRanges = {
             {1400, 1700, 1600, 1950, 1500, 1800}, // White order is RGB
             {264, 364, 468, 568, 237, 337},      // Green
@@ -140,6 +136,7 @@ public class Aura_Manual extends LinearOpMode {
     private static ElapsedTime timer_gp2_rb = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp1_rt = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp1_lt = new ElapsedTime(MILLISECONDS);
+    private static ElapsedTime timer_gp2_lt = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp2_right_stick_button = new ElapsedTime(MILLISECONDS);
 
     private static ElapsedTime timer_gp1_lb = new ElapsedTime(MILLISECONDS);
@@ -155,6 +152,8 @@ public class Aura_Manual extends LinearOpMode {
 
     private static ElapsedTime timer_gp1_left_bumper = new ElapsedTime(MILLISECONDS);
     private static ElapsedTime timer_gp1_y = new ElapsedTime(MILLISECONDS);
+    private static ElapsedTime PatternTimer = new ElapsedTime(MILLISECONDS);
+
 
     //slide button booleans
     private boolean assumingHighPosition = false;
@@ -167,26 +166,11 @@ public class Aura_Manual extends LinearOpMode {
     private boolean rightDetected = false;
     private boolean leftDetected = false;
 
+    private RevBlinkinLedDriver.BlinkinPattern rightDetectedColor = Aurelius.colors[1];
+    private RevBlinkinLedDriver.BlinkinPattern leftDetectedColor = Aurelius.colors[1];
 
-    public ElapsedTime PatternTimer;
+    private RevBlinkinLedDriver.BlinkinPattern allianceColor = Aurelius.alliance[0];
 
-    private static final RevBlinkinLedDriver.BlinkinPattern WHITE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.WHITE;
-    private static final RevBlinkinLedDriver.BlinkinPattern GREEN_PATTERN = RevBlinkinLedDriver.BlinkinPattern.GREEN;
-    private static final RevBlinkinLedDriver.BlinkinPattern PURPLE_PATTERN = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
-    private static final RevBlinkinLedDriver.BlinkinPattern YELLOW_PATTERN = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
-
-
-
-    // Define Fingers
-    private Servo LeftFinger = null;
-    private Servo RightFinger = null;
-
-    private Servo RightLink = null;
-    private Servo LeftLink = null;
-
-
-    private RevBlinkinLedDriver.BlinkinPattern rightDetectedColor = colors[1];
-    private RevBlinkinLedDriver.BlinkinPattern leftDetectedColor = colors[1];
 
     //drive booleans
     private boolean changing_drive_mode = false;
@@ -202,22 +186,28 @@ public class Aura_Manual extends LinearOpMode {
     public void runOpMode() {
         // Initialize the drive system vriables
         Aurelius.init(hardwareMap);
-        LeftFinger = hardwareMap.get(Servo.class, "lefty");
-        RightFinger = hardwareMap.get(Servo.class, "righty");
-        BlinkinBoard = hardwareMap.get(RevBlinkinLedDriver.class, "Blink");
-        Left = hardwareMap.get(RevColorSensorV3.class, "Left");
-        Right = hardwareMap.get(ColorRangeSensor.class, "Right");
-        LeftLink = hardwareMap.get(Servo.class, "LeftLink");
-        RightLink = hardwareMap.get(Servo.class, "RightLink");
+        myIntakeOuttakeController = new AuraIntakeOuttakeController (hardwareMap, true);
 
-        PatternTimer = new ElapsedTime();
         PatternTimer.reset();
 
-        myIntakeOuttakeController = new AuraIntakeOuttakeController (hardwareMap, true);
         initAurelius();
 
         while (!isStarted()){
             myIntakeOuttakeController.update();
+//            if ((gamepad1.left_bumper && gamepad1.right_bumper)){
+//                allianceColor = Aurelius.alliance[0];
+//                telemetry.addData("Alliance", "Not Chosen");
+//            }else if(gamepad1.left_bumper){
+//                allianceColor = Aurelius.alliance[1];
+//                telemetry.addData("Alliance", "Blue");
+//            } else if (gamepad1.right_bumper){
+//                allianceColor = Aurelius.alliance[2];
+//                telemetry.addData("Alliance", "Red");
+//            } else if (allianceColor == Aurelius.alliance[0]){
+//                telemetry.addData("Alliance", "Not Chosen");
+//            }
+//            Aurelius.BlinkinBoard.setPattern(allianceColor);
+//            telemetry.update();
         }
 
         while (opModeIsActive()) {
@@ -243,7 +233,7 @@ public class Aura_Manual extends LinearOpMode {
                 timer_gp1_lt.reset();
                 changingState = true;
             } else if (timer_gp1_lt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
+                myIntakeOuttakeController.LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
                 changingState = false;
             }
         }
@@ -252,7 +242,7 @@ public class Aura_Manual extends LinearOpMode {
                 timer_gp1_rt.reset();
                 changingState = true;
             } else if (timer_gp1_lt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                RightFinger.setPosition(RIGHT_FINGER_UNLOCK);
+                myIntakeOuttakeController.RightFinger.setPosition(RIGHT_FINGER_UNLOCK);
                 changingState = false;
             }
         }
@@ -262,8 +252,8 @@ public class Aura_Manual extends LinearOpMode {
                 timer_gp1_lb.reset();
                 changingState = true;
             } else if (timer_gp1_lb.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                RightFinger.setPosition(RIGHT_FINGER_UNLOCK);
-                LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
+                myIntakeOuttakeController.RightFinger.setPosition(RIGHT_FINGER_UNLOCK);
+                myIntakeOuttakeController.LeftFinger.setPosition(LEFT_FINGER_UNLOCK);
             }
         }
     }
@@ -277,8 +267,8 @@ public class Aura_Manual extends LinearOpMode {
         Aurelius.hanger.update();
         myIntakeOuttakeController.init();
         myIntakeOuttakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_1_RFI);
-        LeftLink.setPosition(leftLinkageClose);
-        RightLink.setPosition(rightLinkageClose);
+        Aurelius.LeftLink.setPosition(leftLinkageClose);
+        Aurelius.RightLink.setPosition(rightLinkageClose);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addLine("Status: Robot is ready to roll!");
         telemetry.update();
@@ -287,25 +277,25 @@ public class Aura_Manual extends LinearOpMode {
     public void AuraColor() {
         rightDetectedColor =  RevBlinkinLedDriver.BlinkinPattern.BLACK;
         leftDetectedColor = RevBlinkinLedDriver.BlinkinPattern.BLACK;
-        telemetry.addData("Right Red: ", Right.red()); // color range
-        telemetry.addData("Right Green: ", Right.green());
-        telemetry.addData("Right Blue: ", Right.blue());
-        telemetry.addData("Left Red: ", Left.red());
-        telemetry.addData("Left Green: ", Left.green());
-        telemetry.addData("Left Blue: ", Left.blue());
+        telemetry.addData("Right Red: ", Aurelius.Right.red()); // color range
+        telemetry.addData("Right Green: ", Aurelius.Right.green());
+        telemetry.addData("Right Blue: ", Aurelius.Right.blue());
+        telemetry.addData("Left Red: ", Aurelius.Left.red());
+        telemetry.addData("Left Green: ", Aurelius.Left.green());
+        telemetry.addData("Left Blue: ", Aurelius.Left.blue());
 
 //         Check the color for Right sensor
-        for (int i = 0; i < colors.length; i++) {
-            if (Right.red() >= rightRanges[i][0] && Right.red() <= rightRanges[i][1] &&
-                    Right.green() >= rightRanges[i][2] && Right.green() <= rightRanges[i][3] &&
-                    Right.blue() >= rightRanges[i][4] && Right.blue() <= rightRanges[i][5]) {
-                rightDetectedColor = colors[i];
+        for (int i = 0; i < Aurelius.colors.length; i++) {
+            if (Aurelius.Right.red() >= rightRanges[i][0] && Aurelius.Right.red() <= rightRanges[i][1] &&
+                    Aurelius.Right.green() >= rightRanges[i][2] && Aurelius.Right.green() <= rightRanges[i][3] &&
+                    Aurelius.Right.blue() >= rightRanges[i][4] && Aurelius.Right.blue() <= rightRanges[i][5]) {
+                rightDetectedColor = Aurelius.colors[i];
             }
 
-            if (Left.red() >= leftRanges[i][0] && Left.red() <= leftRanges[i][1] &&
-                    Left.green() >= leftRanges[i][2] && Left.green() <= leftRanges[i][3] &&
-                    Left.blue() >= leftRanges[i][4] && Left.blue() <= leftRanges[i][5]) {
-                leftDetectedColor = colors[i];
+            if (Aurelius.Left.red() >= leftRanges[i][0] && Aurelius.Left.red() <= leftRanges[i][1] &&
+                    Aurelius.Left.green() >= leftRanges[i][2] && Aurelius.Left.green() <= leftRanges[i][3] &&
+                    Aurelius.Left.blue() >= leftRanges[i][4] && Aurelius.Left.blue() <= leftRanges[i][5]) {
+                leftDetectedColor = Aurelius.colors[i];
             }
 
             if (rightDetectedColor != RevBlinkinLedDriver.BlinkinPattern.BLACK && leftDetectedColor != RevBlinkinLedDriver.BlinkinPattern.BLACK) {
@@ -314,11 +304,11 @@ public class Aura_Manual extends LinearOpMode {
         }
 
         if(PatternTimer.seconds()<1) {
-            BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+            Aurelius.BlinkinBoard.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
         } else if (PatternTimer.seconds() < 2) {
-            BlinkinBoard.setPattern(leftDetectedColor);
+            Aurelius.BlinkinBoard.setPattern(leftDetectedColor);
         } else if (PatternTimer.seconds() < 3) {
-            BlinkinBoard.setPattern(rightDetectedColor);
+            Aurelius.BlinkinBoard.setPattern(rightDetectedColor);
         } else {
             PatternTimer.reset();
         }
@@ -414,9 +404,6 @@ public class Aura_Manual extends LinearOpMode {
                 Aurelius.hanger.update();
                 telemetry.addData("State ", " Idle");
                 telemetry.update();
-                if (previous_slide_pos != 0) {
-                    myIntakeOuttakeController.setTargetPosition(previous_slide_pos);
-                }
                 myIntakeOuttakeController.update();
                 {
                     changingState = false;
@@ -466,13 +453,13 @@ public class Aura_Manual extends LinearOpMode {
                 timer_gp2_rt.reset();
                 changingState = true;
             } else if (timer_gp2_rt.time(TimeUnit.MILLISECONDS) > BUTTON_TRIGGER_TIMER_MS) {
-                LeftLink.setPosition(leftLinkageOpen);
-                RightLink.setPosition(rightLinkageOpen);
+                Aurelius.LeftLink.setPosition(leftLinkageOpen);
+                Aurelius.RightLink.setPosition(rightLinkageOpen);
                 changingState = false;
             }
         } else if(gamepad2.right_trigger == 0f) {
-            LeftLink.setPosition(leftLinkageClose);
-            RightLink.setPosition(rightLinkageClose);
+            Aurelius.LeftLink.setPosition(leftLinkageClose);
+            Aurelius.RightLink.setPosition(rightLinkageClose);
         }
 
 
@@ -484,7 +471,6 @@ public class Aura_Manual extends LinearOpMode {
                 myIntakeOuttakeController.setTargetState(AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL);
                 telemetry.addData("State", "going to outtake");
                 telemetry.addData("Previous Slide Position", previous_slide_pos);
-                previous_slide_pos = Aurelius.Slide.getCurrentPosition();
                 telemetry.update();
                 changingState = false;
             }
@@ -515,16 +501,33 @@ public class Aura_Manual extends LinearOpMode {
         }
 
         if(myIntakeOuttakeController.currState == AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL){
-            double target = targetSlidePos + (int) (-gamepad2.left_stick_y * slideTicks_stepSize);
+            //slide drive
+            double target = previous_slide_pos + (int) (-gamepad2.left_stick_y * slideTicks_stepSize);
             if (target >= SLIDE_RAISE_HIGH) {
                 target = SLIDE_RAISE_HIGH;
             } else if (target < SLIDE_INTAKE_POS) {
                 target = SLIDE_INTAKE_POS;
-                telemetry.addData("TargetSlidePos: ", targetSlidePos);
-                telemetry.update();
             }
+            telemetry.addData("TargetSlidePos: ", targetSlidePos);
             myIntakeOuttakeController.setTargetPosition(target);
+            if(myIntakeOuttakeController.targetState == AuraIntakeOuttakeController.ioState.STATE_5_RFO_MANUAL) {
+                previous_slide_pos = target;
+                telemetry.addData("Saved Slide Pos: ", previous_slide_pos);
+            }
+
+            //pixel mover state
+            if(gamepad2.left_trigger == 1f) {
+                    myIntakeOuttakeController.setWristPosition(WRIST_PIXEL_MOVE);
+            } else {
+                    myIntakeOuttakeController.setWristPosition(WRIST_TUCK);
+            }
+
+            telemetry.update();
+
+
         }
+
+        telemetry.update();
         myIntakeOuttakeController.update();
     }
 

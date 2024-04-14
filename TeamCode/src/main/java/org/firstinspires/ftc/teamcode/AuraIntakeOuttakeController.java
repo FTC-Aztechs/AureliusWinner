@@ -142,6 +142,9 @@ public class AuraIntakeOuttakeController {
         telemetry = tele;
     }
 
+    public void setWristPosition(double angle) {
+        Wrist.setPosition(angle);
+    }
     public void setTargetPosition(double target) {
         if (target >= LowerLimit && target <= UpperLimit)
             targetSlidePos = target;
