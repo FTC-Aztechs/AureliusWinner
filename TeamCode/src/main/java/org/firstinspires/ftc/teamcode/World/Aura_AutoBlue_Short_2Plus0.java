@@ -46,10 +46,12 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_LOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.blueShort_leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.blueShort_leftLinkageOpen;
+import static org.firstinspires.ftc.teamcode.AuraRobot.blueShort_rightLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.blueShort_rightLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
-import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
-import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 
 import android.util.Size;
 
@@ -126,7 +128,7 @@ public class Aura_AutoBlue_Short_2Plus0 extends LinearOpMode {
 
     Vector2d blueYellow1Pos = new Vector2d(50.5, 42);  //27,37,-90
     Vector2d blueYellow2Pos = new Vector2d(50.5, 35);   //26,37,-90
-    Vector2d blueYellow3Pos = new Vector2d(50.5,28);    //33,37,-90
+    Vector2d blueYellow3Pos = new Vector2d(50.5,26);    //33,37,-90
 
     Vector2d blueWhite1Pos = new Vector2d(50.5, 42);  //27,37,-90
     Vector2d blueWhite2Pos = new Vector2d(50.5, 34.5);   //26,37,-90
@@ -140,6 +142,10 @@ public class Aura_AutoBlue_Short_2Plus0 extends LinearOpMode {
     Vector2d blueShortStackPos = new Vector2d(-60.5,34);
 
     Vector2d blueParkPos = new Vector2d(45, 54.5);  //7, 37
+
+
+
+
     boolean bProceedToYellow = false;
 
     //Roadrunner field-centric coordinates quick guide brought to you by Lavanya
@@ -982,14 +988,14 @@ public class Aura_AutoBlue_Short_2Plus0 extends LinearOpMode {
 
     public void lowerStackIntake()
     {
-        Aurelius.LeftLink.setPosition(leftLinkageOpen);
-        Aurelius.RightLink.setPosition(rightLinkageOpen);
+        Aurelius.LeftLink.setPosition(blueShort_leftLinkageOpen);
+        Aurelius.RightLink.setPosition(blueShort_rightLinkageOpen);
     }
 
     public void raiseStackIntake()
     {
-        Aurelius.LeftLink.setPosition(leftLinkageClose);
-        Aurelius.RightLink.setPosition(rightLinkageClose);
+        Aurelius.LeftLink.setPosition(blueShort_leftLinkageClose);
+        Aurelius.RightLink.setPosition(blueShort_rightLinkageClose);
     }
 
     public void stackIntakePixels()

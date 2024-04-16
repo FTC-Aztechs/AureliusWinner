@@ -48,6 +48,10 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
+import static org.firstinspires.ftc.teamcode.AuraRobot.redShort_leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.redShort_leftLinkageOpen;
+import static org.firstinspires.ftc.teamcode.AuraRobot.redShort_rightLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.redShort_rightLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 
@@ -134,7 +138,7 @@ public class Aura_AutoRed_Short_2Plus0 extends LinearOpMode {
 
     Vector2d redReturnPos = new Vector2d(-40,-58);
     Vector2d redWingPos = new Vector2d(-60.5,-58);
-    Vector2d redStackPos = new Vector2d(-60.5,-34);
+    Vector2d redStackPos = new Vector2d(-60.5,-36);
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -979,14 +983,14 @@ public class Aura_AutoRed_Short_2Plus0 extends LinearOpMode {
 
     public void lowerStackIntake()
     {
-        Aurelius.LeftLink.setPosition(leftLinkageOpen);
-        Aurelius.RightLink.setPosition(rightLinkageOpen);
+        Aurelius.LeftLink.setPosition(redShort_leftLinkageOpen);
+        Aurelius.RightLink.setPosition(redShort_rightLinkageOpen);
     }
 
     public void raiseStackIntake()
     {
-        Aurelius.LeftLink.setPosition(leftLinkageClose);
-        Aurelius.RightLink.setPosition(rightLinkageClose);
+        Aurelius.LeftLink.setPosition(redShort_leftLinkageClose);
+        Aurelius.RightLink.setPosition(redShort_rightLinkageClose);
     }
 
     public void stackIntakePixels()

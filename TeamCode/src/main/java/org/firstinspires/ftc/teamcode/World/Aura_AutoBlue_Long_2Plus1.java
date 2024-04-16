@@ -132,6 +132,10 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
     Pose2d blueCycleLongYellow2Pos = new Pose2d(51, 37.25, Math.toRadians(0));   //26,37,-90
     Pose2d blueCycleLongYellow3Pos = new Pose2d(51,28.5, Math.toRadians(0));    //33,37,-90
 
+    Vector2d blueCycleLongYellow1Vec = new Vector2d(51.5, 41.75);  //27,37,-90
+    Vector2d blueCycleLongYellow2Vec = new Vector2d(51, 37.25);   //26,37,-90
+    Vector2d blueCycleLongYellow3Ve = new Vector2d(51,28.5);    //33,37,-90
+
     Vector2d blueCycleLongWhite1Pos = new Vector2d(51, 35);  //27,37,-90
     Vector2d blueCycleLongWhite2Pos = new Vector2d(51, 34);   //26,37,-90
     Vector2d blueCycleLongWhite3Pos = new Vector2d(51,28);
@@ -613,7 +617,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
                 .strafeTo(new Vector2d(36,36))
                 .waitSeconds(1)
                 .stopAndAdd(updatePosFromAprilTagEyeball)
-                .splineToLinearHeading(blueCycleLongYellow1Pos,Math.toRadians(0))
+                .strafeTo(blueCycleLongYellow1Vec)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -648,7 +652,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
                 .strafeTo(new Vector2d(36,36))
                 .waitSeconds(1)
                 .stopAndAdd(updatePosFromAprilTagEyeball)
-                .splineToLinearHeading(blueCycleLongYellow2Pos,Math.toRadians(0))
+                .strafeTo(blueCycleLongYellow2Vec)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -683,7 +687,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
                 .strafeTo(new Vector2d(36,36))
                 .waitSeconds(1)
                 .stopAndAdd(updatePosFromAprilTagEyeball)
-                .splineToLinearHeading(blueCycleLongYellow3Pos,Math.toRadians(0))
+                .strafeTo(blueCycleLongYellow2Vec)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)

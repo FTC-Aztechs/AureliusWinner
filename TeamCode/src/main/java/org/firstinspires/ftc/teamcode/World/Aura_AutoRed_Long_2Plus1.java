@@ -136,6 +136,10 @@ public class Aura_AutoRed_Long_2Plus1 extends LinearOpMode {
     Pose2d redCycleLongYellow2Pos = new Pose2d(51, -36, Math.toRadians(0));   //26,37,-90
     Pose2d redCycleLongYellow1Pos = new Pose2d(51.5,-27.5, Math.toRadians(0));    //33,37,-90
 
+    Vector2d redCycleLongYellow3Vec = new Vector2d( 51, -42);
+    Vector2d redCycleLongYellow2Vec = new Vector2d( 51, -36);
+    Vector2d redCycleLongYellow1Vec = new Vector2d( 51.5, -27.5);
+
 
     Vector2d redCycleLongWhite3Pos = new Vector2d(50.5, -30.5);  //27,37,-90
     Vector2d redCycleLongWhite2Pos = new Vector2d(50.5, -39);   //26,37,-90
@@ -596,9 +600,9 @@ public class Aura_AutoRed_Long_2Plus1 extends LinearOpMode {
                 .afterDisp(50, getReadyForOutTake)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(new Vector2d(36,-36))
-                .waitSeconds(AUTO_WAIT_FOR_ALLIANCE)
                 .stopAndAdd(updateAfterGatePos)
-                .splineToLinearHeading(redCycleLongYellow3Pos,Math.toRadians(0))
+                .waitSeconds(AUTO_WAIT_FOR_ALLIANCE)
+                .strafeTo(redCycleLongYellow3Vec)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -630,9 +634,9 @@ public class Aura_AutoRed_Long_2Plus1 extends LinearOpMode {
                 .afterDisp(50, getReadyForOutTake)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(new Vector2d(36,-36))
-                .waitSeconds(AUTO_WAIT_FOR_ALLIANCE)
                 .stopAndAdd(updateAfterGatePos)
-                .splineToLinearHeading(redCycleLongYellow2Pos,Math.toRadians(0))
+                .waitSeconds(AUTO_WAIT_FOR_ALLIANCE)
+                .strafeTo(redCycleLongYellow2Vec)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -665,9 +669,9 @@ public class Aura_AutoRed_Long_2Plus1 extends LinearOpMode {
                 .afterDisp(50, getReadyForOutTake)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(new Vector2d(36,-36))
-                .waitSeconds(AUTO_WAIT_FOR_ALLIANCE)
                 .stopAndAdd(updateAfterGatePos)
-                .splineToLinearHeading(redCycleLongYellow1Pos,Math.toRadians(0))
+                .waitSeconds(AUTO_WAIT_FOR_ALLIANCE)
+                .strafeTo(redCycleLongYellow1Vec)
                 .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
@@ -811,7 +815,7 @@ public class Aura_AutoRed_Long_2Plus1 extends LinearOpMode {
             double yaw = desiredTag.ftcPose.yaw;
 
             double robotOffsetX = -7;
-            double robotOffsetY = +5.5;
+            double robotOffsetY = -3.75;
 
             double offsetX = (range * Math.cos(Math.toRadians(bearing)));
 

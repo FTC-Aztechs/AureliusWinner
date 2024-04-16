@@ -156,16 +156,35 @@ public class AuraRobot
 
 
 
+    // These are for manual
     public static double leftLinkageOpen = 0.53;
     public static double leftLinkageClose = 0.8;
     public static double rightLinkageOpen = 0.72;
     public static double rightLinkageClose = 0.5;
 
-    //TODO: Use these for Manual as it appears these values mess up Auto.
-    public static double leftLinkageOpenManual = 0.53;
-    public static double leftLinkageCloseManual = 0.8;
-    public static double rightLinkageOpenManual = 0.72;
-    public static double rightLinkageCloseManual = 0.5;
+    // These are for blue shorts
+    public static double blueShort_leftLinkageOpen = 0.53;
+    public static double blueShort_leftLinkageClose = 0.8;
+    public static double blueShort_rightLinkageOpen = 0.69;
+    public static double blueShort_rightLinkageClose = 0.5;
+
+    // These are for blue longs
+    public static double blueLong_leftLinkageOpen = 0.53;
+    public static double blueLong_leftLinkageClose = 0.8;
+    public static double blueLong_rightLinkageOpen = 0.72;
+    public static double blueLong_rightLinkageClose = 0.5;
+
+    // These are for red shorts
+    public static double redShort_leftLinkageOpen = 0.56;
+    public static double redShort_leftLinkageClose = 0.8;
+    public static double redShort_rightLinkageOpen = 0.72;
+    public static double redShort_rightLinkageClose = 0.5;
+
+    // These are for red longs
+    public static double redLong_leftLinkageOpen = 0.53;
+    public static double redLong_leftLinkageClose = 0.8;
+    public static double redLong_rightLinkageOpen = 0.72;
+    public static double redLong_rightLinkageClose = 0.5;
 
     public static double left2LinkageOpen = 0.57;
     public static double right2LinkageOpen = 0.73;
