@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.State;
+package org.firstinspires.ftc.teamcode.World.RedShort;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
@@ -48,6 +48,10 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
+import static org.firstinspires.ftc.teamcode.AuraRobot.redShort_leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.redShort_leftLinkageOpen;
+import static org.firstinspires.ftc.teamcode.AuraRobot.redShort_rightLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.redShort_rightLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageOpen;
 
@@ -66,7 +70,6 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -104,10 +107,9 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Red_Short_State", group="State")
-@Disabled
+@Autonomous(name="RedShort_2+0", group="World")
 
-public class Aura_AutoRed_Short_State extends LinearOpMode {
+public class Aura_AutoRed_Short_2Plus0 extends LinearOpMode {
 
     //**** Roadrunner Pose2ds ****
 
@@ -127,8 +129,8 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
     Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
     Vector2d redYellow3Pos = new Vector2d(50.5, -41.5);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(50.5, -35);   //26,37,-90
-    Vector2d redYellow1Pos = new Vector2d(51.5,-28);    //33,37,-90
+    Vector2d redYellow2Pos = new Vector2d(50.5, -33);   //26,37,-90
+    Vector2d redYellow1Pos = new Vector2d(51.5,-24);    //33,37,-90
 
     Pose2d redBeforeGateCyclePos = new Pose2d(12,-57, Math.toRadians(0));
 
@@ -136,7 +138,7 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
 
     Vector2d redReturnPos = new Vector2d(-40,-58);
     Vector2d redWingPos = new Vector2d(-60.5,-58);
-    Vector2d redStackPos = new Vector2d(-60.5,-34);
+    Vector2d redStackPos = new Vector2d(-60.5,-36);
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
     boolean bProceedToYellow = false;
@@ -573,28 +575,6 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0, getReadyForIntake)
-                .strafeTo(redEntryPos)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(redWingPos, new TranslationalVelConstraint(65))
-                .strafeTo(redStackPos, new TranslationalVelConstraint(25))
-                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
-                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-                .stopAndAdd(securePixels)
-                .strafeTo(redReturnPos)
-                .afterDisp(0, retractStackIntake)
-//                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(redEntryPos)
-                .afterDisp(50, getReadyForOutTake)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(redTagPos.position)
-                .stopAndAdd(updatePosFromAprilTagKemera)
-                .strafeTo(redYellow2Pos)
-                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-                .stopAndAdd(depositYellow)
-
-                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .afterDisp(0,getReadyForIntake)
                 .strafeTo(redParkPos)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
@@ -611,26 +591,6 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0, getReadyForIntake)
-                .strafeTo(redEntryPos)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(redWingPos, new TranslationalVelConstraint(65))
-                .strafeTo(redStackPos, new TranslationalVelConstraint(25))
-                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
-                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-                .stopAndAdd(securePixels)
-                .strafeTo(redReturnPos)
-                .afterDisp(0, retractStackIntake)
-                .strafeTo(redEntryPos)
-                .afterDisp(50, getReadyForOutTake)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(redTagPos.position)
-                .stopAndAdd(updatePosFromAprilTagKemera)
-                .strafeTo(redYellow3Pos)
-                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-                .stopAndAdd(depositYellow)
-                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .afterDisp(0,getReadyForIntake)
                 .strafeTo(redParkPos)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
@@ -648,26 +608,6 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
                 .stopAndAdd(depositYellow)
                 .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
                 .afterDisp(0, getReadyForIntake)
-                .strafeTo(redEntryPos)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(redWingPos, new TranslationalVelConstraint(65))
-                .strafeTo(redStackPos, new TranslationalVelConstraint(25))
-                .afterDisp(0,deployStackIntake) // Make sure to turn on bottom roller
-                .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
-                .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
-                .stopAndAdd(securePixels)
-                .strafeTo(redWingPos)
-                .afterDisp(0, retractStackIntake)
-                .strafeTo(redEntryPos)
-                .afterDisp(50, getReadyForOutTake)
-                .stopAndAdd(rectifyHeadingError)
-                .strafeTo(redTagPos.position)
-                .stopAndAdd(updatePosFromAprilTagKemera)
-                .strafeTo(redYellow3Pos)
-                .waitSeconds(AUTO_WAIT_FOR_OUTTAKE)
-                .stopAndAdd(depositYellow)
-                .waitSeconds(AUTO_WAIT_FOR_YELLOW_DROP)
-                .afterDisp(0,getReadyForIntake)
                 .strafeTo(redParkPos)
                 .waitSeconds(AUTO_WAIT_RETURN_TO_INTAKE)
                 .build();
@@ -1043,14 +983,14 @@ public class Aura_AutoRed_Short_State extends LinearOpMode {
 
     public void lowerStackIntake()
     {
-        Aurelius.LeftLink.setPosition(leftLinkageOpen);
-        Aurelius.RightLink.setPosition(rightLinkageOpen);
+        Aurelius.LeftLink.setPosition(redShort_leftLinkageOpen);
+        Aurelius.RightLink.setPosition(redShort_rightLinkageOpen);
     }
 
     public void raiseStackIntake()
     {
-        Aurelius.LeftLink.setPosition(leftLinkageClose);
-        Aurelius.RightLink.setPosition(rightLinkageClose);
+        Aurelius.LeftLink.setPosition(redShort_leftLinkageClose);
+        Aurelius.RightLink.setPosition(redShort_rightLinkageClose);
     }
 
     public void stackIntakePixels()

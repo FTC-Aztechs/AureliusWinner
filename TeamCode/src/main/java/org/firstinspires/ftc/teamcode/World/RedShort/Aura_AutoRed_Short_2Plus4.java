@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.World;
+package org.firstinspires.ftc.teamcode.World.RedShort;
 
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.MILLISECONDS;
 import static org.firstinspires.ftc.teamcode.AuraIntakeOuttakeController.ioState.STATE_1_RFI;
@@ -101,9 +101,9 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Config
-@Autonomous(name="Red_Short_World", group="State")
+@Autonomous(name="RedShort_2+4", group="World")
 
-public class Aura_AutoRed_Short_World extends LinearOpMode {
+public class Aura_AutoRed_Short_2Plus4 extends LinearOpMode {
 
     //**** Roadrunner Pose2ds ****
 

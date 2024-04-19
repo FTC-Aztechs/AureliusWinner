@@ -69,6 +69,7 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -108,6 +109,7 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 @Autonomous(name="Red_Long_State", group="State")
+@Disabled
 
 public class Aura_AutoRed_Long_State extends LinearOpMode {
 

@@ -52,7 +52,7 @@ import java.util.List;
 public final class MecanumDrive {
     public static class Params {
         // drive model parameters
-        public double inPerTick = 0.00297043;
+        public double inPerTick = 0.00294597; //0.00297043
         public double lateralInPerTick =  0.002033062749452721;
         public double trackWidthTicks = 4024.082691479545;
 
@@ -63,7 +63,7 @@ public final class MecanumDrive {
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
-        public double minProfileAccel = -30;
+        public double minProfileAccel = -50;
         public double maxProfileAccel = 50;
 
         // turn profile parameters (in radians)

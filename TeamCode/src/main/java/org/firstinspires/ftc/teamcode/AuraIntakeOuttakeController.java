@@ -142,6 +142,9 @@ public class AuraIntakeOuttakeController {
         telemetry = tele;
     }
 
+    public void setWristPosition(double angle) {
+        Wrist.setPosition(angle);
+    }
     public void setTargetPosition(double target) {
         if (target >= LowerLimit && target <= UpperLimit)
             targetSlidePos = target;
@@ -195,8 +198,10 @@ public class AuraIntakeOuttakeController {
                 if (goingUp) {
                     if (isManual) { // TODO: Unless we need to adjust slide pos to something else in Auto...
                         nextState = ioState.STATE_5_RFO_MANUAL;
-                    } else {
+                    } else if (targetState == ioState.STATE_5_RFO_LOW){
                         nextState = ioState.STATE_5_RFO_LOW;
+                    } else {
+                        nextState = ioState.STATE_5_RFO_MID;
                     }
                 } else {
                     nextState = ioState.STATE_3_PS;
@@ -210,6 +215,13 @@ public class AuraIntakeOuttakeController {
                 }
                 break;
             case STATE_5_RFO_LOW:
+                if (goingUp) {
+                    nextState = ioState.STATE_6_PR_BOTH;
+                } else {
+                    nextState = ioState.STATE_4_BF;
+                }
+                break;
+            case STATE_5_RFO_MID:
                 if (goingUp) {
                     nextState = ioState.STATE_6_PR_BOTH;
                 } else {
@@ -343,6 +355,25 @@ public class AuraIntakeOuttakeController {
             case STATE_5_RFO_LOW: // Ready for Outtake = main state in manual
                 if(goingUp) {
                     targetSlidePos = SLIDE_RAISE_LOW;
+                    Elbow.setPosition(ELBOW_UP);
+                    if (flipTimer.seconds() > FLIP_WAIT_TIME_LIMIT) {
+                        currState = nextState;
+
+                        // Reset Slide Timer such that state 4 has a fresh timer to count
+                        slideTimer.reset();
+                    }
+                }
+                else {
+                    currState = nextState;
+
+                    // Reset Slide Timer such that state 4 has a fresh timer to count
+                    slideTimer.reset();
+                }
+                break;
+
+            case STATE_5_RFO_MID: // Ready for Outtake = main state in manual
+                if(goingUp) {
+                    targetSlidePos = SLIDE_RAISE_MED;
                     Elbow.setPosition(ELBOW_UP);
                     if (flipTimer.seconds() > FLIP_WAIT_TIME_LIMIT) {
                         currState = nextState;
