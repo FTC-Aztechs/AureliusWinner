@@ -146,13 +146,13 @@ public class AuraRobot
     //claw variables
 
     public static double Launcher_Set_Pos = 1;
-    public static double Launcher_Fire_Pos = .85;
+    public static double Launcher_Fire_Pos = .78;
 
     public static double Lid_Close_Pos = 0.5;
     public  static double Lid_Open_Pos = 0.85;
 
     public static double Ramp_Up_Pos = 0.75;
-    public static double Ramp_Down_Pos = 0.61;
+    public static double Ramp_Down_Pos = 0.62;
 
 
 
@@ -169,9 +169,9 @@ public class AuraRobot
     public static double blueShort_rightLinkageClose = 0.5;
 
     // These are for blue longs
-    public static double blueLong_leftLinkageOpen = 0.53;
+    public static double blueLong_leftLinkageOpen = 0.52;
     public static double blueLong_leftLinkageClose = 0.8;
-    public static double blueLong_rightLinkageOpen = 0.72;
+    public static double blueLong_rightLinkageOpen = 0.73;
     public static double blueLong_rightLinkageClose = 0.5;
 
     // These are for red shorts
@@ -199,7 +199,7 @@ public class AuraRobot
     public static double RIGHT_FINGER_LOCK = 0.25;
     public static double LEFT_FINGER_UNLOCK = 0.45;
     public static double RIGHT_FINGER_UNLOCK = 0.5;
-    public static double WRIST_INTAKE = 0.57;
+    public static double WRIST_INTAKE = 0.55;
     public static double WRIST_TUCK = 0.80;
     public static double WRIST_PIXEL_MOVE = 0.45;
     public static double ELBOW_DOWN = 0.02; //0.023; AFter refixing Max, adjustment needed.

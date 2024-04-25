@@ -124,22 +124,22 @@ public class Aura_AutoRed_Long_2Plus1 extends LinearOpMode {
 
     Pose2d redCycleLongPurple3Pos = new Pose2d(-32.5, -35.5, Math.toRadians(0));  //27,0,-90
     Pose2d redCycleLongPurple2Pos = new Pose2d(-39, -34, Math.toRadians(90));  //37,12,-90
-    Pose2d redCycleLongPurple1Pos = new Pose2d(-47, -41.5, Math.toRadians(90)); //27,19,-90
+    Pose2d redCycleLongPurple1Pos = new Pose2d(-46.5, -41.5, Math.toRadians(90)); //27,19,-90
 
     Vector2d redCycleLongBeforeGatePos = new Vector2d(-38, -10);//50,-19
     Vector2d redCycleLongAfterGateTagPos = new Vector2d(36, -10);//50,51.25
 
     Vector2d redCycleLongPreStackPos = new Vector2d(-55.5,-17);
-    Vector2d redCycleLongStackPos = new Vector2d(-58,-18);
-    Vector2d redCycleLongPostStackPos = new Vector2d(-58,-22.5);
+    Vector2d redCycleLongStackPos = new Vector2d(-59,-18);
+    Vector2d redCycleLongPostStackPos = new Vector2d(-59,-22.5);
 
     Pose2d redCycleLongYellow3Pos = new Pose2d(51, -42, Math.toRadians(0));  //27,37,-90
     Pose2d redCycleLongYellow2Pos = new Pose2d(51, -36, Math.toRadians(0));   //26,37,-90
     Pose2d redCycleLongYellow1Pos = new Pose2d(51.5,-27.5, Math.toRadians(0));    //33,37,-90
 
-    Vector2d redCycleLongYellow3Vec = new Vector2d( 51, -42);
-    Vector2d redCycleLongYellow2Vec = new Vector2d( 51, -36);
-    Vector2d redCycleLongYellow1Vec = new Vector2d( 51.5, -27.5);
+    Vector2d redCycleLongYellow3Vec = new Vector2d( 51.5, -41);
+    Vector2d redCycleLongYellow2Vec = new Vector2d( 51.5, -36);
+    Vector2d redCycleLongYellow1Vec = new Vector2d( 51.5, -29);
 
 
     Vector2d redCycleLongWhite3Pos = new Vector2d(50.5, -30.5);  //27,37,-90

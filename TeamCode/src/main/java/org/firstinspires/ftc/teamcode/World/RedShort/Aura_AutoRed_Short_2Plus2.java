@@ -126,20 +126,20 @@ public class Aura_AutoRed_Short_2Plus2 extends LinearOpMode {
 
     Pose2d redTagPos = new Pose2d(36,-45, Math.toRadians(0));
 
-    Vector2d redYellow3Pos = new Vector2d(50.5, -41.5);  //27,37,-90
-    Vector2d redYellow2Pos = new Vector2d(50.5, -33);   //26,37,-90
+    Vector2d redYellow3Pos = new Vector2d(50.5, -42);  //27,37,-90
+    Vector2d redYellow2Pos = new Vector2d(50.5, -32.5);   //26,37,-90
     Vector2d redYellow1Pos = new Vector2d(50.5,-24);    //33,37,-90
 
-    Vector2d redWhite3Pos = new Vector2d(50.5, -41.5);  //27,37,-90
-    Vector2d redWhite2Pos = new Vector2d(50.5, -34.5);   //26,37,-90
+    Vector2d redWhite3Pos = new Vector2d(50.5, -42);  //27,37,-90
+    Vector2d redWhite2Pos = new Vector2d(50.5, -36.5);   //26,37,-90
 
     Pose2d redBeforeGateCyclePos = new Pose2d(12,-57, Math.toRadians(0));
 
     Vector2d redEntryPos = new Vector2d(12,-58);
 
     Vector2d redReturnPos = new Vector2d(-40,-58);
-    Vector2d redWingPos = new Vector2d(-58.25,-58);
-    Vector2d redShortStackPos = new Vector2d(-58.25,-34);
+    Vector2d redWingPos = new Vector2d(-60.5,-58);
+    Vector2d redShortStackPos = new Vector2d(-60.5,-34);
 
     Vector2d redParkPos = new Vector2d(45, -54.5);  //7, 37
     boolean bProceedToYellow = false;

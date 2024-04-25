@@ -45,6 +45,11 @@ import static org.firstinspires.ftc.teamcode.AuraRobot.PURPLE_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.RIGHT_FINGER_UNLOCK;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Down_Pos;
 import static org.firstinspires.ftc.teamcode.AuraRobot.Ramp_Up_Pos;
+import static org.firstinspires.ftc.teamcode.AuraRobot.blueLong_leftLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.blueLong_leftLinkageOpen;
+import static org.firstinspires.ftc.teamcode.AuraRobot.blueLong_rightLinkageClose;
+import static org.firstinspires.ftc.teamcode.AuraRobot.blueLong_rightLinkageOpen;
+import static org.firstinspires.ftc.teamcode.AuraRobot.blueShort_leftLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageClose;
 import static org.firstinspires.ftc.teamcode.AuraRobot.leftLinkageOpen;
 import static org.firstinspires.ftc.teamcode.AuraRobot.rightLinkageClose;
@@ -134,7 +139,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
     Pose2d blueCycleLongYellow3Pos = new Pose2d(51,28.5, Math.toRadians(0));    //33,37,-90
 
     Vector2d blueCycleLongYellow1Vec = new Vector2d(51.5, 43);  //27,37,-90
-    Vector2d blueCycleLongYellow2Vec = new Vector2d(51, 37.25);   //26,37,-90
+    Vector2d blueCycleLongYellow2Vec = new Vector2d(51, 36.75);   //26,37,-90
     Vector2d blueCycleLongYellow3Vec = new Vector2d(51,28.5);    //33,37,-90
 
 
@@ -596,7 +601,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
     void buildYellowTrajectories()
     {
         dropOffYellowAtPos1 = BlueLong.actionBuilder(blueCycleLongPurple1Pos)
-                .waitSeconds(8)
+                .waitSeconds(6)
                 .setReversed(false)
                 .setTangent(Math.toRadians(0))
                 .lineToX(-38)
@@ -607,6 +612,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
                 .strafeTo(blueCycleLongStackPos)
                 .stopAndAdd(rectifyHeadingError)
                 .strafeTo(blueCycleLongPostStackPos, new TranslationalVelConstraint(25))
+                .waitSeconds(0.5)
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .stopAndAdd(securePixels)
@@ -633,7 +639,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
                 .build();
 
         dropOffYellowAtPos2 = BlueLong.actionBuilder(blueCycleLongPurple2Pos)
-                .waitSeconds(8)
+                .waitSeconds(6)
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-50,45, Math.toRadians(0)),Math.toRadians(180))
                 .stopAndAdd(rectifyHeadingError)
@@ -642,6 +648,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
                 .afterDisp(0, deployStackIntake)
                 .strafeTo(blueCycleLongStackPos)
                 .strafeTo(blueCycleLongPostStackPos, new TranslationalVelConstraint(25))
+                .waitSeconds(0.5)
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .stopAndAdd(securePixels)
@@ -668,7 +675,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
                 .build();
 
         dropOffYellowAtPos3 = BlueLong.actionBuilder(blueCycleLongPurple3Pos)
-                .waitSeconds(8)
+                .waitSeconds(6)
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(-57.5, 48,Math.toRadians(0)), Math.toRadians(-180))
                 .stopAndAdd(rectifyHeadingError)
@@ -677,6 +684,7 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
                 .afterDisp(0, deployStackIntake)
                 .strafeTo(blueCycleLongStackPos)
                 .strafeTo(blueCycleLongPostStackPos, new TranslationalVelConstraint(25))
+                .waitSeconds(0.5)
                 .stopAndAdd(intakeFromStack) // Make sure to flip box and lock fingers
                 .waitSeconds(AUTO_WAIT_FOR_STACK_INTAKE)
                 .stopAndAdd(securePixels)
@@ -1072,14 +1080,14 @@ public class Aura_AutoBlue_Long_2Plus1 extends LinearOpMode {
 
     public void lowerStackIntake()
     {
-        Aurelius.LeftLink.setPosition(leftLinkageOpen);
-        Aurelius.RightLink.setPosition(rightLinkageOpen);
+        Aurelius.LeftLink.setPosition(blueLong_leftLinkageOpen);
+        Aurelius.RightLink.setPosition(blueLong_rightLinkageOpen);
     }
 
     public void raiseStackIntake()
     {
-        Aurelius.LeftLink.setPosition(leftLinkageClose);
-        Aurelius.RightLink.setPosition(rightLinkageClose);
+        Aurelius.LeftLink.setPosition(blueLong_leftLinkageClose);
+        Aurelius.RightLink.setPosition(blueLong_rightLinkageClose);
     }
 
     public void stackIntakePixels()
