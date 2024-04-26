@@ -422,7 +422,7 @@ public final class MecanumDrive {
         c.strokePolyline(xPoints, yPoints);
     }
 
-    public static void drawRobot(Canvas c, Pose2d t) {
+    private static void drawRobot(Canvas c, Pose2d t) {
         final double ROBOT_RADIUS = 9;
 
         c.setStrokeWidth(1);
